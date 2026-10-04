@@ -49,3 +49,10 @@ export const useAuthStore = create<AuthState>()((set) => ({
 export function useCurrentUser(): AuthUser | null {
   return useAuthStore((s) => s.user)
 }
+
+// Admins can browse the shop to see how it looks, but they don't shop: cart,
+// buy and wishlist controls are hidden for them (and /cart, /checkout send
+// them to the dashboard).
+export function useIsAdmin(): boolean {
+  return useAuthStore((s) => s.user?.role === "admin")
+}

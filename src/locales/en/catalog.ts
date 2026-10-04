@@ -67,6 +67,9 @@ export const product = {
   },
   addToCart: "Add to cart",
   buyNow: "Buy now",
+  // Shown instead of the buy buttons to an admin browsing the shop.
+  adminNotice: "You're signed in as an admin, so ordering is turned off.",
+  editProduct: "Edit product",
   addedToCart: "Added to your cart.",
   viewCart: "View cart",
   rated: "Rated {value} out of 5",

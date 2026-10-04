@@ -1,6 +1,10 @@
 import type { Dictionary } from "@/locales/en"
 
 export const admin: Dictionary["admin"] = {
+  shell: {
+    badge: "አስተዳዳሪ",
+    viewStore: "ሱቁን ይመልከቱ",
+  },
   nav: {
     label: "አስተዳዳሪ",
     dashboard: "ዳሽቦርድ",

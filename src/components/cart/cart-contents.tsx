@@ -1,12 +1,15 @@
 "use client"
 
 import { CartSkeleton } from "@/components/feedback/skeletons"
+import { useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Package, ShoppingBag } from "lucide-react"
 
 import { formatPrice } from "@/lib/currency"
 import { useT } from "@/lib/i18n/provider"
 import { useCartStore } from "@/lib/store/cart"
+import { useIsAdmin } from "@/lib/store/auth"
 import { useProductsByIds } from "@/lib/hooks/use-products-by-ids"
 import { resolveCartLines, computeCartTotals } from "@/lib/cart-math"
 import { EmptyState } from "@/components/feedback/empty-state"
@@ -20,6 +23,16 @@ function CartContents() {
   const hasHydrated = useCartStore((s) => s.hasHydrated)
   const removeItem = useCartStore((s) => s.removeItem)
   const { products, loading } = useProductsByIds(items.map((i) => i.productId))
+  const isAdmin = useIsAdmin()
+  const router = useRouter()
+
+  // /cart is a public page, so the proxy can't keep admins out of it: they
+  // don't shop, so send them to the dashboard (checkout is refused in proxy.ts).
+  useEffect(() => {
+    if (isAdmin) router.replace("/admin")
+  }, [isAdmin, router])
+
+  if (isAdmin) return <CartSkeleton />
 
   // Render nothing until persist finishes reading localStorage — otherwise
   // a user with a real saved cart would briefly see the empty-cart state
