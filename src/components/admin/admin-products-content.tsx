@@ -28,8 +28,21 @@ function AdminProductsContent() {
     return <p className="text-sm text-error">{t("admin.loadFailed.products")}</p>
   }
 
+  // The "Add product" button lives in the list's header below, which this
+  // early return skips — so the empty state must offer it too, or a shop with
+  // no products has no way to create its first one.
   if (products.length === 0) {
-    return <EmptyState icon={PackageX} title={t("admin.products.empty")} />
+    return (
+      <EmptyState
+        icon={PackageX}
+        title={t("admin.products.empty")}
+        action={
+          <Button asChild>
+            <Link href="/admin/products/new">{t("admin.products.add")}</Link>
+          </Button>
+        }
+      />
+    )
   }
 
   async function handleToggleActive(id: string, next: boolean) {
