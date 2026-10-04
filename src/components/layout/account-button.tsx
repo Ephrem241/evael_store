@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { User } from "lucide-react"
+import { LayoutDashboard, User } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -18,8 +18,11 @@ function AccountButton({
 }) {
   const t = useT()
   const user = useCurrentUser()
-  const label = user ? t("nav.account") : t("nav.signIn")
-  const href = user ? "/account" : "/login"
+  // An admin browsing the shop gets a way back to the dashboard instead.
+  const isAdmin = user?.role === "admin"
+  const label = isAdmin ? t("admin.nav.dashboard") : user ? t("nav.account") : t("nav.signIn")
+  const href = isAdmin ? "/admin" : user ? "/account" : "/login"
+  const Icon = isAdmin ? LayoutDashboard : User
 
   if (variant === "stacked") {
     return (
@@ -30,7 +33,7 @@ function AccountButton({
           className
         )}
       >
-        <User aria-hidden className="size-[22px]" strokeWidth={1.75} />
+        <Icon aria-hidden className="size-[22px]" strokeWidth={1.75} />
         <span className="text-[11px] leading-none font-medium">{label}</span>
       </Link>
     )
@@ -39,7 +42,7 @@ function AccountButton({
   return (
     <Button variant="ghost" size="icon-lg" asChild className={className}>
       <Link href={href} aria-label={label}>
-        <User aria-hidden className="size-[22px]" strokeWidth={1.75} />
+        <Icon aria-hidden className="size-[22px]" strokeWidth={1.75} />
       </Link>
     </Button>
   )

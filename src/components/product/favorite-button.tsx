@@ -6,6 +6,7 @@ import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { useFavoritesStore } from "@/lib/store/favorites"
+import { useIsAdmin } from "@/lib/store/auth"
 import { Button } from "@/components/ui/button"
 
 // A white round button that sits on top of a photo (card corner) or beside the
@@ -24,11 +25,15 @@ function FavoriteButton({
   const t = useT()
   const isFavorited = useFavoritesStore((s) => s.ids.includes(productId))
   const toggle = useFavoritesStore((s) => s.toggle)
+  const isAdmin = useIsAdmin()
 
   function handleToggle() {
     toggle(productId)
     toast.success(isFavorited ? t("product.favorites.removed") : t("product.favorites.added"))
   }
+
+  // Admins don't shop (see useIsAdmin).
+  if (isAdmin) return null
 
   return (
     <Button

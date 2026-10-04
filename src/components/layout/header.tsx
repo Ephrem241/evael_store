@@ -10,6 +10,7 @@ import { CartButton } from "@/components/layout/cart-button"
 import { AccountButton } from "@/components/layout/account-button"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { SearchBar } from "@/components/navigation/search-bar"
+import { HideForAdmin } from "@/components/layout/storefront-only"
 import { DesktopNav, type NavLink } from "@/components/navigation/desktop-nav"
 
 // How many of the shop's categories get their own link in the second row.
@@ -39,13 +40,15 @@ async function Header() {
         <div className="flex items-center gap-1">
           <LanguageSwitcher className="mr-3" />
           <AccountButton variant="stacked" />
-          <Link
-            href="/account/favorites"
-            className="flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-forest focus-visible:ring-3 focus-visible:ring-ring/50"
-          >
-            <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
-            <span className="text-[11px] leading-none font-medium">{t("nav.wishlist")}</span>
-          </Link>
+          <HideForAdmin>
+            <Link
+              href="/account/favorites"
+              className="flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-forest focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
+              <span className="text-[11px] leading-none font-medium">{t("nav.wishlist")}</span>
+            </Link>
+          </HideForAdmin>
           <CartButton variant="stacked" />
         </div>
       </Container>

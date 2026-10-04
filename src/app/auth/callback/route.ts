@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server"
 
 import { createClient } from "@/lib/supabase/server"
 import { getSafeRedirect } from "@/lib/safe-redirect"
+import { isAdminPath } from "@/lib/admin-path"
 
 // Landing point for every emailed/OAuth link that has to turn into a real
 // session (cookies set server-side), then forwards to `next`.
@@ -31,8 +32,16 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient()
 
   if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) return NextResponse.redirect(new URL(next, origin))
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    if (!error) {
+      // An admin signing in with Google lands in the admin area (they don't
+      // shop), as with a password sign-in — see LoginForm.
+      if (isOAuth && !isAdminPath(next) && data.user) {
+        const { data: profile } = await supabase.from("profiles").select("role").eq("id", data.user.id).maybeSingle()
+        if (profile?.role === "admin") return NextResponse.redirect(new URL("/admin", origin))
+      }
+      return NextResponse.redirect(new URL(next, origin))
+    }
   } else if (tokenHash && type === "recovery") {
     // Only recovery: this endpoint must not become a general "sign in with
     // any OTP type" door.

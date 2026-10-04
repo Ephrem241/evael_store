@@ -1,5 +1,10 @@
 // Admin panel: navigation, dashboard, catalog, orders, customers, messages, homepage.
 export const admin = {
+  // The admin area's own frame (sidebar on desktop, top bar on phones).
+  shell: {
+    badge: "Admin",
+    viewStore: "View store",
+  },
   nav: {
     label: "Admin",
     dashboard: "Dashboard",
