@@ -11,6 +11,8 @@ import { useT } from "@/lib/i18n/provider"
 import { useRequireAdmin } from "@/lib/hooks/use-require-admin"
 import { signOut } from "@/lib/services/auth"
 import { AdminNav } from "@/components/admin/admin-nav"
+import { OrderAlertsBell } from "@/components/admin/order-alerts-bell"
+import { OrderAlertsWatcher } from "@/components/admin/order-alerts-watcher"
 import { Logo } from "@/components/layout/logo"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 
@@ -53,11 +55,15 @@ function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh bg-cream/40 lg:pl-64">
+      <OrderAlertsWatcher />
       {/* Desktop: fixed dark sidebar. */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-forest-dark text-white lg:flex">
         <div className="flex flex-col items-start gap-3 px-5 pt-6 pb-5">
           <Logo variant="light" />
-          {badge}
+          <div className="flex w-full items-center justify-between gap-2">
+            {badge}
+            <OrderAlertsBell />
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto px-3">
           <AdminNav />
@@ -98,6 +104,7 @@ function AdminShell({ children }: { children: ReactNode }) {
             {badge}
           </div>
           <div className="flex items-center gap-1">
+            <OrderAlertsBell />
             <LanguageSwitcher compact tone="dark" />
             <Link
               href="/"
