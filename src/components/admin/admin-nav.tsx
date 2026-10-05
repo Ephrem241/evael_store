@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect } from "react"
-import { LayoutDashboard, Package, FolderTree, ShoppingCart, Users, Home, Mail } from "lucide-react"
+import { LayoutDashboard, Package, FolderTree, ShoppingCart, Users, Home, Mail, Settings } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -19,6 +19,7 @@ const ADMIN_NAV_ITEMS: { href: string; label: MessageKey; icon: typeof Home }[] 
   { href: "/admin/customers", label: "admin.nav.customers", icon: Users },
   { href: "/admin/messages", label: "admin.nav.messages", icon: Mail },
   { href: "/admin/homepage", label: "admin.nav.homepage", icon: Home },
+  { href: "/admin/settings", label: "admin.nav.settings", icon: Settings },
 ]
 
 // Dashboard ("/admin") matches only itself — it would prefix-match every

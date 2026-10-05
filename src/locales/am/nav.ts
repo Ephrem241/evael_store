@@ -56,6 +56,7 @@ export const footer: Dictionary["footer"] = {
   terms: "ውሎችና ሁኔታዎች",
   language: "ቋንቋ",
   rights: "© {year} {brand}። መብቱ በሕግ የተጠበቀ ነው።",
+  reachUs: "ያግኙን",
 }
 
 export const meta: Dictionary["meta"] = {

@@ -35,6 +35,7 @@ export const productSchema = z.object({
   is_featured: z.boolean(),
   is_popular: z.boolean(),
   is_active: z.boolean(),
+  is_flash_sale: z.boolean(),
 })
 
 export type ProductValues = z.infer<typeof productSchema>

@@ -37,6 +37,12 @@ export interface Product {
    * products" rail, replacing the old hardcoded POPULAR_PRODUCT_IDS list.
    */
   is_popular?: boolean
+  /**
+   * Admin-settable: shown in the homepage's Flash Deals row (when it also has a
+   * discount). Missing (mock data, or a database before migration 0022) means
+   * "every discounted product is a flash deal", the behaviour before the switch.
+   */
+  is_flash_sale?: boolean
 }
 
 const TIMESTAMP = "2026-01-15T00:00:00.000Z"

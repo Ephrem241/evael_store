@@ -8,10 +8,12 @@ import { nameOf } from "@/lib/i18n/content"
 import { getT } from "@/lib/i18n/server"
 import type { MessageKey } from "@/lib/i18n/translator"
 import { getNavCategories } from "@/lib/services/nav-queries"
+import { getStoreContact } from "@/lib/services/store-info"
 import { Container } from "@/components/layout/container"
 import { Logo } from "@/components/layout/logo"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { Newsletter } from "@/components/home/newsletter"
+import { ContactChannels } from "@/components/contact/contact-channels"
 import { MobileCollapsible } from "@/components/ui/mobile-collapsible"
 
 const columns: { id: string; title: MessageKey; links: { href: string; label: MessageKey }[] }[] = [
@@ -69,7 +71,8 @@ function FooterColumn({ id, title, children }: { id: string; title: string; chil
 // lists the shop's own categories (from the database), so it can never point
 // at one that doesn't exist.
 async function Footer() {
-  const [t, categories] = await Promise.all([getT(), getNavCategories()])
+  const [t, categories, contact] = await Promise.all([getT(), getNavCategories(), getStoreContact()])
+  const hasChannels = Boolean(contact.telegram || contact.whatsapp || contact.phone)
 
   return (
     // Bottom padding on phones: room for the fixed bottom bar (BottomNav, or
@@ -81,6 +84,12 @@ async function Footer() {
           <Logo variant="light" />
           {/* Phones show the logo alone: the tagline is the first thing cut for height. */}
           <p className="max-w-xs text-sm leading-relaxed text-white/70 max-lg:hidden">{t("footer.tagline")}</p>
+          {hasChannels && (
+            <div className="space-y-2 max-lg:pt-4">
+              <h2 className={headingClass}>{t("footer.reachUs")}</h2>
+              <ContactChannels contact={contact} variant="dark" />
+            </div>
+          )}
         </div>
 
         {/* The first folding row gets the top rule; each row draws the one below it. */}

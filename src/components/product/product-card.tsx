@@ -68,6 +68,11 @@ function ProductCard({
             it) — a <button> inside an <a> is invalid HTML and unreliable for
             keyboard/screen-reader users. */}
         <div className="pointer-events-none absolute top-4 left-4 z-10 flex flex-col items-start gap-1.5 max-lg:top-2 max-lg:left-2">
+          {product.stock <= 0 && (
+            <span className="inline-flex h-6 items-center rounded-lg bg-charcoal px-2 text-[11px] font-semibold tracking-wide text-white">
+              {t("product.stock.out")}
+            </span>
+          )}
           <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
           {badge && (
             <span className="inline-flex h-6 items-center rounded-lg bg-forest px-2 text-[11px] font-semibold tracking-wide text-white">

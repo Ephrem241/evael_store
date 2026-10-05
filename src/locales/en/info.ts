@@ -19,6 +19,12 @@ export const info = {
     subtitle: "We're happy to help with your orders, deliveries and any questions.",
     email: "Email",
     phone: "Phone",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
+    call: "Call",
+    channelsTitle: "Chat with us or call",
+    // {channel} is Telegram / WhatsApp / Call.
+    channelLabel: "{channel}: {value}",
     address: "Address",
     hours: "Support hours",
     notSet:
