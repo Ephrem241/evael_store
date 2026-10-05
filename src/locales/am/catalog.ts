@@ -61,6 +61,7 @@ export const catalog: Dictionary["catalog"] = {
 export const product: Dictionary["product"] = {
   stock: {
     out: "አልቋል",
+    soldOut: "ተሽጦ አልቋል",
     low: "{count} ብቻ ቀርተዋል",
     in: "በክምችት አለ",
   },

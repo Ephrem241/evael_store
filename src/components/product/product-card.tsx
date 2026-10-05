@@ -11,6 +11,7 @@ import { FavoriteButton } from "@/components/product/favorite-button"
 import { Price } from "@/components/product/price"
 import { DiscountBadge } from "@/components/product/discount-badge"
 import { Rating } from "@/components/product/rating"
+import { SoldOutStamp } from "@/components/product/sold-out-stamp"
 
 // Renders on the server (shop, home) and in the browser (favorites) alike:
 // it takes the translator as a prop instead of reading it from context, which
@@ -44,6 +45,7 @@ function ProductCard({
   const Icon = getCategoryIcon(product.categorySlug)
   const href = `/product/${product.slug}`
   const name = nameOf(product, t.locale)
+  const soldOut = product.stock <= 0
 
   return (
     <article
@@ -61,18 +63,14 @@ function ProductCard({
             imageUrl={product.image_url}
             sizes={sizes}
             eager={eager}
-            className="transition-transform duration-500 group-hover:scale-105"
+            className={cn("transition-transform duration-500 group-hover:scale-105", soldOut && "grayscale-[40%]")}
           />
         </Link>
+        {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} className="m-2 mb-0 rounded-image max-lg:m-0 max-lg:rounded-none" />}
         {/* The badges and the heart are siblings of the Link (not nested inside
             it) — a <button> inside an <a> is invalid HTML and unreliable for
             keyboard/screen-reader users. */}
         <div className="pointer-events-none absolute top-4 left-4 z-10 flex flex-col items-start gap-1.5 max-lg:top-2 max-lg:left-2">
-          {product.stock <= 0 && (
-            <span className="inline-flex h-6 items-center rounded-lg bg-charcoal px-2 text-[11px] font-semibold tracking-wide text-white">
-              {t("product.stock.out")}
-            </span>
-          )}
           <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
           {badge && (
             <span className="inline-flex h-6 items-center rounded-lg bg-forest px-2 text-[11px] font-semibold tracking-wide text-white">
@@ -108,7 +106,7 @@ function ProductCard({
               <Price amount={product.compare_at_price} t={t} variant="compare" className="text-xs" />
             )}
           </div>
-          <AddToCartButton productId={product.id} outOfStock={product.stock <= 0} className="mt-1 w-full max-lg:mt-0" />
+          <AddToCartButton productId={product.id} outOfStock={soldOut} className="mt-1 w-full max-lg:mt-0" />
         </div>
       </div>
     </article>
