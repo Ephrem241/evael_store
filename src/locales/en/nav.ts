@@ -59,6 +59,7 @@ export const footer = {
   terms: "Terms & Conditions",
   language: "Language",
   rights: "© {year} {brand}. All rights reserved.",
+  reachUs: "Reach us",
 }
 
 export const meta = {

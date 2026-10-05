@@ -6,6 +6,7 @@ import type { Product } from "@/lib/data/products"
 import type { Category } from "@/lib/data/categories"
 import { toProduct, type ProductRow } from "@/lib/services/catalog"
 import { planImageSync, type ImageRow } from "@/lib/services/image-sync"
+import { applyDiscount } from "@/lib/discount"
 
 // Admin product/category management against the real database. Authorization
 // is enforced by Postgres RLS (every write requires is_admin()), not by this
@@ -35,6 +36,7 @@ export interface ProductFormValues {
   is_featured: boolean
   is_popular: boolean
   is_active: boolean
+  is_flash_sale: boolean
 }
 
 export interface CategoryFormValues {
@@ -171,6 +173,7 @@ function productColumns(input: ProductFormValues) {
     is_featured: input.is_featured,
     is_popular: input.is_popular,
     is_active: input.is_active,
+    is_flash_sale: input.is_flash_sale,
   }
 }
 
@@ -221,9 +224,13 @@ export async function deleteProduct(id: string): Promise<Result> {
   return ok(undefined)
 }
 
-async function setProductFlag(id: string, changes: Partial<Pick<Product, "is_active" | "is_featured" | "is_popular">>): Promise<Result> {
+type QuickChanges = Partial<
+  Pick<Product, "is_active" | "is_featured" | "is_popular" | "is_flash_sale" | "stock" | "price" | "compare_at_price">
+>
+
+async function setProductFlag(id: string, changes: QuickChanges): Promise<Result> {
   const { data, error } = await createClient().from("products").update(changes).eq("id", id).select("id")
-  if (error) return fail(translate("common.somethingWentWrong"))
+  if (error) return fail(error.code === "23514" ? translate("admin.errors.outOfRange") : translate("common.somethingWentWrong"))
   if (!data || data.length === 0) return fail(noPermission())
   return ok(undefined)
 }
@@ -231,6 +238,14 @@ async function setProductFlag(id: string, changes: Partial<Pick<Product, "is_act
 export const setProductActive = (id: string, isActive: boolean) => setProductFlag(id, { is_active: isActive })
 export const setProductFeatured = (id: string, isFeatured: boolean) => setProductFlag(id, { is_featured: isFeatured })
 export const setProductPopular = (id: string, isPopular: boolean) => setProductFlag(id, { is_popular: isPopular })
+export const setProductFlashSale = (id: string, isFlashSale: boolean) => setProductFlag(id, { is_flash_sale: isFlashSale })
+// 0 = sold out: checkout refuses it (place_order) and the shop shows "Out of stock".
+export const setProductStock = (id: string, stock: number) => setProductFlag(id, { stock: Math.max(0, Math.floor(stock)) })
+
+// `percent` off the product's original price; 0 removes the discount.
+export function setProductDiscount(product: Pick<Product, "id" | "price" | "compare_at_price">, percent: number): Promise<Result> {
+  return setProductFlag(product.id, applyDiscount(product, percent))
+}
 
 // ---------------------------------------------------------------------------
 // Categories

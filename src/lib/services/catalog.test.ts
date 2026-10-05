@@ -103,6 +103,9 @@ describe("homepage selections and categories", () => {
     expect(ids(pickPopular(products, categories))).toEqual(["wallet", "mug"])
     expect(ids(pickFlashDeals(products, categories))).toEqual(["watch", "bag"])
     expect(pickFeatured([{ ...watch, is_active: false }], categories)).toEqual([])
+    // The admin's flash-sale switch: off hides a discounted product, on needs a discount too.
+    expect(ids(pickFlashDeals([{ ...watch, is_flash_sale: false }, { ...bag, is_flash_sale: true }], categories))).toEqual(["bag"])
+    expect(pickFlashDeals([{ ...wallet, is_flash_sale: true }], categories)).toEqual([])
   })
 })
 

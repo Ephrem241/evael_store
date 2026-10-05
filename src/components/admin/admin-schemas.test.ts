@@ -18,6 +18,7 @@ const product = {
   is_featured: false,
   is_popular: false,
   is_active: true,
+  is_flash_sale: false,
 }
 
 const category = {

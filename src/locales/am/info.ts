@@ -16,6 +16,11 @@ export const info: Dictionary["info"] = {
     subtitle: "ስለ ትዕዛዞችዎ፣ ማድረስና ማንኛውም ጥያቄ ለመርዳት ዝግጁ ነን።",
     email: "ኢሜይል",
     phone: "ስልክ",
+    whatsapp: "ዋትስአፕ",
+    telegram: "ቴሌግራም",
+    call: "ይደውሉ",
+    channelsTitle: "በቻት ያናግሩን ወይም ይደውሉ",
+    channelLabel: "{channel}፦ {value}",
     address: "አድራሻ",
     hours: "የድጋፍ ሰዓት",
     notSet:
