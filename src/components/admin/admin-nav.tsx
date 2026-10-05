@@ -10,6 +10,7 @@ import { useT } from "@/lib/i18n/provider"
 import type { MessageKey } from "@/lib/i18n/translator"
 import { useUnreadMessageCount } from "@/lib/hooks/use-admin-data"
 import { MESSAGES_CHANGED_EVENT } from "@/lib/services/admin-messages"
+import { useOrderAlertsStore } from "@/lib/store/order-alerts"
 
 const ADMIN_NAV_ITEMS: { href: string; label: MessageKey; icon: typeof Home }[] = [
   { href: "/admin", label: "admin.nav.dashboard", icon: LayoutDashboard },
@@ -29,12 +30,29 @@ function isActive(pathname: string, href: string): boolean {
   return href === "/admin" ? pathname === href : pathname === href || pathname.startsWith(`${href}/`)
 }
 
+// The count pill after a nav item (unread messages, new orders).
+function NavCount({ count, label, tabs, active }: { count: number; label: string; tabs: boolean; active: boolean }) {
+  return (
+    <span
+      className={cn(
+        "rounded-full px-2 py-0.5 text-xs font-semibold",
+        tabs ? "" : "ml-auto",
+        active && tabs ? "bg-forest-dark text-white" : "bg-gold text-forest-dark"
+      )}
+    >
+      <span aria-hidden>{count}</span>
+      <span className="sr-only"> ({label})</span>
+    </span>
+  )
+}
+
 // `sidebar`: the dark desktop sidebar. `tabs`: a horizontally scrolling strip
 // under the phone top bar.
 function AdminNav({ variant = "sidebar" }: { variant?: "sidebar" | "tabs" }) {
   const t = useT()
   const pathname = usePathname()
   const { data: unread, reload: reloadUnread } = useUnreadMessageCount()
+  const unseenOrders = useOrderAlertsStore((s) => s.unseen.length)
 
   // Fresh on every admin page, and whenever a message is read, answered or
   // deleted (see admin-messages.ts).
@@ -79,16 +97,15 @@ function AdminNav({ variant = "sidebar" }: { variant?: "sidebar" | "tabs" }) {
             <Icon aria-hidden className="size-4 shrink-0" />
             {t(item.label)}
             {item.href === "/admin/messages" && !!unread && (
-              <span
-                className={cn(
-                  "rounded-full px-2 py-0.5 text-xs font-semibold",
-                  tabs ? "" : "ml-auto",
-                  active && tabs ? "bg-forest-dark text-white" : "bg-gold text-forest-dark"
-                )}
-              >
-                <span aria-hidden>{unread}</span>
-                <span className="sr-only"> ({t.plural("admin.messages.unreadCount", unread)})</span>
-              </span>
+              <NavCount count={unread} label={t.plural("admin.messages.unreadCount", unread)} tabs={tabs} active={active} />
+            )}
+            {item.href === "/admin/orders" && unseenOrders > 0 && (
+              <NavCount
+                count={unseenOrders}
+                label={t.plural("admin.orderAlerts.unseenCount", unseenOrders)}
+                tabs={tabs}
+                active={active}
+              />
             )}
           </Link>
         )

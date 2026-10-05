@@ -259,6 +259,22 @@ export const admin = {
     saved: "Homepage updated.",
     noPermission: "You don't have permission to edit the homepage.",
   },
+  orderAlerts: {
+    // {order} is the order number, {customer} the customer's name, {total} the price.
+    newOrder: "New order {order}",
+    details: "{customer} · {total}",
+    detailsNoName: "{total}",
+    view: "View",
+    bellLabel: { one: "New orders: {count} not opened yet", other: "New orders: {count} not opened yet" },
+    bellLabelNone: "New orders: none",
+    soundOn: "Turn off new-order sound",
+    soundOff: "Turn on new-order sound and desktop alerts",
+    soundEnabled: "New-order sound is on.",
+    soundDisabled: "New-order sound is off.",
+    markAllSeen: "Mark all as seen",
+    newBadge: "New",
+    unseenCount: { one: "{count} new", other: "{count} new" },
+  },
   settings: {
     title: "Store settings",
     subtitle: "How customers reach you: shown on the Contact page and in the footer.",
