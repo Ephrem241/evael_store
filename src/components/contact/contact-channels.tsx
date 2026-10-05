@@ -9,21 +9,21 @@ interface Channel {
   key: ContactChannelKey
   href: string
   value: string
-  external: boolean
+}
+
+function channel(key: ContactChannelKey, value: string | null, toLink: (v: string) => string | null): Channel | null {
+  const href = value ? toLink(value) : null
+  return value && href ? { key, href, value } : null
 }
 
 // The links for the channels the shop has set (and that make sense as links).
+// Telegram and WhatsApp fall back to the shop's phone number, so all three
+// buttons reach the same contact.
 function channelsOf(contact: Pick<StoreContact, "telegram" | "whatsapp" | "phone">): Channel[] {
-  const channels: (Channel | null)[] = [
-    contact.telegram && telegramLink(contact.telegram)
-      ? { key: "telegram", href: telegramLink(contact.telegram)!, value: contact.telegram, external: true }
-      : null,
-    contact.whatsapp && whatsappLink(contact.whatsapp)
-      ? { key: "whatsapp", href: whatsappLink(contact.whatsapp)!, value: contact.whatsapp, external: true }
-      : null,
-    contact.phone && telLink(contact.phone)
-      ? { key: "call", href: telLink(contact.phone)!, value: contact.phone, external: false }
-      : null,
+  const channels = [
+    channel("telegram", contact.telegram ?? contact.phone, telegramLink),
+    channel("whatsapp", contact.whatsapp ?? contact.phone, whatsappLink),
+    channel("call", contact.phone, telLink),
   ]
   return channels.filter((c): c is Channel => c !== null)
 }
@@ -53,7 +53,7 @@ async function ContactChannels({
 
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
-      {channels.map(({ key, href, value, external }) => {
+      {channels.map(({ key, href, value }) => {
         const name = t(`info.contact.${key}`)
         return (
           <li key={key}>
@@ -61,7 +61,6 @@ async function ContactChannels({
               href={href}
               className={styles[variant]}
               aria-label={t("info.contact.channelLabel", { channel: name, value })}
-              {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
             >
               <ChannelLogo channel={key} className={variant === "dark" ? "size-10" : "size-8"} />
               {variant === "light" && <span>{name}</span>}
