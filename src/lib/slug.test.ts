@@ -21,13 +21,13 @@ describe("isValidSlug", () => {
     ["a path traversal", "../admin"],
     ["a slash", "a/b"],
     ["a non-latin name", "ቦርሳ"],
-    ["something absurdly long", "a".repeat(201)],
+    ["something absurdly long", "a".repeat(256)],
   ])("rejects %s", (_what, slug) => {
     expect(isValidSlug(slug)).toBe(false)
   })
 
   it("accepts a slug right at the length limit", () => {
-    expect(isValidSlug("a".repeat(200))).toBe(true)
+    expect(isValidSlug("a".repeat(255))).toBe(true)
   })
 })
 

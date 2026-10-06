@@ -2,14 +2,14 @@
 
 import { FavoritesSkeleton } from "@/components/feedback/skeletons"
 import Link from "next/link"
-import { HeartOff } from "lucide-react"
+import { Heart } from "lucide-react"
 
 import { useT } from "@/lib/i18n/provider"
 import { useRequireAuth } from "@/lib/hooks/use-require-auth"
 import { useFavoritesStore } from "@/lib/store/favorites"
 import { resolveFavoriteProducts } from "@/lib/favorites-math"
 import { useProductsByIds } from "@/lib/hooks/use-products-by-ids"
-import { FavoriteProductCard } from "@/components/account/favorite-product-card"
+import { ProductCard } from "@/components/product/product-card"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { Button } from "@/components/ui/button"
 
@@ -27,7 +27,7 @@ function AccountFavoritesContent() {
   if (products.length === 0) {
     return (
       <EmptyState
-        icon={HeartOff}
+        icon={Heart}
         title={t("account.favorites.emptyTitle")}
         description={t("account.favorites.emptyText")}
         action={
@@ -40,9 +40,16 @@ function AccountFavoritesContent() {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+    // The same card as everywhere else: it carries its own Add to cart, and
+    // its heart removes the product from this list.
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-5">
       {products.map((product) => (
-        <FavoriteProductCard key={product.id} product={product} />
+        <ProductCard
+          key={product.id}
+          product={product}
+          t={t}
+          sizes="(min-width: 1024px) 280px, (min-width: 640px) 31vw, 47vw"
+        />
       ))}
     </div>
   )

@@ -1,12 +1,23 @@
 export const home = {
   hero: {
-    imageAlt: "A sunlit living room with a cream sofa, green and rust cushions, a round wooden coffee table and potted plants",
+    imageAlt:
+      "A smiling woman holding an orange Evael Store shopping bag, surrounded by a handbag, sneakers, a phone, headphones, beauty products, an air fryer, a smartwatch and a plant",
   },
   categoriesTitle: "Shop by Category",
   viewAll: "View All",
-  categoryShopNow: "Shop Now",
-  featuredTitle: "Featured Products",
+  // Under each category card: how many products it really holds.
+  categoryItems: { one: "{count} item", other: "{count} items" },
+  // The admin's "featured" products.
+  featuredTitle: "Trending Now",
   newArrivalsTitle: "New Arrivals",
+  // The admin's "popular" products. Not "Best Sellers": no sales ranking exists.
+  popularTitle: "Popular Picks",
+  shopByNeed: {
+    title: "What are you shopping for?",
+    subtitle: "Jump straight to what you need today.",
+    // {category} is the category's name.
+    cta: "Shop {category}",
+  },
   carousel: {
     previous: "Previous products",
     next: "Next products",
@@ -37,14 +48,16 @@ export const home = {
     badge: "{percent}% OFF",
     badgeLabel: "{percent}% OFF: show today's deal",
   },
-  // Kept for /shop?sale=1, which introduces the discounted products.
-  flashTitle: "Flash deals",
-  flashSubtitle: "Limited-time offers on selected products.",
-  flashBadge: "FLASH SALE",
-  trustTitle: "Why Shop With {brand}?",
+  // Also introduces /shop?sale=1.
+  flashTitle: "Flash Deals",
+  flashSubtitle: "Limited-time prices on products you love.",
+  trustTitle: "Why {brand}?",
+  // The compact strip under the hero. Worded without promises the shop can't
+  // keep (no "guaranteed", no delivery times).
+  trustLabel: "Shopping with us",
   trust: {
-    qualityTitle: "Quality Products",
-    qualityText: "Carefully selected products for everyday life.",
+    codTitle: "Cash on Delivery",
+    codText: "Pay when your order arrives.",
     secureTitle: "Secure Shopping",
     secureText: "A safe and reliable shopping experience.",
     fastTitle: "Fast Delivery",
@@ -52,10 +65,19 @@ export const home = {
     supportTitle: "Customer Support",
     supportText: "Friendly support whenever you need help.",
   },
+  // The "Why Evael" band: what the store is, not claims about it.
+  why: {
+    valueTitle: "Clear, fair prices",
+    valueText: "Every price in birr, with discounts shown up front.",
+    rangeTitle: "Everything in one place",
+    rangeText: "Fashion, home, kitchen, beauty and electronics in one store.",
+    localTitle: "Made for Ethiopia",
+    localText: "Shop in English or Amharic, and pay in cash when your order arrives.",
+  },
   lifestyle: {
-    title: "Upgrade Your Everyday Life",
-    text: "Discover products designed to make your home, kitchen, and lifestyle better.",
-    cta: "Shop Collection",
+    title: "Upgrade Your Everyday",
+    text: "Discover products selected for modern Ethiopian lifestyles.",
+    cta: "Explore Collection",
     imageAlt: "A bright open living space with plants, a wooden sideboard and a kitchen beyond",
   },
   // The "Pay your way" strip. Only Cash on Delivery works today; the banks and

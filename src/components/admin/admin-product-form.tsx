@@ -10,6 +10,7 @@ import { nameOf } from "@/lib/i18n/content"
 import { useT } from "@/lib/i18n/provider"
 import { useAdminCategories } from "@/lib/hooks/use-admin-data"
 import { createProduct, updateProduct } from "@/lib/services/admin-catalog"
+import { MAX_SLUG_LENGTH } from "@/lib/slug"
 import { productSchema, type ProductValues } from "@/components/admin/product-schema"
 import { FormField } from "@/components/forms/form-field"
 import { ProductImagesField } from "@/components/admin/product-images-field"
@@ -18,12 +19,17 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import type { Product } from "@/lib/data/products"
 
+// Made from the English name as it is typed. Cut to the storefront's slug
+// limit (a very long name would otherwise make a slug the shop cannot open),
+// without leaving a hyphen at the end.
 function slugify(value: string): string {
   return value
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
+    .slice(0, MAX_SLUG_LENGTH)
+    .replace(/-+$/, "")
 }
 
 function toDefaultValues(product?: Product): ProductValues {

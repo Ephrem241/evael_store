@@ -125,7 +125,7 @@ function AdminHomepageContent() {
             .split(TOKEN_MARK)
             .flatMap((part, i) => [
               i > 0 ? (
-                <code key={`token-${i}`} lang="en" className="rounded bg-cream px-1 py-0.5 font-mono text-[11px] text-charcoal">
+                <code key={`token-${i}`} lang="en" className="rounded bg-brand-soft px-1 py-0.5 font-mono text-[11px] text-charcoal">
                   {PROMO_TOKEN}
                 </code>
               ) : null,

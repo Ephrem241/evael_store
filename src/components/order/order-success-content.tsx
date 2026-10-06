@@ -49,7 +49,7 @@ function OrderSuccessContent({ orderId }: { orderId: string }) {
         <p className="text-muted-text">{t("order.title", { number: order.order_number })}</p>
       </div>
 
-      <div className="space-y-3 rounded-lg bg-sand/30 p-4 text-left text-sm">
+      <div className="space-y-3 rounded-lg bg-subtle/30 p-4 text-left text-sm">
         <div className="flex justify-between">
           <span className="text-muted-text">{t("cart.summary.total")}</span>
           <span className="font-medium text-charcoal">{formatPrice(order.total, t)}</span>

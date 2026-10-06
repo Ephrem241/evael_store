@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware"
 interface RecentSearchesState {
   queries: string[]
   add: (query: string) => void
+  clear: () => void
 }
 
 const MAX_RECENT = 5
@@ -21,6 +22,7 @@ export const useRecentSearchesStore = create<RecentSearchesState>()(
           )
           return { queries: [trimmed, ...deduped].slice(0, MAX_RECENT) }
         }),
+      clear: () => set({ queries: [] }),
     }),
     { name: "ethio-mart-recent-searches" }
   )

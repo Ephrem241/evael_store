@@ -16,13 +16,13 @@ import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/layout/container";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 
-// The three typefaces are SELF-HOSTED (./fonts, all SIL Open Font License,
+// The two typefaces are SELF-HOSTED (./fonts, all SIL Open Font License,
 // fetched from Google Fonts): the same fonts next/font/google would serve, but
 // with no network needed to run `next dev` or `next build`. (Turbopack's
 // Google-Fonts download has a short timeout; on a slow or busy connection every
 // dev page stalled for ~20s and fell back to a system font.) Each file is one
-// subset of one variable font — Latin for the Latin fonts, Ethiopic for the
-// Ethiopic one — so nothing is shipped that the site never paints.
+// subset of one variable font — Latin for Inter, Ethiopic for Noto Sans
+// Ethiopic — so nothing is shipped that the site never paints.
 const inter = localFont({
   src: "./fonts/inter-latin-variable.woff2",
   weight: "100 900",
@@ -31,8 +31,8 @@ const inter = localFont({
 });
 
 // Ethiopic glyphs come from this font in every language, headings included:
-// globals.css lists it after the Latin fonts, so Latin text stays in Inter (or
-// Playfair) and Amharic falls through to it.
+// globals.css lists it after Inter, so Latin text stays in Inter and Amharic
+// falls through to it.
 //
 // It is NOT preloaded, and it declares the Unicode ranges of the Ethiopic
 // blocks. Both matter: without the range, ANY character Inter lacks (a "★" in
@@ -49,19 +49,6 @@ const notoSansEthiopic = localFont({
   preload: false,
   adjustFontFallback: false,
   declarations: [{ prop: "unicode-range", value: "U+1200-139F, U+2D80-2DDF, U+AB00-AB2F" }],
-});
-
-// Display headings ("font-display"): an editorial serif for Latin text. Amharic
-// headings use the sans Ethiopic above, in a heavier weight — a second Ethiopic
-// font (a serif) would cost Amharic visitors another ~190KB for a difference
-// hardly visible in that script. The Playfair file is preloaded (the hero
-// headline is the LCP text).
-const playfair = localFont({
-  src: "./fonts/playfair-display-latin-variable.woff2",
-  weight: "400 900",
-  variable: "--font-display-latin",
-  display: "swap",
-  adjustFontFallback: "Times New Roman",
 });
 
 // `viewport-fit: cover` lets fixed elements read the iPhone safe-area insets
@@ -101,7 +88,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang={locale}
-      className={cn("font-sans", inter.variable, notoSansEthiopic.variable, playfair.variable)}
+      className={cn("font-sans", inter.variable, notoSansEthiopic.variable)}
     >
       <body>
         <LocaleProvider locale={locale} dictionary={dictionary}>
@@ -111,7 +98,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 is invisible until it has focus. */}
             <a
               href="#main-content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-forest-dark focus:shadow-lift focus:ring-2 focus:ring-gold focus:outline-none"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-charcoal focus:shadow-lift focus:ring-2 focus:ring-brand focus:outline-none"
             >
               {t("nav.skipToContent")}
             </a>

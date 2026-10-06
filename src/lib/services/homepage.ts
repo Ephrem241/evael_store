@@ -42,18 +42,19 @@ export interface HomepageSettings {
 // Only used if the rows are missing entirely (never on a properly migrated
 // project — 0005 seeds both), so the storefront can't render blank.
 //
-// A newline in the headline is a deliberate line break (the hero shows it).
+// A newline in the headline is a deliberate line break (the hero shows it, and
+// draws the last line in the brand orange).
 // `{maxDiscount}` in the promo texts is replaced with the biggest discount
 // among the products actually on sale (see fillDealTokens), so the banner can
 // never promise a bigger discount than exists.
 export const DEFAULT_HOMEPAGE_SETTINGS: HomepageSettings = {
-  heroHeadline: "Everything You Love,\nAll in One Place.",
-  heroHeadlineAm: "የሚወዱትን ሁሉ፣\nበአንድ ቦታ።",
-  heroSubtext: "Discover quality products for your home, kitchen, family, and everyday life.",
-  heroSubtextAm: "ለቤትዎ፣ ለወጥ ቤትዎ፣ ለቤተሰብዎ እና ለዕለት ተዕለት ኑሮዎ ጥራት ያላቸው ምርቶችን ያግኙ።",
-  heroCtaLabel: "Shop Now",
-  heroCtaLabelAm: "አሁን ይግዙ",
-  heroCtaHref: "/shop",
+  heroHeadline: "Everything You Love.\nBetter Prices.",
+  heroHeadlineAm: "የሚወዱትን ሁሉ።\nበተሻለ ዋጋ።",
+  heroSubtext: "Discover fashion, electronics, beauty, home essentials and more — all in one place.",
+  heroSubtextAm: "ፋሽን፣ ኤሌክትሮኒክስ፣ የውበት ምርቶች፣ የቤት ቁሳቁሶች እና ሌሎችንም — ሁሉንም በአንድ ቦታ ያግኙ።",
+  heroCtaLabel: "Shop Deals",
+  heroCtaLabelAm: "ቅናሾችን ይግዙ",
+  heroCtaHref: "/deals",
   heroSecondaryCtaLabel: "Explore Categories",
   heroSecondaryCtaLabelAm: "ምድቦችን ያስሱ",
   heroSecondaryCtaHref: "/categories",

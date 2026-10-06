@@ -29,4 +29,6 @@ export const common: Dictionary["common"] = {
   pageNotFoundText: "የሚፈልጉት ገጽ የለም ወይም ተንቀሳቅሷል።",
   backHome: "ወደ መነሻ ተመለስ",
   somethingWentWrong: "የሆነ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።",
+  errorTitle: "የሆነ ችግር ተፈጥሯል።",
+  errorText: "እባክዎ እንደገና ይሞክሩ። ችግሩ ከቀጠለ ከጥቂት ደቂቃዎች በኋላ ይመለሱ።",
 }

@@ -28,4 +28,7 @@ export const common = {
   pageNotFoundText: "The page you're looking for doesn't exist or has moved.",
   backHome: "Back to home",
   somethingWentWrong: "Something went wrong. Please try again.",
+  // The page shown when a page fails to load.
+  errorTitle: "Something went wrong.",
+  errorText: "Please try again. If it keeps happening, come back in a few minutes.",
 }

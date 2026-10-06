@@ -8,10 +8,10 @@ import { RemoteProductImage } from "@/components/product/remote-product-image"
 // same product/category always renders the same placeholder and server and
 // client render identical markup (no hydration mismatch).
 const GRADIENTS = [
-  "bg-linear-to-br from-sand to-ivory",
-  "bg-linear-to-br from-forest/15 via-sand/40 to-ivory",
-  "bg-linear-to-br from-sand/70 via-ivory to-sand/30",
-  "bg-linear-to-br from-forest-dark/10 via-sand/50 to-ivory",
+  "bg-linear-to-br from-subtle to-background",
+  "bg-linear-to-br from-brand/15 via-subtle/40 to-background",
+  "bg-linear-to-br from-subtle/70 via-background to-subtle/30",
+  "bg-linear-to-br from-charcoal/10 via-subtle/50 to-background",
 ]
 
 function hashString(value: string): number {
@@ -74,7 +74,7 @@ function ImagePlaceholder({
         className
       )}
     >
-      <Icon aria-hidden className="size-10 text-forest/40" />
+      <Icon aria-hidden className="size-10 text-brand-ink/40" />
       {imageUrl && <RemoteProductImage src={imageUrl} alt={decorative ? "" : label} sizes={sizes} eager={eager} />}
     </div>
   )

@@ -1,9 +1,11 @@
+import { ThumbsUp, TrendingUp } from "lucide-react"
 import {
   getCategories,
   getFeaturedProducts,
   getNewArrivals,
   getDealsSummary,
   getFlashDeals,
+  getPopularProducts,
 } from "@/lib/services/catalog-queries"
 import { getHomepageSettings } from "@/lib/services/homepage-queries"
 import { dealsCountdown, fillDealTokens, localizeHomepage } from "@/lib/services/homepage"
@@ -16,15 +18,16 @@ import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld"
 import { JsonLd } from "@/components/seo/json-ld"
 import { Hero } from "@/components/home/hero"
 import { MobileHomeCarousel } from "@/components/home/mobile-home-carousel"
-import { DealsSlide, LifestyleSlide } from "@/components/home/mobile-home-slides"
-import { CategorySection } from "@/components/home/category-section"
-import { FeaturedProducts } from "@/components/home/featured-products"
+import { DealsSlide } from "@/components/home/mobile-home-slides"
+import { TrustSection } from "@/components/home/trust-section"
 import { DealsRow } from "@/components/home/deals-row"
 import { DealPopup } from "@/components/home/deal-popup"
+import { CategorySection } from "@/components/home/category-section"
+import { ProductGridSection } from "@/components/home/product-grid-section"
 import { NewArrivals } from "@/components/home/new-arrivals"
-import { TrustSection } from "@/components/home/trust-section"
+import { ShopByNeed } from "@/components/home/shop-by-need"
 import { LifestyleBanner } from "@/components/home/lifestyle-banner"
-import { PaymentMethods } from "@/components/home/payment-methods"
+import { WhyEvael } from "@/components/home/why-evael"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT()
@@ -36,28 +39,28 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-// The homepage, in the order a shopper reads it: hero, categories, featured
-// products, special deals, new arrivals, why us, the closing banner and the
-// ways to pay (the footer follows from the layout). Everything is read from
-// the database — the copy, the categories, the products and the size of the
-// deal. The hero is full-bleed: it breaks out of the layout's Container and
-// cancels this wrapper's top padding itself.
+// The homepage, in the order a shopper reads it: the hero, the trust strip,
+// flash deals, categories, trending (featured) products, new arrivals,
+// popular picks, shop by need, the promotional banner and "why Evael" (the
+// footer, with the newsletter, follows from the layout). Everything is read
+// from the database — the copy, the categories, the products, the size of the
+// deal and whether it has a real end date. The hero is full-bleed: it breaks
+// out of the layout's Container and cancels this wrapper's top padding itself.
 //
-// The promotion (its copy and live countdown) is a popup that opens a few
+// The promotion (its copy and countdown) is also a popup that opens a few
 // seconds in, once per session, plus a small floating button to reopen it
-// (deal-popup.tsx); the page itself only lists the discounted products.
+// (deal-popup.tsx).
 //
-// Phones: the hero, special-deals and lifestyle banners become one swipeable
-// carousel at the top instead of sections spread down the page — same copy,
-// pictures and links, presented the way a shopping app would (the two promo
-// banners as full-slide versions, see mobile-home-slides.tsx). Desktop keeps
-// the hero and lifestyle banner in place (the `hidden lg:block` wrappers).
+// Phones: the hero and the special-deals card become one swipeable carousel
+// at the top — same copy, pictures and links, presented the way a shopping app
+// would. Desktop shows the hero alone (the `hidden lg:block` wrapper).
 export default async function Home() {
-  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings] = await Promise.all([
+  const [locale, categories, featured, newArrivals, popular, deals, flashDeals, rawSettings] = await Promise.all([
     getLocale(),
     getCategories(),
-    getFeaturedProducts(6),
+    getFeaturedProducts(8),
     getNewArrivals(10),
+    getPopularProducts(8),
     getDealsSummary(),
     getFlashDeals(10),
     getHomepageSettings(),
@@ -66,11 +69,13 @@ export default async function Home() {
   const t = await getT()
   // No discounted product, no deals banner or popup: they would have nothing to point at.
   const dealSettings = deals.count > 0 ? fillDealTokens(settings, deals.maxDiscountPercent) : null
+  // Flash Deals shows a countdown only for a real, admin-set end date.
+  const countdown = dealsCountdown(settings)
+  const dealDeadline = countdown.rolling ? undefined : countdown
 
   return (
-    // Phones get the tighter rhythm of a shopping app (32px between sections);
-    // from `sm` up the spacing is as it was.
-    <div className="space-y-8 py-6 sm:space-y-16 lg:space-y-20 lg:py-10">
+    // Phones get the tighter rhythm of a shopping app (32px between sections).
+    <div className="space-y-8 py-6 sm:space-y-12 lg:space-y-16 lg:py-10">
       <JsonLd nodes={[organizationJsonLd(t("meta.description")), websiteJsonLd(locale)]} />
 
       {/* Takes no room in the flow (a portal plus a fixed floating button).
@@ -89,7 +94,7 @@ export default async function Home() {
       )}
 
       {/* The page's one real <h1>, kept separate from the two Hero renders
-          below (mobile carousel + desktop): each of those now draws the same
+          below (mobile carousel + desktop): each of those draws the same
           headline as plain, aria-hidden text, since a second literal <h1>
           would exist in the DOM even while `display:none` — invalid
           regardless of which copy is visible at a given width. */}
@@ -102,23 +107,35 @@ export default async function Home() {
           slides={[
             <Hero key="hero" settings={settings} showHeading={false} variant="slide" />,
             ...(dealSettings ? [<DealsSlide key="deals" settings={dealSettings} />] : []),
-            <LifestyleSlide key="lifestyle" />,
           ]}
         />
       </div>
-      <div className="hidden lg:block">
+      {/* The trust strip tucks in close under the hero (a tighter gap than between sections). */}
+      <div className="hidden lg:block lg:mb-8!">
         <Hero settings={settings} showHeading={false} />
       </div>
 
-      <CategorySection categories={categories} />
-      <FeaturedProducts products={featured} />
-      <DealsRow products={flashDeals} />
-      <NewArrivals products={newArrivals} />
       <TrustSection />
-      <div className="hidden lg:block">
-        <LifestyleBanner />
-      </div>
-      <PaymentMethods />
+      <DealsRow products={flashDeals} countdown={dealDeadline} />
+      <CategorySection categories={categories} />
+      <ProductGridSection
+        id="trending-heading"
+        title={t("home.featuredTitle")}
+        icon={<TrendingUp aria-hidden className="size-6 shrink-0 text-brand" />}
+        href="/shop"
+        products={featured}
+      />
+      <NewArrivals products={newArrivals} />
+      <ProductGridSection
+        id="popular-heading"
+        title={t("home.popularTitle")}
+        icon={<ThumbsUp aria-hidden className="size-6 shrink-0 text-brand" />}
+        href="/shop?sort=popular"
+        products={popular}
+      />
+      <ShopByNeed categories={categories} />
+      <LifestyleBanner />
+      <WhyEvael />
     </div>
   )
 }

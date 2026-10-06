@@ -50,16 +50,19 @@ function countdownParts(remaining: number) {
   }
 }
 
-// One short line ("Deal ends in 05:12:33") for the phone carousel's deals
-// slide, where a card of tiles would cover most of the photograph.
+// "pill": one short line ("Deal ends in 05:12:33") for the phone carousel's
+// deals slide. "tiles": the Flash Deals header's orange number boxes
+// (05 : 42 : 18) with their units underneath.
 function DealsCountdown({
   endsAt,
   initialRemainingMs,
   rolling = false,
+  variant = "pill",
 }: {
   endsAt: string
   initialRemainingMs: number
   rolling?: boolean
+  variant?: "pill" | "tiles"
 }) {
   const t = useT()
   const remaining = useDealCountdown(endsAt, initialRemainingMs, rolling)
@@ -73,6 +76,35 @@ function DealsCountdown({
   }
 
   const { days, hours, minutes, seconds } = countdownParts(remaining)
+
+  if (variant === "tiles") {
+    const parts = [
+      ...(days > 0 ? [{ value: days, unit: t("home.deals.days") }] : []),
+      { value: hours, unit: t("home.deals.hours") },
+      { value: minutes, unit: t("home.deals.minutes") },
+      { value: seconds, unit: t("home.deals.seconds") },
+    ]
+    return (
+      <div role="timer" aria-label={t("home.deals.timeLeft")} className="flex items-start gap-1.5">
+        {parts.map((part, i) => (
+          <div key={part.unit} className="flex items-start gap-1.5">
+            {i > 0 && (
+              <span aria-hidden className="pt-1.5 text-lg font-bold text-brand-ink">
+                :
+              </span>
+            )}
+            <div className="flex flex-col items-center gap-1">
+              <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-brand-strong px-1.5 text-lg font-bold text-white tabular-nums shadow-soft">
+                {String(part.value).padStart(2, "0")}
+              </span>
+              <span className="text-[11px] font-medium text-charcoal/70">{part.unit}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     // role="timer" is not announced on every tick (its live region is off by
     // default), which is what we want; the label says what it counts.

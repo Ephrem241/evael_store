@@ -50,7 +50,15 @@ export async function fetchProductsByIds(ids: string[]): Promise<ProductWithCate
 }
 
 export interface SearchSuggestions {
-  products: { id: string; slug: string; name_en: string; name_am: string }[]
+  products: {
+    id: string
+    slug: string
+    name_en: string
+    name_am: string
+    price: number
+    /** The first photo (by sort order), if the product has one. */
+    image_url: string | null
+  }[]
   categories: { id: string; slug: string; name_en: string; name_am: string }[]
 }
 
@@ -77,7 +85,7 @@ export async function searchSuggestions(query: string): Promise<SearchSuggestion
   const [productsResult, categoriesResult] = await Promise.all([
     supabase
       .from("products")
-      .select("id, slug, name_en, name_am, categories!inner(is_active)")
+      .select("id, slug, name_en, name_am, price, product_images(image_url, sort_order), categories!inner(is_active)")
       .eq("is_active", true)
       .eq("categories.is_active", true)
       .or(nameMatches)
@@ -91,7 +99,14 @@ export async function searchSuggestions(query: string): Promise<SearchSuggestion
   ])
 
   return {
-    products: (productsResult.data ?? []).map(({ id, slug, name_en, name_am }) => ({ id, slug, name_en, name_am })),
+    products: (productsResult.data ?? []).map(({ id, slug, name_en, name_am, price, product_images }) => ({
+      id,
+      slug,
+      name_en,
+      name_am,
+      price: Number(price),
+      image_url: [...(product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order)[0]?.image_url ?? null,
+    })),
     categories: (categoriesResult.data as Pick<Category, "id" | "slug" | "name_en" | "name_am">[] | null) ?? [],
   }
 }

@@ -6,10 +6,13 @@ import type { ReactNode } from "react"
 function CheckoutStep({
   number,
   title,
+  action,
   children,
 }: {
   number: number
   title: string
+  /** A small link at the right of the heading (the review's "Edit cart"). */
+  action?: ReactNode
   children: ReactNode
 }) {
   const headingId = `checkout-step-${number}`
@@ -17,18 +20,19 @@ function CheckoutStep({
   return (
     <section
       aria-labelledby={headingId}
-      className="space-y-5 rounded-card border border-border/70 bg-card p-5 shadow-soft sm:p-6"
+      className="space-y-5 rounded-card border border-border bg-card p-5 shadow-soft sm:p-6"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 border-b border-border pb-4">
         <span
           aria-hidden
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-forest text-sm font-semibold text-white"
+          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-strong text-sm font-semibold text-white"
         >
           {number}
         </span>
-        <h2 id={headingId} className="font-display text-lg font-semibold text-charcoal">
+        <h2 id={headingId} className="font-display text-lg font-bold tracking-tight text-charcoal">
           {title}
         </h2>
+        {action && <div className="ml-auto">{action}</div>}
       </div>
       {children}
     </section>

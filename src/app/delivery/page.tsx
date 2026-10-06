@@ -35,7 +35,7 @@ export default async function DeliveryPage() {
           <div className="overflow-hidden rounded-card border border-border bg-white">
             <table className="w-full text-start">
               <caption className="sr-only">{t("info.delivery.feesCaption")}</caption>
-              <thead className="bg-cream/70 text-sm text-muted-text">
+              <thead className="bg-brand-soft/70 text-sm text-muted-text">
                 <tr>
                   <th scope="col" className="px-4 py-3 text-start font-medium sm:px-5">
                     {t("info.delivery.city")}
@@ -61,7 +61,7 @@ export default async function DeliveryPage() {
           </div>
         )}
         {freeFrom !== null && (
-          <p className="font-medium text-forest">{t("info.delivery.freeText", { amount: formatPrice(freeFrom, t) })}</p>
+          <p className="font-medium text-brand-ink">{t("info.delivery.freeText", { amount: formatPrice(freeFrom, t) })}</p>
         )}
         <p className="text-sm text-muted-text">{t("info.delivery.feesNote")}</p>
       </InfoSection>

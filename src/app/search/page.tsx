@@ -1,12 +1,16 @@
 import type { Metadata } from "next"
-import { Search } from "lucide-react"
+import Link from "next/link"
+import { Search, SearchX } from "lucide-react"
 
 import { parseListingParams } from "@/lib/services/catalog"
-import { getProducts, getFilterFacets } from "@/lib/services/catalog-queries"
+import { getCategories, getFilterFacets, getPopularProducts, getProducts } from "@/lib/services/catalog-queries"
 import { getT } from "@/lib/i18n/server"
 import { ProductListing } from "@/components/catalog/product-listing"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { PageHeader } from "@/components/layout/page-header"
+import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryChip } from "@/components/product/category-chip"
+import { Button } from "@/components/ui/button"
 
 // Internal search results are never indexed (thin, endless variations), but
 // their links are followed so the products they list can be discovered.
@@ -36,7 +40,7 @@ export default async function SearchPage({
   if (!q) {
     return (
       <div className="space-y-8 py-6 lg:py-8">
-        <PageHeader title={t("catalog.searchTitle")} />
+        <PageHeader breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]} title={t("catalog.searchTitle")} />
         <EmptyState
           icon={Search}
           title={t("catalog.searchEmptyTitle")}
@@ -50,10 +54,56 @@ export default async function SearchPage({
     getProducts(parsed),
     getFilterFacets({ query: q }),
   ])
+  const breadcrumb = [{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]
+  const filtered =
+    !!parsed.categorySlug || !!parsed.priceBucket || !!parsed.inStockOnly || parsed.minRating != null || !!parsed.onSaleOnly
+
+  // Nothing matches the words themselves (no filter to blame): instead of a
+  // dead end, the shop's categories and its popular picks — real products, so
+  // the next tap still leads somewhere. (With filters on, the listing's own
+  // empty state and filter chips say how to widen the search.)
+  if (result.total === 0 && !filtered) {
+    const [categories, popular] = await Promise.all([getCategories(), getPopularProducts(8)])
+    return (
+      <div className="space-y-10 py-6 lg:py-8">
+        <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
+        <EmptyState
+          icon={SearchX}
+          title={t("catalog.searchNoMatchTitle")}
+          description={t("catalog.searchNoMatchText", { query: q })}
+          action={
+            <Button variant="outline" asChild>
+              <Link href="/shop">{t("cart.continueShopping")}</Link>
+            </Button>
+          }
+        />
+        {categories.length > 0 && (
+          <section aria-labelledby="search-categories-heading" className="space-y-4">
+            <h2 id="search-categories-heading" className="text-xl font-bold tracking-tight text-charcoal">
+              {t("catalog.searchBrowseCategories")}
+            </h2>
+            <div className="flex flex-wrap gap-4">
+              {categories.map((category) => (
+                <CategoryChip key={category.id} category={category} t={t} />
+              ))}
+            </div>
+          </section>
+        )}
+        {popular.length > 0 && (
+          <section aria-labelledby="search-popular-heading" className="space-y-4">
+            <h2 id="search-popular-heading" className="text-xl font-bold tracking-tight text-charcoal">
+              {t("home.popularTitle")}
+            </h2>
+            <ProductGrid products={popular} />
+          </section>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8 py-6 lg:py-8">
-      <PageHeader title={t("catalog.searchResultsFor", { query: q })} />
+      <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
       <ProductListing
         products={result.products}
         total={result.total}

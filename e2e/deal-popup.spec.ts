@@ -84,7 +84,7 @@ test.describe("Homepage deal popup", () => {
     await freshVisit(page)
     await expect(popup(page)).toBeVisible({ timeout: DEAL_POPUP_DELAY_MS + 10_000 })
     await popup(page).getByRole("link").click()
-    await expect(page).toHaveURL(/\/shop\?sale=1/)
+    await expect(page).toHaveURL(/\/deals$/)
     await expect(popup(page)).toBeHidden()
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.nav.deals)
 

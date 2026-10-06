@@ -14,11 +14,11 @@ import { MobileCollapsible } from "@/components/ui/mobile-collapsible"
 async function ProductDetailsSection({ product }: { product: ProductWithCategory }) {
   const t = await getT()
   const stock = getStockStatus(product.stock, t)
-  const icon = <ListChecks aria-hidden className="size-5 text-forest" strokeWidth={1.75} />
+  const icon = <ListChecks aria-hidden className="size-5 text-brand" strokeWidth={1.75} />
 
   return (
-    <section className="space-y-4 rounded-card border border-border/70 bg-card p-5 shadow-soft max-lg:space-y-0 max-lg:p-0 lg:p-6">
-      <h2 className="flex items-center gap-2.5 font-display text-xl font-semibold text-charcoal max-lg:hidden">
+    <section className="space-y-4 rounded-card border border-border bg-card p-5 shadow-soft max-lg:space-y-0 max-lg:p-0 lg:p-6">
+      <h2 className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-charcoal max-lg:hidden">
         {icon}
         {t("product.details.title")}
       </h2>
@@ -30,7 +30,7 @@ async function ProductDetailsSection({ product }: { product: ProductWithCategory
           <dd>
             <Link
               href={`/category/${product.categorySlug}`}
-              className="text-charcoal underline-offset-4 hover:text-forest hover:underline"
+              className="text-charcoal underline-offset-4 hover:text-brand-ink hover:underline"
             >
               {categoryNameOf(product, t.locale)}
             </Link>

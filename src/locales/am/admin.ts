@@ -249,6 +249,7 @@ export const admin: Dictionary["admin"] = {
     nameAm: "የአማርኛ ስም ያስገቡ።",
     slug: "ስሉግ ያስገቡ።",
     slugFormat: "ትናንሽ የእንግሊዝኛ ፊደላትን፣ ቁጥሮችን እና ሰረዝን ብቻ ይጠቀሙ።",
+    slugLength: "ስሉጉ ከ{max} ቁምፊዎች መብለጥ የለበትም።",
     descriptionEn: "የእንግሊዝኛ መግለጫ ያስገቡ።",
     descriptionAm: "የአማርኛ መግለጫ ያስገቡ።",
     price: "ከ0 የሚበልጥ ዋጋ ያስገቡ።",

@@ -105,8 +105,8 @@ function AccountOrdersContent() {
               className={cn(
                 "rounded-full border px-3 py-1 text-sm transition-colors",
                 statusFilter === f
-                  ? "border-forest bg-forest text-white"
-                  : "border-border text-charcoal hover:bg-sand/30"
+                  ? "border-brand bg-brand-strong text-white"
+                  : "border-border text-charcoal hover:bg-subtle/30"
               )}
             >
               {t(`order.historyFilter.${f}`)}
@@ -132,7 +132,7 @@ function AccountOrdersContent() {
             <Link
               key={order.id}
               href={`/orders/${order.id}`}
-              className="flex flex-col gap-2 rounded-card border border-border bg-card p-4 transition-colors hover:bg-sand/20 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-2 rounded-card border border-border bg-card p-4 transition-colors hover:bg-subtle/20 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <p className="font-medium text-charcoal">{t("account.orders.orderNumber", { number: order.order_number })}</p>

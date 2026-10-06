@@ -17,7 +17,12 @@ const badgeVariants = cva(
           "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
         ghost:
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "text-brand-ink underline-offset-4 hover:underline",
+        // Storefront badges (the mockup's palette row).
+        sale: "rounded-md bg-sale font-bold text-white",
+        new: "rounded-md bg-success font-semibold text-white",
+        soft: "rounded-md bg-brand-soft font-semibold text-brand-ink",
+        limited: "rounded-md bg-brand-strong font-semibold text-white",
       },
     },
     defaultVariants: {

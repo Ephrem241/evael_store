@@ -48,7 +48,7 @@ function AdminDashboardContent() {
         <section className="space-y-3 rounded-card border border-border bg-card p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-medium text-charcoal">{t("admin.dashboard.lowStock")}</h2>
-            <Link href="/admin/products" className="text-sm text-forest hover:underline">
+            <Link href="/admin/products" className="text-sm text-brand-ink hover:underline">
               {t("admin.dashboard.manageProducts")}
             </Link>
           </div>
@@ -69,7 +69,7 @@ function AdminDashboardContent() {
         <section className="space-y-3 rounded-card border border-border bg-card p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-medium text-charcoal">{t("admin.dashboard.recentOrders")}</h2>
-            <Link href="/admin/orders" className="text-sm text-forest hover:underline">
+            <Link href="/admin/orders" className="text-sm text-brand-ink hover:underline">
               {t("admin.dashboard.viewAllOrders")}
             </Link>
           </div>
@@ -81,7 +81,7 @@ function AdminDashboardContent() {
                 <li key={o.id}>
                   <Link
                     href={`/admin/orders/${o.id}`}
-                    className="flex items-center justify-between text-sm hover:text-forest"
+                    className="flex items-center justify-between text-sm hover:text-brand-ink"
                   >
                     <span className="text-charcoal">
                       #{o.order_number} · {formatOrderDate(o.created_at, t.locale)}

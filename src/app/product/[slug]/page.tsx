@@ -10,13 +10,16 @@ import Link from "next/link"
 import { AlignLeft } from "lucide-react"
 
 import { getStockStatus, isOnSale } from "@/lib/services/catalog"
-import { getProductBySlug } from "@/lib/services/catalog-queries"
+import { getProductBySlug, getProducts } from "@/lib/services/catalog-queries"
 import { Breadcrumb } from "@/components/navigation/breadcrumb"
 import { ProductGallery } from "@/components/product/product-gallery"
 import { ProductPurchaseActions } from "@/components/product/product-purchase-actions"
 import { ProductDetailsSection } from "@/components/product/product-details-section"
 import { ProductDeliverySection } from "@/components/product/product-delivery-section"
 import { ProductReviewsSection } from "@/components/product/product-reviews-section"
+import { ProductPaymentSection } from "@/components/product/product-payment-section"
+import { ProductCard } from "@/components/product/product-card"
+import { RecentlyViewed } from "@/components/product/recently-viewed"
 import { MobileCollapsible } from "@/components/ui/mobile-collapsible"
 import { Price } from "@/components/product/price"
 import { DiscountBadge } from "@/components/product/discount-badge"
@@ -42,11 +45,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 // resolve, permanently locking in the wrong status (same fix applied to
 // category/[slug] last phase).
 //
+// Desktop: the gallery on the left, everything needed to decide and buy on the
+// right; then three cards (details, delivery, payment), the reviews, more
+// from the same category and what this shopper viewed before.
+//
 // Phones and tablets (below `lg`): the photos first (edge to edge on phones),
 // then the price, the name, stock and quantity; Add to cart and Buy now sit in
 // a bar pinned to the bottom (ProductPurchaseActions); the description,
-// details, delivery and reviews are sections that fold away. Desktop keeps
-// the two-column layout exactly as it was.
+// details, delivery, payment and reviews are sections that fold away.
 export default async function ProductPage({
   params,
 }: {
@@ -55,6 +61,11 @@ export default async function ProductPage({
   const { slug } = await params
   const [product, t] = await Promise.all([getProductBySlug(slug), getT()])
   if (!product) notFound()
+
+  // More from the same category, this product left out.
+  const related = (await getProducts({ categorySlug: product.categorySlug, pageSize: 9 })).products
+    .filter((p) => p.id !== product.id)
+    .slice(0, 8)
 
   const hasDiscount = isOnSale(product)
   const stock = getStockStatus(product.stock, t)
@@ -67,7 +78,7 @@ export default async function ProductPage({
     // reviews — its 32px padding plus the 40px `space-y` gap the reviews got
     // while the (desktop-hidden) phone buy bar was rendered after them. The
     // bar now lives in ProductPurchaseActions; this keeps desktop identical.
-    <div className="space-y-4 py-4 lg:space-y-10 lg:py-8 lg:pb-18">
+    <div className="space-y-4 py-4 lg:space-y-12 lg:py-8 lg:pb-18">
       <JsonLd
         nodes={[
           productJsonLd({
@@ -111,45 +122,76 @@ export default async function ProductPage({
             <Link
               href={`/category/${product.categorySlug}`}
               // Phones: padding makes a 47px tap area; the negative margins keep the layout as it was.
-              className="text-xs font-semibold tracking-[0.16em] text-forest uppercase underline-offset-4 hover:underline max-lg:-my-4 max-lg:inline-block max-lg:py-4"
+              className="text-xs font-semibold tracking-[0.16em] text-brand-ink uppercase underline-offset-4 hover:underline max-lg:-my-4 max-lg:inline-block max-lg:py-4"
             >
               {categoryName}
             </Link>
-            <h1 className="font-display text-3xl leading-tight font-semibold text-charcoal sm:text-4xl">{name}</h1>
+            <h1 className="font-display text-3xl leading-tight font-bold tracking-tight text-charcoal sm:text-4xl">{name}</h1>
             {product.rating != null && <Rating value={product.rating} t={t} />}
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 max-lg:order-first">
-            <Price amount={product.price} t={t} className="text-3xl" />
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 max-lg:order-first lg:border-y lg:border-border lg:py-5">
+            <Price amount={product.price} t={t} className="text-3xl lg:text-[2rem]" />
             {hasDiscount && <Price amount={product.compare_at_price!} t={t} variant="compare" className="text-base" />}
             <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
           </div>
 
-          <p className={`flex items-center gap-2 text-sm font-medium ${stock.className}`}>
+          <p
+            className={`flex w-fit items-center gap-2 rounded-full bg-current/8 px-3 py-1 text-sm font-semibold ${stock.className}`}
+          >
             <span aria-hidden className="size-2 rounded-full bg-current" />
             {stock.label}
           </p>
 
-          <div className="max-lg:order-last max-lg:rounded-card max-lg:border max-lg:border-border/70 max-lg:bg-card max-lg:shadow-soft">
+          {/* Buying comes before the description: on desktop the buttons stay
+              in view however long the text is (below `lg` the description is
+              moved to the end anyway, and the buttons live in the bottom bar). */}
+          <ProductPurchaseActions product={product} name={name} />
+          <div className="max-lg:order-last max-lg:rounded-card max-lg:border max-lg:border-border max-lg:bg-card max-lg:shadow-soft lg:border-t lg:border-border lg:pt-6">
+            {/* The desktop heading; below `lg` MobileCollapsible draws its own toggle. */}
+            <h2 className="mb-2 text-base font-bold tracking-tight text-charcoal max-lg:hidden">
+              {t("product.description.title")}
+            </h2>
             <MobileCollapsible
               id="product-description"
               label={t("product.description.title")}
-              icon={<AlignLeft aria-hidden className="size-5 text-forest" strokeWidth={1.75} />}
+              icon={<AlignLeft aria-hidden className="size-5 text-brand" strokeWidth={1.75} />}
               defaultOpen
               className="max-lg:px-5 max-lg:pb-5"
             >
               <p className="leading-relaxed text-muted-text">{descriptionOf(product, t.locale)}</p>
             </MobileCollapsible>
           </div>
-          <ProductPurchaseActions product={product} />
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3 lg:gap-5">
         <ProductDetailsSection product={product} />
         <ProductDeliverySection />
+        <ProductPaymentSection />
       </div>
       <ProductReviewsSection product={product} />
+
+      {related.length > 0 && (
+        <section aria-labelledby="related-heading" className="space-y-5 max-lg:pt-4">
+          <h2 id="related-heading" className="font-display text-2xl font-bold tracking-tight text-charcoal">
+            {t("product.related", { category: categoryName })}
+          </h2>
+          <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 lg:scroll-px-0 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-5 lg:overflow-visible lg:px-0 [&>*]:shrink-0 [&>*]:snap-start max-lg:[&>*]:w-[46%] sm:max-lg:[&>*]:w-[31%] lg:[&>*:nth-child(n+5)]:hidden">
+            {related.map((item) => (
+              <ProductCard
+                key={item.id}
+                product={item}
+                t={t}
+                compact
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 31vw, 46vw"
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <RecentlyViewed productId={product.id} />
     </div>
   )
 }

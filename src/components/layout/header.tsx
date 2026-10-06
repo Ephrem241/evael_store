@@ -32,16 +32,16 @@ async function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-30 hidden border-b border-border bg-background/95 backdrop-blur-md lg:block">
-      <Container className="flex h-[76px] items-center gap-8">
+    <header className="sticky top-0 z-30 hidden border-b border-border bg-card/95 backdrop-blur-md lg:block">
+      <Container className="flex h-[76px] items-center gap-10">
         <Logo />
-        <SearchBar className="mx-auto w-full max-w-xl" />
+        <SearchBar size="lg" className="mx-auto w-full max-w-2xl" />
         <div className="flex items-center gap-1">
           <LanguageSwitcher className="mr-3" />
           <AccountButton variant="stacked" />
           <Link
             href="/account/favorites"
-            className="flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-forest focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
             <span className="text-[11px] leading-none font-medium">{t("nav.wishlist")}</span>
@@ -49,7 +49,7 @@ async function Header() {
           <CartButton variant="stacked" />
         </div>
       </Container>
-      <div className="border-t border-border/70">
+      <div className="border-t border-border/70 bg-card">
         <Container>
           <DesktopNav links={links} />
         </Container>

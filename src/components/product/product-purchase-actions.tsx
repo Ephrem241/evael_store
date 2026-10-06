@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { ShoppingCart } from "lucide-react"
 
 import { useT } from "@/lib/i18n/provider"
 import type { ProductWithCategory } from "@/lib/services/catalog"
@@ -10,9 +11,10 @@ import { useCartStore } from "@/lib/store/cart"
 import { Button } from "@/components/ui/button"
 import { QuantitySelector } from "@/components/product/quantity-selector"
 import { FavoriteButton } from "@/components/product/favorite-button"
+import { ShareButton } from "@/components/product/share-button"
 import { MobilePurchaseBar } from "@/components/product/mobile-purchase-bar"
 
-function ProductPurchaseActions({ product }: { product: ProductWithCategory }) {
+function ProductPurchaseActions({ product, name }: { product: ProductWithCategory; name: string }) {
   const t = useT()
   const [quantity, setQuantity] = useState(1)
   const router = useRouter()
@@ -35,17 +37,21 @@ function ProductPurchaseActions({ product }: { product: ProductWithCategory }) {
           bottom of the screen instead (fixed, so it takes no room here; it
           comes first so that it is never the "last child" `space-y` spaces). */}
       <MobilePurchaseBar outOfStock={outOfStock} onAddToCart={handleAddToCart} onBuyNow={handleBuyNow} />
-      {/* Quantity and the heart share a row; the two buy buttons get a row of
-          their own, in equal columns that may shrink (min-w-0) — three things
-          side by side did not fit a 320px screen. */}
+      {/* Quantity, the heart and Share share a row; the two buy buttons get a
+          row of their own, in equal columns that may shrink (min-w-0) — all
+          of it side by side did not fit a 320px screen. */}
       <div className="flex items-center justify-between gap-3">
         {!outOfStock && (
           <QuantitySelector value={quantity} onChange={setQuantity} max={product.stock} className="h-12" />
         )}
-        <FavoriteButton productId={product.id} className="ml-auto size-12 shrink-0 border border-border shadow-none" />
+        <div className="ml-auto flex items-center gap-2">
+          <FavoriteButton productId={product.id} className="size-12 shrink-0 border border-border shadow-none" />
+          <ShareButton title={name} />
+        </div>
       </div>
       <div className="hidden grid-cols-2 gap-2.5 lg:grid">
         <Button size="lg" className="min-w-0 px-3" disabled={outOfStock} onClick={handleAddToCart}>
+          {!outOfStock && <ShoppingCart aria-hidden />}
           {outOfStock ? t("product.stock.out") : t("product.addToCart")}
         </Button>
         <Button size="lg" variant="outline" className="min-w-0 px-3" disabled={outOfStock} onClick={handleBuyNow}>

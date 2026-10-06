@@ -47,7 +47,7 @@ function MobileCollapsible({
           aria-controls={id}
           onClick={() => setOpen((value) => !value)}
           className={cn(
-            "flex min-h-14 w-full items-center gap-2.5 px-5 text-left font-display text-lg font-semibold text-charcoal outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset active:bg-cream/60",
+            "flex min-h-14 w-full items-center gap-2.5 px-5 text-left font-display text-lg font-bold tracking-tight text-charcoal outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset active:bg-subtle/60",
             triggerClassName
           )}
         >

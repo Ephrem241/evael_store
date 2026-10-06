@@ -8,29 +8,33 @@
     --font-heading: var(--font-sans), var(--font-amharic);
     --font-sans: var(--font-sans), var(--font-amharic);
     --font-amharic: var(--font-amharic);
-    /* Editorial serif for storefront headings. Latin glyphs come from the
-       first family; Amharic falls through to the (single) Ethiopic font, which
-       the headings' semibold weight suits well. */
-    --font-display: var(--font-display-latin), var(--font-amharic), Georgia, serif;
-    --color-forest: var(--color-forest);
-    --color-forest-dark: var(--color-forest-dark);
-    --color-ivory: var(--color-ivory);
-    --color-cream: var(--color-cream);
-    --color-sand: var(--color-sand);
-    --color-gold: var(--color-gold);
-    --color-gold-deep: var(--color-gold-deep);
-    --color-copper: var(--color-copper);
-    --color-charcoal: var(--color-charcoal);
-    --color-muted-text: var(--color-muted-text);
-    --color-success: var(--color-success);
-    --color-warning: var(--color-warning);
-    --color-warning-text: var(--color-warning-text);
-    --color-error: var(--color-error);
-    --radius-card: 1.25rem;
-    --radius-image: 1.125rem;
-    --radius-hero: 1.75rem;
-    --shadow-soft: 0 1px 2px rgb(23 23 23 / 0.04), 0 10px 28px -12px rgb(23 23 23 / 0.14);
-    --shadow-lift: 0 2px 4px rgb(23 23 23 / 0.05), 0 18px 40px -16px rgb(23 23 23 / 0.22);
+    /* Storefront headings: the same Inter as the body, set bold and tight.
+       Amharic falls through to the Ethiopic font. */
+    --font-display: var(--font-sans), var(--font-amharic), system-ui, sans-serif;
+    --color-surface: var(--evael-surface);
+    --color-subtle: var(--evael-subtle);
+    --color-charcoal: var(--evael-text);
+    --color-muted-text: var(--evael-text-secondary);
+    --color-brand: var(--evael-primary);
+    --color-brand-strong: var(--evael-primary-strong);
+    --color-brand-deep: var(--evael-primary-dark);
+    --color-brand-ink: var(--evael-primary-ink);
+    --color-brand-soft: var(--evael-primary-soft);
+    --color-sale: var(--evael-sale);
+    --color-star: var(--evael-star);
+    --color-footer: var(--evael-footer);
+    --color-success: var(--evael-success);
+    --color-warning: var(--evael-warning);
+    --color-warning-text: var(--evael-warning-text);
+    --color-error: var(--evael-error);
+    --radius-card: 1rem;
+    --radius-image: 0.75rem;
+    --radius-hero: 1.5rem;
+    --shadow-soft: 0 1px 2px rgb(23 23 23 / 0.04), 0 6px 18px -10px rgb(23 23 23 / 0.12);
+    --shadow-lift: 0 2px 6px rgb(23 23 23 / 0.05), 0 18px 36px -16px rgb(23 23 23 / 0.2);
+    --animate-fade-up: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    --animate-pop: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --animate-shimmer: shimmer 1.6s ease-in-out infinite;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -69,61 +73,89 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    @keyframes fade-up {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.25); }
+        100% { transform: scale(1); }
+    }
+    @keyframes shimmer {
+        0% { background-position: 100% 0; }
+        100% { background-position: -100% 0; }
+    }
 }
 
 :root {
-    /* Evael Store brand palette. Forest is the brand colour; ivory is the
-       dominant surface; cream and sand are secondary surfaces; gold is a
-       small accent — it is used on dark forest surfaces and for star ratings,
-       never as text on ivory (too little contrast). */
-    --color-forest: #123C35;
-    --color-forest-dark: #092A25;
-    --color-ivory: #FAF7F0;
-    --color-cream: #F3ECE2;
-    --color-sand: #E3D2BD;
-    --color-gold: #C9A15B;
-    --color-gold-deep: #8A6A2F; /* gold for small text on light surfaces (the logo's "STORE"): 4.7:1 on ivory */
-    --color-copper: #D4894A; /* the deal popup's warm button: forest-dark text on it is 5.5:1 */
-    --color-charcoal: #171717;
-    --color-muted-text: #6B665F; /* 4.85:1 on the darkest surface it sits on (WCAG AA) */
-    --color-success: #267A55;
-    --color-warning: #B7791F; /* icons, fills and tints */
-    --color-warning-text: #8F5F0F; /* text on light surfaces, 4.6:1+ (the amber above is only 3.1:1) */
-    --color-error: #B42318;
+    /* Evael Store palette. Every colour in the app comes from here.
+       Orange guides the eye to actions; neutrals do most of the work
+       (roughly 70% neutral surfaces, 20% dark type, 10% accent).
+
+       Contrast (WCAG AA, checked by the e2e axe audit):
+       - primary (#E86A33) is 3.2:1 with white. It is for icons, rings,
+         underlines, progress bars, the logo and display-size text only.
+       - primary-strong (#C94F20) carries white text: buttons, the
+         announcement bar, badges (4.5:1).
+       - primary-ink is orange TEXT on any light surface, tinted ones
+         included (4.6:1 on primary-soft, 5.1:1 on white).
+       - text-secondary, success and sale are the brief's #6B7280, #16845B
+         and #DC3A32 darkened a few percent, so they keep 4.5:1 on the soft
+         and subtle tints too (the brief's values drop to ~4.3:1 there). */
+    --evael-background: #FAFAF7;
+    --evael-surface: #FFFFFF;
+    --evael-subtle: #F3F2EE; /* neutral secondary surface: hovers, skeletons, chips */
+    --evael-text: #171717;
+    --evael-text-secondary: #646B78;
+    --evael-primary: #E86A33;
+    --evael-primary-strong: #C94F20;
+    --evael-primary-dark: #A9421A; /* hover/pressed for primary-strong */
+    --evael-primary-ink: #BA4A1C;
+    --evael-primary-soft: #FFF1E8;
+    --evael-success: #157A54;
+    --evael-sale: #D3352D;
+    --evael-star: #F59E0B;
+    --evael-warning: #B7791F; /* icons, fills and tints */
+    --evael-warning-text: #8F5F0F; /* text on light surfaces, 4.6:1+ */
+    --evael-error: #B42318;
+    --evael-footer: #181818;
+    --evael-border: #E8E6E1;
 
     /* semantic tokens consumed by shadcn components */
-    --background: var(--color-ivory);
-    --foreground: var(--color-charcoal);
-    --card: #FFFFFF;
-    --card-foreground: var(--color-charcoal);
-    --popover: #FFFFFF;
-    --popover-foreground: var(--color-charcoal);
-    --primary: var(--color-forest);
+    --background: var(--evael-background);
+    --foreground: var(--evael-text);
+    --card: var(--evael-surface);
+    --card-foreground: var(--evael-text);
+    --popover: var(--evael-surface);
+    --popover-foreground: var(--evael-text);
+    --primary: var(--evael-primary-strong);
     --primary-foreground: #FFFFFF;
-    --secondary: var(--color-cream);
-    --secondary-foreground: var(--color-charcoal);
-    --muted: var(--color-cream);
-    --muted-foreground: var(--color-muted-text);
-    --accent: var(--color-cream);
-    --accent-foreground: var(--color-charcoal);
-    --destructive: var(--color-error);
-    --border: #E5DED4;
-    --input: #8C867C; /* form-control borders + switch track: 3:1+ (WCAG 1.4.11); --border stays light */
-    --ring: var(--color-forest);
+    --secondary: var(--evael-subtle);
+    --secondary-foreground: var(--evael-text);
+    --muted: var(--evael-subtle);
+    --muted-foreground: var(--evael-text-secondary);
+    --accent: var(--evael-subtle);
+    --accent-foreground: var(--evael-text);
+    --destructive: var(--evael-error);
+    --border: var(--evael-border);
+    --input: #8A8F98; /* form-control borders + switch track: 3:1+ (WCAG 1.4.11); --border stays light */
+    --ring: var(--evael-primary);
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --radius: 0.875rem;
-    --sidebar: #FFFFFF;
-    --sidebar-foreground: var(--color-charcoal);
-    --sidebar-primary: var(--color-forest);
+    --radius: 0.75rem;
+    --sidebar: var(--evael-surface);
+    --sidebar-foreground: var(--evael-text);
+    --sidebar-primary: var(--evael-primary-strong);
     --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: var(--color-cream);
-    --sidebar-accent-foreground: var(--color-charcoal);
-    --sidebar-border: #E5DED4;
-    --sidebar-ring: var(--color-forest);
+    --sidebar-accent: var(--evael-primary-soft);
+    --sidebar-accent-foreground: var(--evael-text);
+    --sidebar-border: var(--evael-border);
+    --sidebar-ring: var(--evael-primary);
 }
 
 .dark {

@@ -2,9 +2,15 @@
 export const cart = {
   title: "Your Cart",
   subtitle: "Review your items before checkout.",
-  emptyTitle: "Your cart is waiting.",
-  emptyText: "Add something you love to get started.",
+  emptyTitle: "Your cart is empty.",
+  emptyText: "Let's find something you'll love.",
   startShopping: "Start shopping",
+  continueShopping: "Continue shopping",
+  // "Save for later": the item moves from the cart to the wishlist.
+  moveToWishlist: "Move to wishlist",
+  moveItemToWishlist: "Move {name} to your wishlist",
+  movedToWishlist: "Moved to your wishlist.",
+  viewWishlist: "View wishlist",
   unavailable: "This item is no longer available.",
   remove: "Remove",
   removeItem: "Remove {name} from cart",
@@ -21,6 +27,8 @@ export const cart = {
     // {amount} is an already-formatted price. "Over" means strictly above it.
     freeDeliveryOffer: "Free delivery on orders over {amount}.",
     freeDeliveryUnlocked: "You've unlocked free delivery!",
+    // {amount} is how much more the cart needs, already formatted.
+    freeDeliveryAway: "You're {amount} away from free delivery.",
   },
   syncFailed: "Couldn't sync your cart. Your changes are saved on this device.",
 }
@@ -48,6 +56,10 @@ export const checkout = {
   },
   review: {
     title: "Order review",
+    editCart: "Edit cart",
+    // Under the Place order button. Only what is true: the connection is
+    // encrypted, and payment happens in cash on delivery.
+    trust: "Your details are sent securely. You pay in cash when your order arrives.",
     qty: "Qty {count}",
     insufficientStock: "Not enough stock for {names}. Update your cart to continue.",
     unavailable: "Some items in your cart are no longer available. Remove them from your cart to continue.",

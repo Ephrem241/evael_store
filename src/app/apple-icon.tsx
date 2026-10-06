@@ -19,10 +19,16 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: BRAND_COLORS.forest,
+          background: BRAND_COLORS.primary,
         }}
       >
-        <BrandMarkImage height={118} />
+        <BrandMarkImage
+          height={118}
+          body={BRAND_COLORS.white}
+          rim={BRAND_COLORS.primarySoft}
+          handle={BRAND_COLORS.white}
+          letter={BRAND_COLORS.primaryStrong}
+        />
       </div>
     ),
     { ...size }

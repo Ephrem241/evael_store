@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { useFormContext } from "react-hook-form"
-import { AlertTriangle } from "lucide-react"
+import { AlertTriangle, ShieldCheck } from "lucide-react"
 
 import { nameOf } from "@/lib/i18n/content"
 import { useT } from "@/lib/i18n/provider"
@@ -67,7 +68,18 @@ function CheckoutReviewSection({
     insufficientStock.length > 0
 
   return (
-    <CheckoutStep number={3} title={t("checkout.review.title")}>
+    <CheckoutStep
+      number={3}
+      title={t("checkout.review.title")}
+      action={
+        <Link
+          href="/cart"
+          className="rounded-md text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
+        >
+          {t("checkout.review.editCart")}
+        </Link>
+      }
+    >
       <div>
         {resolvedLines.map(({ line, product }) => (
           <CheckoutOrderItem key={product.id} line={line} product={product} />
@@ -100,6 +112,10 @@ function CheckoutReviewSection({
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting || hasBlockingIssue}>
         {isSubmitting ? t("checkout.review.placing") : t("checkout.review.place")}
       </Button>
+      <p className="flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-muted-text">
+        <ShieldCheck aria-hidden className="mt-px size-4 shrink-0 text-success" />
+        {t("checkout.review.trust")}
+      </p>
     </CheckoutStep>
   )
 }

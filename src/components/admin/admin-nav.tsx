@@ -55,13 +55,13 @@ function AdminNav() {
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex items-center gap-2 rounded-xl border border-border bg-card p-3 text-sm transition-colors lg:border-transparent lg:bg-transparent lg:p-2",
-              active ? "bg-cream font-medium text-forest" : "text-charcoal hover:bg-cream/70"
+              active ? "bg-brand-soft font-medium text-brand-ink" : "text-charcoal hover:bg-subtle/70"
             )}
           >
             <Icon aria-hidden className="size-4" />
             {t(item.label)}
             {item.href === "/admin/messages" && !!unread && (
-              <span className="ml-auto rounded-full bg-forest px-2 py-0.5 text-xs font-medium text-white">
+              <span className="ml-auto rounded-full bg-brand-strong px-2 py-0.5 text-xs font-medium text-white">
                 <span aria-hidden>{unread}</span>
                 <span className="sr-only"> ({t.plural("admin.messages.unreadCount", unread)})</span>
               </span>

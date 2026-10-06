@@ -35,13 +35,13 @@ export default async function LoginPage({
             {t("auth.login.noAccount")}{" "}
             <Link
               href={`/register?redirect=${encodeURIComponent(redirectTo)}`}
-              className="text-forest underline underline-offset-4 hover:decoration-2"
+              className="text-brand-ink underline underline-offset-4 hover:decoration-2"
             >
               {t("auth.login.create")}
             </Link>
           </p>
           <p>
-            <Link href="/forgot-password" className="text-forest underline underline-offset-4 hover:decoration-2">
+            <Link href="/forgot-password" className="text-brand-ink underline underline-offset-4 hover:decoration-2">
               {t("auth.login.forgot")}
             </Link>
           </p>

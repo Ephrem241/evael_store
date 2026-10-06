@@ -26,7 +26,7 @@ function AccountButton({
       <Link
         href={href}
         className={cn(
-          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-forest focus-visible:ring-3 focus-visible:ring-ring/50",
+          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
           className
         )}
       >

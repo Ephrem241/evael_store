@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Banknote } from "lucide-react"
+import { Banknote, Mail } from "lucide-react"
 import { cn } from "cn"
 
 import { BRAND_NAME } from "@/lib/brand"
@@ -43,10 +43,10 @@ const SHOP_LINKS = 5
 const linkClass =
   "rounded text-sm text-white/70 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline max-lg:flex max-lg:min-h-11 max-lg:items-center"
 const listClass = "space-y-2 max-lg:space-y-0 max-lg:pb-2"
-const headingClass = "text-xs font-semibold tracking-[0.16em] text-gold uppercase"
+const headingClass = "text-xs font-semibold tracking-[0.14em] text-white uppercase"
 // The phone toggle row, styled like the desktop column heading.
 const triggerClass =
-  "min-h-12 px-0 font-sans text-xs tracking-[0.16em] text-gold uppercase active:bg-white/5 focus-visible:ring-gold/50"
+  "min-h-12 px-0 font-sans text-xs tracking-[0.14em] text-white uppercase active:bg-white/5 focus-visible:ring-brand/50"
 
 // One link column. From `lg` up: a heading and the list, as always. Below it:
 // a row that folds the list away (closed by default), so the footer is a few
@@ -65,9 +65,11 @@ function FooterColumn({ id, title, children }: { id: string; title: string; chil
   )
 }
 
-// The closing band: dark forest, white type, gold accents. The Shop column
-// lists the shop's own categories (from the database), so it can never point
-// at one that doesn't exist.
+// The closing band: a warm near-black, white type, orange accents. It opens
+// with the newsletter (so every page ends on it, the homepage included). The
+// Shop column lists the shop's own categories (from the database), so it can
+// never point at one that doesn't exist. No social column: the store has no
+// social accounts configured yet, and a dead icon would be worse than none.
 async function Footer() {
   const [t, categories] = await Promise.all([getT(), getNavCategories()])
 
@@ -75,9 +77,26 @@ async function Footer() {
     // Bottom padding on phones: room for the fixed bottom bar (BottomNav, or
     // the product page's buy bar) — 4rem plus the iPhone home-indicator inset
     // it grows by, so the language switcher in the last row stays clear of it.
-    <footer className="mt-8 bg-forest-dark pb-[calc(4rem+env(safe-area-inset-bottom))] text-white/80 lg:pb-0">
-      <Container className="grid py-6 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.6fr] lg:gap-8 lg:py-8">
-        <div className="space-y-3 max-lg:space-y-0 max-lg:pb-4">
+    <footer className="mt-12 bg-footer pb-[calc(4rem+env(safe-area-inset-bottom))] text-white/80 lg:mt-16 lg:pb-0">
+      <div className="border-b border-white/10">
+        <Container className="grid gap-5 py-8 lg:grid-cols-[1fr_minmax(0,28rem)] lg:items-center lg:gap-12 lg:py-10">
+          <div className="flex items-start gap-4">
+            <span className="hidden size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand sm:flex">
+              <Mail aria-hidden className="size-5" />
+            </span>
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-bold tracking-tight text-white lg:text-2xl">{t("home.newsletter.title")}</h2>
+              <p className="max-w-lg text-sm leading-relaxed text-white/70">
+                {t("home.newsletter.text", { brand: BRAND_NAME })}
+              </p>
+            </div>
+          </div>
+          <Newsletter />
+        </Container>
+      </div>
+
+      <Container className="grid py-6 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-10 lg:py-12">
+        <div className="space-y-4 max-lg:space-y-0 max-lg:pb-4">
           <Logo variant="light" />
           {/* Phones show the logo alone: the tagline is the first thing cut for height. */}
           <p className="max-w-xs text-sm leading-relaxed text-white/70 max-lg:hidden">{t("footer.tagline")}</p>
@@ -94,6 +113,11 @@ async function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/deals" className={linkClass}>
+                  {t("nav.deals")}
+                </Link>
+              </li>
               <li>
                 <Link href="/categories" className={linkClass}>
                   {t("footer.allCategories")}
@@ -116,25 +140,17 @@ async function Footer() {
             </ul>
           </FooterColumn>
         ))}
-
-        <div className="space-y-3 max-lg:pt-5">
-          <h2 className={headingClass}>{t("home.newsletter.title")}</h2>
-          <p className="line-clamp-2 text-sm leading-relaxed text-white/70">
-            {t("home.newsletter.text", { brand: BRAND_NAME })}
-          </p>
-          <Newsletter />
-        </div>
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
+        <Container className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-5">
             <p className="text-xs text-white/60">
               {t("footer.rights", { year: new Date().getFullYear(), brand: BRAND_NAME })}
             </p>
             {/* Only what checkout really takes — see the homepage's payment strip. */}
             <p className="flex items-center gap-1.5 text-xs text-white/60">
-              <Banknote aria-hidden className="size-3.5 text-gold" />
+              <Banknote aria-hidden className="size-3.5 text-brand" />
               {t("home.payments.weAccept", { methods: t("home.payments.cod") })}
             </p>
           </div>

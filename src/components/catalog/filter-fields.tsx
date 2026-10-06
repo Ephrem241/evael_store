@@ -31,7 +31,7 @@ function FilterFields({
             <input
               type="radio"
               name="category"
-              className="accent-forest"
+              className="accent-brand"
               checked={!filters.categorySlug}
               onChange={() => onChange({ ...filters, categorySlug: undefined })}
             />
@@ -46,7 +46,7 @@ function FilterFields({
                 <input
                   type="radio"
                   name="category"
-                  className="accent-forest"
+                  className="accent-brand"
                   checked={filters.categorySlug === c.slug}
                   onChange={() => onChange({ ...filters, categorySlug: c.slug })}
                 />
@@ -64,7 +64,7 @@ function FilterFields({
           <input
             type="radio"
             name="price"
-            className="accent-forest"
+            className="accent-brand"
             checked={!filters.priceBucket}
             onChange={() => onChange({ ...filters, priceBucket: undefined })}
           />
@@ -79,7 +79,7 @@ function FilterFields({
               <input
                 type="radio"
                 name="price"
-                className="accent-forest"
+                className="accent-brand"
                 checked={filters.priceBucket === b.id}
                 onChange={() => onChange({ ...filters, priceBucket: b.id })}
               />
@@ -96,7 +96,7 @@ function FilterFields({
           <span className="flex items-center gap-2">
             <input
               type="checkbox"
-              className="accent-forest"
+              className="accent-brand"
               checked={!!filters.inStockOnly}
               onChange={(e) => onChange({ ...filters, inStockOnly: e.target.checked })}
             />
@@ -112,7 +112,7 @@ function FilterFields({
           <input
             type="radio"
             name="rating"
-            className="accent-forest"
+            className="accent-brand"
             checked={filters.minRating == null}
             onChange={() => onChange({ ...filters, minRating: undefined })}
           />
@@ -129,7 +129,7 @@ function FilterFields({
                 <input
                   type="radio"
                   name="rating"
-                  className="accent-forest"
+                  className="accent-brand"
                   checked={filters.minRating === min}
                   onChange={() => onChange({ ...filters, minRating: min })}
                 />
@@ -147,7 +147,7 @@ function FilterFields({
           <span className="flex items-center gap-2">
             <input
               type="checkbox"
-              className="accent-forest"
+              className="accent-brand"
               checked={!!filters.onSaleOnly}
               onChange={(e) => onChange({ ...filters, onSaleOnly: e.target.checked })}
             />

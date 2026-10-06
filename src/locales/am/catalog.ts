@@ -9,6 +9,9 @@ export const catalog: Dictionary["catalog"] = {
   searchEmptyTitle: "ካታሎጋችንን ይፈልጉ",
   searchEmptyText: "ለመጀመር ከላይ የምርት ስም ይተይቡ።",
   searchResultsFor: "የ\"{query}\" የፍለጋ ውጤቶች",
+  searchNoMatchTitle: "የሚፈልጉትን አላገኙም?",
+  searchBrowseCategories: "በምድብ ያስሱ",
+  searchNoMatchText: "ከ“{query}” ጋር የሚዛመድ ነገር የለም። አጻጻፉን ያረጋግጡ፣ አጠር ያለ ቃል ይሞክሩ፣ ወይም ከታች ያስሱ።",
   categoryNotFound: "ምድቡ አልተገኘም።",
   categoryNotFoundText: "ይህ ምድብ ተወግዶ ወይም ስሙ ተቀይሮ ሊሆን ይችላል።",
   productNotFound: "ምርቱ አልተገኘም።",
@@ -33,6 +36,8 @@ export const catalog: Dictionary["catalog"] = {
     priceUnder: "ከ{amount} በታች",
     priceRange: "{min} – {max}",
     priceOver: "{amount} እና በላይ",
+    active: "የተተገበሩ ማጣሪያዎች",
+    remove: "ማጣሪያውን አስወግድ፦ {label}",
     activeCount: { one: "{count} ማጣሪያ ተተግብሯል", other: "{count} ማጣሪያዎች ተተግብረዋል" },
   },
   sort: {
@@ -48,6 +53,14 @@ export const catalog: Dictionary["catalog"] = {
   noResults: "ውጤት የለም",
   emptyTitle: "ምርቶች አልተገኙም።",
   emptyText: "ሌላ ፍለጋ ይሞክሩ ወይም ምድቦቻችንን ይመልከቱ።",
+  dealsPage: {
+    featured: "ተመራጭ ቅናሾች",
+    limited: "በውስን ብዛት",
+    onSale: "አሁን በቅናሽ",
+    browseAll: "ቅናሾችን አጣራና ደርድር",
+    emptyTitle: "አሁን ምንም ቅናሽ የለም።",
+    emptyText: "አዳዲስ ቅናሾች በየጊዜው ይጨመራሉ። በቅርቡ ይመለሱ።",
+  },
   pagination: {
     label: "የገጽ ቁጥሮች",
     previous: "ቀዳሚ ገጽ",
@@ -104,4 +117,22 @@ export const product: Dictionary["product"] = {
     empty: "እስካሁን ግምገማ የለም።",
     emptyText: "ይህ ምርት እስካሁን ምንም የደንበኛ ግምገማ የለውም።",
   },
+  quickView: {
+    label: "ፈጣን እይታ",
+    open: "ፈጣን እይታ፦ {name}",
+    details: "ሙሉ ዝርዝሩን ይመልከቱ",
+    unavailable: "ይህ ምርት ከአሁን በኋላ አይገኝም።",
+  },
+  share: {
+    label: "አጋራ",
+    copied: "ማስፈንጠሪያው ተቀድቷል።",
+    failed: "ማስፈንጠሪያውን መቅዳት አልተቻለም።",
+  },
+  payment: {
+    title: "ክፍያ",
+    cod: "ሲደርስ በጥሬ ገንዘብ ክፍያ፦ ትዕዛዝዎ ሲደርስ በጥሬ ገንዘብ ይክፈሉ።",
+    more: "በኢትዮጵያ ባንኮችና በሞባይል ገንዘብ መክፈል በቅርቡ ይጀምራል።",
+  },
+  related: "ተጨማሪ ከ{category}",
+  recentlyViewed: "በቅርቡ የታዩ",
 }

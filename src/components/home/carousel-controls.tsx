@@ -51,7 +51,7 @@ function CarouselControls({ targetId }: { targetId: string }) {
         disabled={!canPrev}
         onClick={() => page(-1)}
         aria-label={t("home.carousel.previous")}
-        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-cream"
+        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-subtle"
       >
         <ChevronLeft />
       </Button>
@@ -62,7 +62,7 @@ function CarouselControls({ targetId }: { targetId: string }) {
         disabled={!canNext}
         onClick={() => page(1)}
         aria-label={t("home.carousel.next")}
-        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-cream"
+        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-subtle"
       >
         <ChevronRight />
       </Button>

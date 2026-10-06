@@ -6,9 +6,9 @@ import { getT } from "@/lib/i18n/server"
 import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/motion/reveal"
 
-// The closing editorial band. The photograph fills the banner (a real, sunlit
-// open-plan room — home, kitchen and living space in one frame) and the copy
-// sits on a soft cream wash at its left, so it stays readable over the picture.
+// The promotional banner: a sunlit open-plan room filling the band, and the
+// copy on a warm off-white wash at its left, so the words never depend on the
+// picture for contrast. Light on purpose — the page's one dark band is the footer.
 async function LifestyleBanner() {
   const t = await getT()
 
@@ -16,16 +16,17 @@ async function LifestyleBanner() {
     <Reveal>
       <section
         aria-labelledby="lifestyle-heading"
-        className="relative isolate overflow-hidden rounded-hero bg-cream lg:min-h-[340px]"
+        className="relative isolate overflow-hidden rounded-hero border border-border bg-brand-soft lg:min-h-[380px]"
       >
-        <div className="relative z-10 flex flex-col items-start px-6 py-9 sm:px-10 lg:min-h-[340px] lg:w-[48%] lg:justify-center lg:py-12 lg:pl-14">
+        <div className="relative z-10 flex flex-col items-start px-6 py-9 sm:px-10 lg:min-h-[380px] lg:w-[46%] lg:justify-center lg:py-12 lg:pl-14">
+          <span aria-hidden className="mb-4 h-1 w-12 rounded-full bg-brand" />
           <h2
             id="lifestyle-heading"
-            className="font-display text-3xl leading-[1.15] font-semibold text-charcoal sm:text-4xl"
+            className="font-display text-3xl leading-[1.1] font-bold tracking-tight text-charcoal sm:text-4xl lg:text-[2.75rem]"
           >
             {t("home.lifestyle.title")}
           </h2>
-          <p className="mt-3 max-w-sm text-base leading-relaxed text-charcoal/75">{t("home.lifestyle.text")}</p>
+          <p className="mt-3 max-w-sm text-base leading-relaxed text-charcoal/80 lg:text-lg">{t("home.lifestyle.text")}</p>
           <Button size="lg" asChild className="mt-7">
             <Link href="/shop">
               {t("home.lifestyle.cta")}
@@ -42,13 +43,14 @@ async function LifestyleBanner() {
             sizes="(min-width: 1024px) 820px, 100vw"
             className="object-cover object-[50%_58%]"
           />
+          {/* Blends the photograph into the soft orange behind the text. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,var(--color-cream)_0%,rgb(243_236_226/0.75)_14%,rgb(243_236_226/0)_44%)] lg:block"
+            className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,var(--color-brand-soft)_0%,color-mix(in_srgb,var(--color-brand-soft),transparent_30%)_16%,transparent_46%)] lg:block"
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-linear-to-b from-cream to-transparent lg:hidden"
+            className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-linear-to-b from-brand-soft to-transparent lg:hidden"
           />
         </div>
       </section>

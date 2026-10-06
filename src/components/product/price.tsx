@@ -28,7 +28,7 @@ function Price({
   }
 
   return (
-    <span className={cn("font-semibold text-forest", className)}>
+    <span className={cn("font-bold tracking-tight text-brand-ink", className)}>
       {formatPrice(amount, t)}
     </span>
   )

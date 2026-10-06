@@ -2,7 +2,7 @@
 
 import { CartSkeleton } from "@/components/feedback/skeletons"
 import Link from "next/link"
-import { Package, ShoppingBag } from "lucide-react"
+import { ArrowLeft, Package, ShoppingBag } from "lucide-react"
 
 import { formatPrice } from "@/lib/currency"
 import { useT } from "@/lib/i18n/provider"
@@ -57,7 +57,7 @@ function CartContents() {
         {unavailableLines.map((line) => (
           <div
             key={line.productId}
-            className="flex items-center gap-4 rounded-card border border-border/70 bg-card p-4 text-sm text-muted-text shadow-soft"
+            className="flex items-center gap-4 rounded-card border border-dashed border-border bg-card p-4 text-sm text-muted-text"
           >
             <Package aria-hidden className="size-8 shrink-0" />
             <p className="flex-1">{t("cart.unavailable")}</p>
@@ -66,9 +66,16 @@ function CartContents() {
             </Button>
           </div>
         ))}
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-1.5 rounded-md pt-2 text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11"
+        >
+          <ArrowLeft aria-hidden className="size-4" />
+          {t("cart.continueShopping")}
+        </Link>
       </div>
 
-      <div className="lg:sticky lg:top-32">
+      <div className="lg:sticky lg:top-36">
         <OrderSummary
           subtotal={subtotal}
           totalSavings={totalSavings}
@@ -83,10 +90,10 @@ function CartContents() {
           cart scrolls. Sticky rather than fixed, so it comes to rest after the
           summary at the end of the cart instead of covering the footer. (The
           summary's own button is hidden there, see ctaDesktopOnly.) */}
-      <div className="sticky bottom-[calc(4rem+1px+env(safe-area-inset-bottom))] z-20 -mx-4 flex items-center gap-4 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+      <div className="sticky bottom-[calc(4rem+1px+env(safe-area-inset-bottom))] z-20 -mx-4 flex items-center gap-4 border-t border-border bg-card/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
         <div className="shrink-0">
           <p className="text-xs text-muted-text">{t("cart.summary.total")}</p>
-          <p className="text-lg leading-tight font-semibold text-forest tabular-nums">{formatPrice(subtotal, t)}</p>
+          <p className="text-lg leading-tight font-bold text-charcoal tabular-nums">{formatPrice(subtotal, t)}</p>
         </div>
         {resolvedLines.length > 0 ? (
           <Button asChild size="lg" className="min-w-0 flex-1">

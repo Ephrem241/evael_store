@@ -1,6 +1,6 @@
-// The Evael Store mark: a gold shopping bag with a forest "E" on its front.
-// One set of shapes, drawn by the header/footer logo (logo.tsx) and by the
-// generated images (icon, apple-icon, opengraph-image) — so they can't drift.
+// The Evael Store mark: a shopping bag with an "E" on its front. It is the
+// app icon, favicon and share image (icon, apple-icon, opengraph-image); the
+// header and footer use the wordmark instead (layout/logo.tsx).
 //
 // All paths share one 40 × 44 viewBox. Draw order: handle (it tucks behind
 // the bag), body, rim, then the "E".
@@ -24,10 +24,12 @@ export const BRAND_MARK = {
 // Hex copies of the palette in globals.css, for the image renderer, which
 // can't read CSS variables. Keep the two in step.
 export const BRAND_COLORS = {
-  forest: "#123C35",
-  forestDark: "#092A25",
-  gold: "#C9A15B",
-  goldRim: "#A9843F",
-  goldDeep: "#8A6A2F",
-  ivory: "#FAF7F0",
+  primary: "#E86A33",
+  primaryStrong: "#C94F20",
+  primarySoft: "#FFF1E8",
+  primaryInk: "#BA4A1C",
+  background: "#FAFAF7",
+  text: "#171717",
+  textSecondary: "#646B78",
+  white: "#FFFFFF",
 } as const

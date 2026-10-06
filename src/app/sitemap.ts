@@ -33,7 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [
     entry("/"),
     entry("/shop"),
-    entry("/shop", {}, { sale: true }), // the Deals page
+    entry("/shop", {}, { sale: true }), // the filterable sale listing
+    entry("/deals"),
     entry("/categories"),
     // The footer's information pages.
     ...["/about", "/contact", "/delivery", "/returns", "/faq", "/privacy", "/terms"].map((path) => entry(path)),

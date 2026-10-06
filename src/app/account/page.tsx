@@ -7,7 +7,7 @@ import { AccountProfileContent } from "@/components/account/account-profile-cont
 // Not for search results: it belongs to one visitor (see privateMetadata).
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT()
-  return privateMetadata(t("account.profile.title"))
+  return privateMetadata(t("account.overview.title"))
 }
 
 export default async function Page() {
@@ -15,10 +15,9 @@ export default async function Page() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-charcoal">{t("account.profile.title")}</h1>
-        <p className="text-muted-text">{t("account.profile.subtitle")}</p>
-      </div>
+      <h1 className="font-display text-2xl font-bold tracking-tight text-charcoal sm:text-3xl">
+        {t("account.overview.title")}
+      </h1>
       <AccountProfileContent />
     </div>
   )

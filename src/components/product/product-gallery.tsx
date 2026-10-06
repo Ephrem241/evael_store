@@ -116,7 +116,7 @@ function ProductGallery({
               onClick={() => scrollToIndex(i)}
               className={cn(
                 "w-20 shrink-0 overflow-hidden rounded-xl ring-2 ring-offset-2 ring-offset-background transition",
-                i === activeIndex ? "ring-forest" : "ring-transparent hover:ring-border"
+                i === activeIndex ? "ring-brand" : "ring-transparent hover:ring-border"
               )}
             >
               <ImagePlaceholder

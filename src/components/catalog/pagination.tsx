@@ -34,7 +34,7 @@ function PageLink({
     <Link
       href={buildPageUrl(basePath, rawParams, page)}
       aria-label={label}
-      className="flex size-10 items-center justify-center rounded-xl text-sm text-charcoal hover:bg-cream"
+      className="flex size-10 items-center justify-center rounded-xl text-sm text-charcoal hover:bg-subtle"
     >
       {symbol}
     </Link>
@@ -75,7 +75,7 @@ async function Pagination({
           aria-current={p === page ? "page" : undefined}
           className={cn(
             "flex size-10 items-center justify-center rounded-xl text-sm",
-            p === page ? "bg-primary font-medium text-primary-foreground" : "text-charcoal hover:bg-cream"
+            p === page ? "bg-primary font-medium text-primary-foreground" : "text-charcoal hover:bg-subtle"
           )}
         >
           {p}

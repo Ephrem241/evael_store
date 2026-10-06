@@ -103,7 +103,7 @@ function ProductImagesField({
                     className="rounded-lg"
                   />
                   {index === 0 && (
-                    <span className="absolute top-1.5 left-1.5 rounded-md bg-forest px-1.5 py-0.5 text-[11px] font-semibold text-white">
+                    <span className="absolute top-1.5 left-1.5 rounded-md bg-brand-strong px-1.5 py-0.5 text-[11px] font-semibold text-white">
                       {t("admin.productForm.mainPhoto")}
                     </span>
                   )}

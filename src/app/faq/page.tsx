@@ -42,11 +42,11 @@ export default async function FaqPage() {
       <div className="divide-y divide-border overflow-hidden rounded-card border border-border bg-white">
         {questions.map((item) => (
           <details key={item.question} className="group">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 font-medium text-charcoal outline-none marker:hidden hover:bg-cream/50 focus-visible:bg-cream/50 focus-visible:ring-2 focus-visible:ring-forest/40 focus-visible:ring-inset sm:px-5 [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 font-medium text-charcoal outline-none marker:hidden hover:bg-subtle/50 focus-visible:bg-subtle/50 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-inset sm:px-5 [&::-webkit-details-marker]:hidden">
               {t(item.question)}
               <ChevronDown
                 aria-hidden
-                className="size-5 shrink-0 text-forest transition-transform duration-200 group-open:rotate-180"
+                className="size-5 shrink-0 text-brand-ink transition-transform duration-200 group-open:rotate-180"
               />
             </summary>
             <div className="space-y-3 px-4 pb-5 leading-relaxed text-charcoal/80 sm:px-5">

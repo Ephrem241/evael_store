@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ShoppingBag } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -28,10 +28,13 @@ function CartButton({
   const t = useT()
   const count = useCartStore(selectCartCount)
   const label = count > 0 ? t.plural("nav.cartCount", count) : t("nav.cart")
+  // Keyed on the count, so the badge re-mounts and plays its small "pop"
+  // whenever something is added (the animation is off under reduced motion).
   const badge = count > 0 && (
     <span
+      key={count}
       aria-hidden
-      className="absolute -top-1 -right-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-gold px-1 text-[10px] leading-none font-bold text-forest-dark ring-2 ring-background"
+      className="absolute -top-1.5 -right-2 flex h-[18px] min-w-[18px] animate-pop items-center justify-center rounded-full bg-brand-strong px-1 text-[10px] leading-none font-bold text-white ring-2 ring-background"
     >
       {count > 99 ? "99+" : count}
     </span>
@@ -43,12 +46,12 @@ function CartButton({
         href="/cart"
         aria-label={label}
         className={cn(
-          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-forest focus-visible:ring-3 focus-visible:ring-ring/50",
+          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
           className
         )}
       >
         <span className="relative">
-          <ShoppingBag aria-hidden className="size-[22px]" strokeWidth={1.75} />
+          <ShoppingCart aria-hidden className="size-[22px]" strokeWidth={1.75} />
           {badge}
         </span>
         <span aria-hidden className="text-[11px] leading-none font-medium">
@@ -62,7 +65,7 @@ function CartButton({
     <Button variant="ghost" size="icon-lg" asChild className={cn("relative", className)}>
       <Link href="/cart" aria-label={label}>
         <span className="relative">
-          <ShoppingBag aria-hidden className="size-[22px]" strokeWidth={1.75} />
+          <ShoppingCart aria-hidden className="size-[22px]" strokeWidth={1.75} />
           {badge}
         </span>
       </Link>

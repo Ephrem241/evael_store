@@ -16,7 +16,7 @@ export default async function Page() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-charcoal">{t("account.settings.title")}</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-charcoal sm:text-3xl">{t("account.settings.title")}</h1>
         <p className="text-muted-text">{t("account.settings.subtitle")}</p>
       </div>
       <AccountSettingsContent />

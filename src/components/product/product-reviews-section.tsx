@@ -18,9 +18,9 @@ async function ProductReviewsSection({ product }: { product: ProductWithCategory
   const rating = product.rating != null ? <Rating value={product.rating} t={t} /> : null
 
   return (
-    <section className="space-y-4 max-lg:space-y-0 max-lg:rounded-card max-lg:border max-lg:border-border/70 max-lg:bg-card max-lg:shadow-soft">
+    <section className="space-y-4 max-lg:space-y-0 max-lg:rounded-card max-lg:border max-lg:border-border max-lg:bg-card max-lg:shadow-soft">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 max-lg:hidden">
-        <h2 className="font-display text-xl font-semibold text-charcoal">{t("product.reviews.title")}</h2>
+        <h2 className="font-display text-2xl font-bold tracking-tight text-charcoal">{t("product.reviews.title")}</h2>
         {rating}
       </div>
       <MobileCollapsible
@@ -31,7 +31,7 @@ async function ProductReviewsSection({ product }: { product: ProductWithCategory
             {rating}
           </span>
         }
-        icon={<MessageSquare aria-hidden className="size-5 text-forest" strokeWidth={1.75} />}
+        icon={<MessageSquare aria-hidden className="size-5 text-brand" strokeWidth={1.75} />}
         className="max-lg:px-5 max-lg:pb-5"
       >
         <EmptyState

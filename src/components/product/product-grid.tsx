@@ -1,3 +1,5 @@
+import { cn } from "cn"
+
 import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductCard } from "@/components/product/product-card"
@@ -7,19 +9,23 @@ async function ProductGrid({
   products,
   badge,
   eagerCount = 0,
+  sizes,
+  className,
 }: {
   products: ProductWithCategory[]
   badge?: string
   // How many of the first cards are visible without scrolling (their photos
   // load immediately; the rest load as the shopper scrolls to them).
   eagerCount?: number
+  sizes?: string
+  className?: string
 }) {
   const t = await getT()
 
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 lg:gap-4">
+    <div className={cn("grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5", className)}>
       {products.map((product, index) => (
-        <ProductCard key={product.id} product={product} t={t} badge={badge} eager={index < eagerCount} />
+        <ProductCard key={product.id} product={product} t={t} badge={badge} eager={index < eagerCount} sizes={sizes} />
       ))}
     </div>
   )

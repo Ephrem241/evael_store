@@ -16,15 +16,17 @@ export interface EmailContext {
   shopEmail: string
 }
 
+// The storefront palette (globals.css), as hex for email clients. White text
+// sits on the strong orange (4.5:1), as on the site's buttons.
 const COLORS = {
-  page: "#FAF7F0",
+  page: "#FAFAF7",
   card: "#FFFFFF",
-  band: "#092A25",
-  gold: "#C9A15B",
+  band: "#C94F20",
+  bandText: "#FFFFFF",
   text: "#171717",
-  muted: "#6B665F",
-  line: "#E3D2BD",
-  button: "#123C35",
+  muted: "#646B78",
+  line: "#E8E6E1",
+  button: "#C94F20",
 }
 
 const translators: Record<Locale, Translator> = {
@@ -125,7 +127,7 @@ function layout(locale: Locale, heading: string, parts: Part[], t: Translator): 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLORS.page}">
 <tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${COLORS.card};border-radius:16px;overflow:hidden;font-family:${font}">
-<tr><td style="background:${COLORS.band};padding:20px 28px;font-family:Georgia,'Times New Roman',serif;font-size:22px;letter-spacing:0.04em;color:${COLORS.gold}">${escapeHtml(BRAND_NAME)}</td></tr>
+<tr><td style="background:${COLORS.band};padding:20px 28px;font-family:${font};font-size:22px;font-weight:700;letter-spacing:-0.02em;color:${COLORS.bandText}">${escapeHtml(BRAND_NAME)}</td></tr>
 <tr><td style="padding:28px">
 <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:${COLORS.text}">${escapeHtml(heading)}</h1>
 ${parts.map(([partHtml]) => partHtml).join("\n")}

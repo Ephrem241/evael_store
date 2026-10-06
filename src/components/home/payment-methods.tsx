@@ -3,7 +3,6 @@ import { cn } from "cn"
 
 import { getT } from "@/lib/i18n/server"
 import { cashOnDeliveryProvider } from "@/lib/services/payment"
-import { Reveal } from "@/components/motion/reveal"
 
 // The Ethiopian banks and wallets shoppers ask about. They are NOT payment
 // providers yet (checkout and the database's place_order take cash on delivery
@@ -21,57 +20,56 @@ const METHODS: { name: string; colorClass: string; available: boolean }[] = [
 ]
 
 const tileClass =
-  "flex h-[72px] min-w-0 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card px-4 text-center shadow-soft sm:min-w-[160px]"
+  "flex h-[68px] min-w-0 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card px-4 text-center sm:min-w-[150px]"
 
+// The "Pay your way" strip, part of the Why Evael band (why-evael.tsx).
 async function PaymentMethods() {
   const t = await getT()
   const codAvailable = cashOnDeliveryProvider.enabled
 
   return (
-    <Reveal>
-      <section aria-labelledby="payments-heading" className="space-y-6 text-center">
-        <div className="space-y-2">
-          <h2 id="payments-heading" className="font-display text-2xl font-semibold text-charcoal sm:text-[1.75rem]">
-            {t("home.payments.title")}
-          </h2>
-          <p className="mx-auto max-w-xl text-sm leading-relaxed text-muted-text">{t("home.payments.text")}</p>
-        </div>
-        <ul
-          aria-label={t("home.payments.listLabel")}
-          className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:justify-center"
-        >
-          <li className={cn(tileClass, "col-span-2 border-forest/40 sm:col-span-1")}>
-            <span className="flex items-center gap-2 text-base font-bold text-forest">
-              <Banknote aria-hidden className="size-5" strokeWidth={1.75} />
-              {t("home.payments.cod")}
+    <div className="space-y-4">
+      <div className="space-y-1">
+        <h3 id="payments-heading" className="text-lg font-bold tracking-tight text-charcoal">
+          {t("home.payments.title")}
+        </h3>
+        <p className="max-w-xl text-sm leading-relaxed text-muted-text">{t("home.payments.text")}</p>
+      </div>
+      <ul
+        aria-labelledby="payments-heading"
+        className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap"
+      >
+        <li className={cn(tileClass, "col-span-2 border-success/40 bg-success/5 sm:col-span-1")}>
+          <span className="flex items-center gap-2 text-base font-bold text-charcoal">
+            <Banknote aria-hidden className="size-5 text-success" strokeWidth={1.75} />
+            {t("home.payments.cod")}
+          </span>
+          <span className="text-[11px] font-semibold text-success">
+            {codAvailable ? t("home.payments.available") : t("home.payments.comingSoon")}
+          </span>
+        </li>
+        {METHODS.map((method) => (
+          <li
+            key={method.name}
+            // On phones a lone last tile is centred, not left hanging. Cash on
+            // Delivery (item 1) spans both columns, so a lone tile is an EVEN item.
+            className={cn(
+              tileClass,
+              "last:even:col-span-2 last:even:w-[calc(50%-0.375rem)] last:even:justify-self-center sm:last:even:w-auto"
+            )}
+          >
+            {/* Not faded for "coming soon": fading brand-coloured text to 70% drops it to
+                2.8-3.3:1 (WCAG AA needs 4.5:1), and the caption below already says it in words. */}
+            <span className={cn("line-clamp-1 text-base font-bold tracking-tight", method.colorClass)}>
+              {method.name}
             </span>
-            <span className="text-[11px] font-medium text-success">
-              {codAvailable ? t("home.payments.available") : t("home.payments.comingSoon")}
+            <span className="text-[11px] font-medium text-muted-text">
+              {method.available ? t("home.payments.available") : t("home.payments.comingSoon")}
             </span>
           </li>
-          {METHODS.map((method) => (
-            <li
-              key={method.name}
-              // On phones a lone last tile is centred, not left hanging. Cash on
-              // Delivery (item 1) spans both columns, so a lone tile is an EVEN item.
-              className={cn(
-                tileClass,
-                "last:even:col-span-2 last:even:w-[calc(50%-0.375rem)] last:even:justify-self-center sm:last:even:w-auto"
-              )}
-            >
-              {/* Not faded for "coming soon": fading brand-coloured text to 70% drops it to
-                  2.8-3.3:1 (WCAG AA needs 4.5:1), and the caption below already says it in words. */}
-              <span className={cn("line-clamp-1 text-base font-bold tracking-tight", method.colorClass)}>
-                {method.name}
-              </span>
-              <span className="text-[11px] font-medium text-muted-text">
-                {method.available ? t("home.payments.available") : t("home.payments.comingSoon")}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Reveal>
+        ))}
+      </ul>
+    </div>
   )
 }
 

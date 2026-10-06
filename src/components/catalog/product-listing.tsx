@@ -9,6 +9,7 @@ import { FilterDrawer } from "@/components/catalog/filter-drawer"
 import { SortSelect } from "@/components/catalog/sort-select"
 import { Pagination } from "@/components/catalog/pagination"
 import { LoadMoreProducts } from "@/components/catalog/load-more-products"
+import { ActiveFilters } from "@/components/catalog/active-filters"
 import type { FilterValues, RawParams } from "@/components/catalog/listing-url"
 
 // Shared by /shop, /category/[slug], and /search — each page renders its own
@@ -57,7 +58,7 @@ async function ProductListing({
     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
       {/* Full width (it cancels the page's side padding) and 44px controls; the
           sort menu's 16px text keeps iOS from zooming in when it is tapped. */}
-      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex items-center gap-2 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex items-center gap-2 border-b border-border bg-card/95 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
         <FilterDrawer
           filters={filters}
           facets={facets}
@@ -77,7 +78,7 @@ async function ProductListing({
         basePath={basePath}
       />
 
-      <div className="flex-1 space-y-6">
+      <div className="min-w-0 flex-1 space-y-5">
         <div className="hidden items-center justify-between lg:flex">
           <p role="status" className="text-sm text-muted-text">
             {resultSummary}
@@ -89,6 +90,14 @@ async function ProductListing({
         <p role="status" className="text-sm text-muted-text lg:hidden">
           {total === 0 ? t("catalog.noResults") : t.plural("catalog.productCount", total)}
         </p>
+
+        <ActiveFilters
+          filters={filters}
+          facets={facets}
+          showCategory={showCategoryFilter}
+          rawParams={rawParams}
+          basePath={basePath}
+        />
 
         {products.length === 0 ? (
           <EmptyState

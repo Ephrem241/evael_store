@@ -35,17 +35,21 @@ import {
 import { toast } from "sonner"
 
 const swatches: { name: string; className: string; hex: string }[] = [
-  { name: "Forest", className: "bg-forest", hex: "#123C35" },
-  { name: "Forest Dark", className: "bg-forest-dark", hex: "#092A25" },
-  { name: "Ivory", className: "bg-ivory", hex: "#FAF7F0" },
-  { name: "Cream", className: "bg-cream", hex: "#F3ECE2" },
-  { name: "Sand", className: "bg-sand", hex: "#E3D2BD" },
-  { name: "Gold", className: "bg-gold", hex: "#C9A15B" },
-  { name: "Charcoal", className: "bg-charcoal", hex: "#171717" },
-  { name: "Muted Text", className: "bg-muted-text", hex: "#706B64" },
-  { name: "White", className: "bg-white", hex: "#FFFFFF" },
-  { name: "Border", className: "bg-[#E5DED4]", hex: "#E5DED4" },
-  { name: "Success", className: "bg-success", hex: "#267A55" },
+  { name: "Background", className: "bg-background", hex: "#FAFAF7" },
+  { name: "Surface", className: "bg-surface", hex: "#FFFFFF" },
+  { name: "Subtle", className: "bg-subtle", hex: "#F3F2EE" },
+  { name: "Text", className: "bg-charcoal", hex: "#171717" },
+  { name: "Secondary Text", className: "bg-muted-text", hex: "#646B78" },
+  { name: "Primary (brand)", className: "bg-brand", hex: "#E86A33" },
+  { name: "Primary Strong", className: "bg-brand-strong", hex: "#C94F20" },
+  { name: "Primary Dark", className: "bg-brand-deep", hex: "#A9421A" },
+  { name: "Primary Ink (text)", className: "bg-brand-ink", hex: "#BA4A1C" },
+  { name: "Primary Soft", className: "bg-brand-soft", hex: "#FFF1E8" },
+  { name: "Sale", className: "bg-sale", hex: "#D3352D" },
+  { name: "Success", className: "bg-success", hex: "#157A54" },
+  { name: "Star", className: "bg-star", hex: "#F59E0B" },
+  { name: "Border", className: "bg-border", hex: "#E8E6E1" },
+  { name: "Footer", className: "bg-footer", hex: "#181818" },
   { name: "Warning", className: "bg-warning", hex: "#B7791F" },
   { name: "Error", className: "bg-error", hex: "#B42318" },
 ]
@@ -87,7 +91,7 @@ export default function StyleGuidePage() {
             የሚወዱትን ያግኙ።
           </p>
           <p className="font-amharic text-base text-charcoal">ምን ይፈልጋሉ?</p>
-          <p className="text-2xl font-semibold text-forest">1,850 ETB</p>
+          <p className="text-2xl font-semibold text-brand-ink">1,850 ETB</p>
         </div>
       </section>
 
@@ -124,7 +128,7 @@ export default function StyleGuidePage() {
             <CardDescription>Fashion</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-lg font-semibold text-forest">1,850 ETB</p>
+            <p className="text-lg font-semibold text-brand-ink">1,850 ETB</p>
           </CardContent>
           <CardFooter>
             <Button size="sm">Add to cart</Button>

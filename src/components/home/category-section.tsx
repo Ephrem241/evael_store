@@ -15,7 +15,7 @@ async function CategorySection({ categories }: { categories: CategoryWithCount[]
 
   return (
     <Reveal>
-      <section aria-labelledby="categories-heading" className="space-y-6">
+      <section aria-labelledby="categories-heading" className="space-y-5 lg:space-y-6">
         <SectionHeading
           id="categories-heading"
           title={t("home.categoriesTitle")}

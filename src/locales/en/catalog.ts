@@ -8,6 +8,10 @@ export const catalog = {
   searchEmptyTitle: "Search our catalog",
   searchEmptyText: "Type a product name above to get started.",
   searchResultsFor: "Search results for \"{query}\"",
+  // A search with no match at all; {query} is what was typed.
+  searchNoMatchTitle: "Couldn't find what you're looking for?",
+  searchBrowseCategories: "Browse by category",
+  searchNoMatchText: "Nothing matches \u201c{query}\u201d. Check the spelling, try a shorter word, or browse below.",
   categoryNotFound: "Category not found.",
   categoryNotFoundText: "This category may have been removed or renamed.",
   productNotFound: "Product not found.",
@@ -32,6 +36,9 @@ export const catalog = {
     priceUnder: "Under {amount}",
     priceRange: "{min} – {max}",
     priceOver: "{amount} & above",
+    // The chips of the filters in force; {label} is what the chip says.
+    active: "Active filters",
+    remove: "Remove filter: {label}",
     // Read after "Filter" on the phone's filter button, whose badge shows the number.
     activeCount: { one: "{count} filter applied", other: "{count} filters applied" },
   },
@@ -48,6 +55,15 @@ export const catalog = {
   noResults: "No results",
   emptyTitle: "No products found.",
   emptyText: "Try another search or explore our categories.",
+  // /deals: every discounted product, grouped.
+  dealsPage: {
+    featured: "Featured Offers",
+    limited: "Limited Stock",
+    onSale: "On Sale Now",
+    browseAll: "Filter & sort deals",
+    emptyTitle: "No deals right now.",
+    emptyText: "New deals are added regularly. Check back soon.",
+  },
   pagination: {
     label: "Pagination",
     previous: "Previous page",
@@ -107,4 +123,25 @@ export const product = {
     empty: "No reviews yet.",
     emptyText: "This product doesn't have any customer reviews yet.",
   },
+  // The product card's Quick view button and dialog. {name} is the product's name.
+  quickView: {
+    label: "Quick view",
+    open: "Quick view: {name}",
+    details: "View full details",
+    unavailable: "This product is no longer available.",
+  },
+  share: {
+    label: "Share",
+    copied: "Link copied to clipboard.",
+    failed: "The link couldn't be copied.",
+  },
+  // How a product is paid for: only what checkout really takes.
+  payment: {
+    title: "Payment",
+    cod: "Cash on Delivery: pay in cash when your order arrives.",
+    more: "Ethiopian bank and mobile-money payments are coming soon.",
+  },
+  // Below the product: more from its category, and what this shopper looked at before.
+  related: "More from {category}",
+  recentlyViewed: "Recently viewed",
 }

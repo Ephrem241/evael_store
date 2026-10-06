@@ -39,7 +39,7 @@ function Newsletter() {
   }
 
   // Lives in the dark footer (its heading and blurb are rendered by the footer
-  // itself): a light input beside a gold button.
+  // itself): a light input beside the orange button.
   return (
     // method="post": if someone submits before this component has hydrated, the
     // browser's own submit must not put the address in the URL (a GET would).
@@ -55,12 +55,12 @@ function Newsletter() {
           aria-label={t("home.newsletter.emailLabel")}
           aria-invalid={!!error}
           aria-describedby={error ? "newsletter-error" : undefined}
-          className="h-11 min-w-0 flex-1 border-transparent bg-white text-charcoal placeholder:text-muted-text"
+          className="h-12 min-w-0 flex-1 rounded-xl border-transparent bg-white text-charcoal placeholder:text-muted-text max-lg:h-12"
         />
         <Button
           type="submit"
           disabled={submitting}
-          className="h-11 bg-gold px-5 text-forest-dark hover:bg-[color-mix(in_srgb,var(--color-gold),white_18%)]"
+          className="h-12 px-6 max-lg:h-12"
         >
           {t("home.newsletter.subscribe")}
         </Button>

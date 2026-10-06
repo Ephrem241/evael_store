@@ -18,7 +18,7 @@ function DiscountBadge({
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center rounded-lg bg-error px-2 text-xs font-semibold text-white",
+        "inline-flex h-6 items-center rounded-md bg-sale px-2 text-xs font-bold tracking-tight text-white",
         className
       )}
     >

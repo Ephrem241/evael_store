@@ -2,16 +2,15 @@ import Link from "next/link"
 import { cn } from "cn"
 
 import { BRAND_NAME } from "@/lib/brand"
-import { BRAND_COLORS, BRAND_MARK, BRAND_MARK_VIEWBOX } from "@/lib/brand-mark"
 
-// The mark (a gold shopping bag with an "E" on it, see brand-mark.ts) beside a
-// stacked wordmark: the first word large in the display serif, the rest small
-// and widely spaced between two thin rules — "EVAEL / — STORE —".
+// The wordmark: "Evael" large and bold in brand orange, with "Store" small
+// beneath it. (The bag mark is the app icon and share image; see brand-mark.ts.)
 //
-// `variant="light"` is for dark surfaces (the footer): the handle turns gold
-// so it doesn't vanish into the background, and the wordmark turns white.
-// On light surfaces the small line uses gold-deep, not gold: plain gold on
-// ivory is too faint to read at that size.
+// The orange is the brand's bright primary, which reaches only 3:1 on the
+// light page — fine here because the word is always display-size bold text
+// (WCAG "large text"), never smaller than 22px.
+//
+// `variant="light"` is for dark surfaces (the footer): "Store" turns white.
 function Logo({
   className,
   variant = "default",
@@ -27,51 +26,22 @@ function Logo({
       href="/"
       aria-label={BRAND_NAME}
       className={cn(
-        "group inline-flex shrink-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11 sm:gap-2.5",
+        "group inline-flex shrink-0 flex-col justify-center rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11",
         className
       )}
     >
-      <svg
-        viewBox={BRAND_MARK_VIEWBOX}
-        aria-hidden
-        className="h-8 w-auto shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 sm:h-10 lg:h-11"
-      >
-        <path
-          d={BRAND_MARK.handle}
-          fill="none"
-          strokeWidth={BRAND_MARK.handleWidth}
-          strokeLinecap="round"
-          className={light ? "stroke-gold" : "stroke-forest"}
-        />
-        <path d={BRAND_MARK.body} fill={BRAND_COLORS.gold} />
-        <path d={BRAND_MARK.rim} fill={BRAND_COLORS.goldRim} />
-        <path
-          d={BRAND_MARK.letter}
-          fill="none"
-          strokeWidth={BRAND_MARK.letterWidth}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={light ? "stroke-forest-dark" : "stroke-forest"}
-        />
-      </svg>
-      <span
-        aria-hidden
-        className="flex flex-col text-[17px] leading-none uppercase min-[380px]:text-[19px] sm:text-[22px] lg:text-[26px]"
-      >
-        <span className={cn("font-display font-bold tracking-[0.08em]", light ? "text-white" : "text-forest")}>
+      <span aria-hidden className="flex flex-col leading-none">
+        <span className="text-[1.6rem] font-bold tracking-[-0.04em] text-brand transition-colors group-hover:text-brand-strong sm:text-[1.75rem] lg:text-[2rem]">
           {first}
         </span>
         {rest.length > 0 && (
           <span
             className={cn(
-              "mt-[0.3em] flex items-center gap-[0.4em] text-[0.45em] font-semibold",
-              light ? "text-gold" : "text-gold-deep"
+              "mt-0.5 pl-0.5 text-[0.7rem] font-medium tracking-[0.02em] lg:text-xs",
+              light ? "text-white/80" : "text-muted-text"
             )}
           >
-            <span className="h-px flex-1 bg-current" />
-            {/* Letter-spacing also trails the last letter; the negative margin re-centres the word. */}
-            <span className="-mr-[0.42em] tracking-[0.42em]">{rest.join(" ")}</span>
-            <span className="h-px flex-1 bg-current" />
+            {rest.join(" ")}
           </span>
         )}
       </span>

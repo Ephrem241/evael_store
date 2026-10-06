@@ -14,18 +14,18 @@ import { MobileCollapsible } from "@/components/ui/mobile-collapsible"
 // the `lg:p-6`).
 async function ProductDeliverySection() {
   const [t, threshold] = await Promise.all([getT(), getFreeDeliveryThreshold()])
-  const icon = <Truck aria-hidden className="size-5 text-forest" strokeWidth={1.75} />
+  const icon = <Truck aria-hidden className="size-5 text-brand" strokeWidth={1.75} />
 
   return (
-    <section className="space-y-4 rounded-card border border-border/70 bg-card p-5 shadow-soft max-lg:space-y-0 max-lg:p-0 lg:p-6">
-      <h2 className="flex items-center gap-2.5 font-display text-xl font-semibold text-charcoal max-lg:hidden">
+    <section className="space-y-4 rounded-card border border-border bg-card p-5 shadow-soft max-lg:space-y-0 max-lg:p-0 lg:p-6">
+      <h2 className="flex items-center gap-2.5 text-lg font-bold tracking-tight text-charcoal max-lg:hidden">
         {icon}
         {t("product.delivery.title")}
       </h2>
       <MobileCollapsible id="product-delivery" label={t("product.delivery.title")} icon={icon} className="max-lg:px-5 max-lg:pb-5">
         <ul className="space-y-2.5 text-sm leading-relaxed text-muted-text">
           {threshold != null && (
-            <li className="font-medium text-forest">
+            <li className="font-medium text-brand-ink">
               {t("cart.summary.freeDeliveryOffer", { amount: formatPrice(threshold, t) })}
             </li>
           )}

@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/layout/page-header"
 export const LEGAL_LAST_UPDATED = "2026-09-24"
 
 const linkClass =
-  "rounded font-medium text-forest underline underline-offset-4 outline-none transition-colors hover:text-forest-dark focus-visible:ring-2 focus-visible:ring-forest/40"
+  "rounded font-medium text-brand-ink underline underline-offset-4 outline-none transition-colors hover:text-brand-deep focus-visible:ring-2 focus-visible:ring-brand/40"
 
 // Frame for the footer's information pages (contact, delivery, returns, FAQ,
 // about, privacy, terms): a breadcrumb and title band, then one narrow column
@@ -62,7 +62,7 @@ function InfoSection({
 }) {
   return (
     <section className="space-y-3">
-      <h2 className="font-display text-xl font-semibold text-charcoal sm:text-2xl">{title}</h2>
+      <h2 className="font-display text-xl font-bold tracking-tight text-charcoal sm:text-2xl">{title}</h2>
       <div className="space-y-3 leading-relaxed text-charcoal/80">{children}</div>
       {link && <InfoLink href={link.href}>{link.label}</InfoLink>}
     </section>
@@ -81,7 +81,7 @@ function InfoLink({ href, children }: { href: string; children: ReactNode }) {
 
 // A bulleted list inside a section (the data the privacy policy lists).
 function InfoList({ children }: { children: ReactNode }) {
-  return <ul className="list-disc space-y-2 ps-5 marker:text-gold">{children}</ul>
+  return <ul className="list-disc space-y-2 ps-5 marker:text-brand">{children}</ul>
 }
 
 // The closing "Still have a question?" strip. The FAQ page itself leaves out
@@ -90,8 +90,8 @@ async function InfoHelp({ title, text, showFaq = true }: { title: string; text: 
   const t = await getT()
 
   return (
-    <aside className="space-y-3 rounded-card bg-cream/70 p-5 sm:p-6">
-      <h2 className="font-display text-lg font-semibold text-charcoal">{title}</h2>
+    <aside className="space-y-3 rounded-card bg-brand-soft/70 p-5 sm:p-6">
+      <h2 className="font-display text-lg font-bold tracking-tight text-charcoal">{title}</h2>
       <p className="text-charcoal/70">{text}</p>
       <div className="flex flex-wrap gap-x-6 gap-y-2">
         <InfoLink href="/contact">{t("info.common.contactLink")}</InfoLink>

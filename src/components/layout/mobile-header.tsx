@@ -18,14 +18,14 @@ async function MobileHeader() {
   const t = await getT()
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md lg:hidden">
+    <header className="sticky top-0 z-30 border-b border-border bg-card/95 backdrop-blur-md lg:hidden">
       <Container className="flex h-14 items-center justify-between gap-2">
         <Logo />
         <div className="flex items-center gap-0.5">
           <LanguageSwitcher compact className="mr-1" />
-          {/* Below 360px there isn't room for a third icon; the wishlist is
-              still one tap away via the bottom navigation. */}
-          <Button variant="ghost" size="icon-lg" asChild className="max-[359px]:hidden">
+          {/* The wishlist's only phone entry point besides the account menu
+              (the bottom bar has Deals in its place), so it shows at every width. */}
+          <Button variant="ghost" size="icon-lg" asChild>
             <Link href="/account/favorites" aria-label={t("nav.wishlist")}>
               <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
             </Link>

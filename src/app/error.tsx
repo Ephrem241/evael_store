@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { AlertTriangle } from "lucide-react"
+import { AlertTriangle, RotateCcw } from "lucide-react"
 
 import { useT } from "@/lib/i18n/provider"
 import { EmptyState } from "@/components/feedback/empty-state"
@@ -26,8 +26,14 @@ export default function RouteError({ error, retry }: { error: Error; retry: () =
       <EmptyState
         titleAs="h1"
         icon={AlertTriangle}
-        title={t("common.somethingWentWrong")}
-        action={<Button onClick={retry}>{t("common.retry")}</Button>}
+        title={t("common.errorTitle")}
+        description={t("common.errorText")}
+        action={
+          <Button size="lg" onClick={retry}>
+            <RotateCcw aria-hidden />
+            {t("common.retry")}
+          </Button>
+        }
       />
     </div>
   )

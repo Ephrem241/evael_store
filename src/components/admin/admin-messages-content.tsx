@@ -45,8 +45,8 @@ function AdminMessagesContent() {
             className={cn(
               "rounded-full border px-3 py-1 text-sm outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
               filter === value
-                ? "border-forest bg-forest text-white"
-                : "border-input bg-card text-charcoal hover:bg-cream"
+                ? "border-brand bg-brand-strong text-white"
+                : "border-input bg-card text-charcoal hover:bg-subtle"
             )}
           >
             {value === "all" ? t("admin.messages.filterAll") : t("admin.messages.filterUnread")}
@@ -65,11 +65,11 @@ function AdminMessagesContent() {
               <li key={message.id}>
                 <Link
                   href={`/admin/messages/${message.id}`}
-                  className="flex gap-3 p-4 outline-none transition-colors hover:bg-cream/70 focus-visible:bg-cream focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring/50"
+                  className="flex gap-3 p-4 outline-none transition-colors hover:bg-subtle/70 focus-visible:bg-subtle focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring/50"
                 >
                   <span
                     aria-hidden
-                    className={cn("mt-2 size-2 shrink-0 rounded-full", unread ? "bg-forest" : "bg-transparent")}
+                    className={cn("mt-2 size-2 shrink-0 rounded-full", unread ? "bg-brand-strong" : "bg-transparent")}
                   />
                   <span className="min-w-0 flex-1 space-y-0.5">
                     <span className="flex items-baseline justify-between gap-3">
@@ -86,7 +86,7 @@ function AdminMessagesContent() {
                     </span>
                     <span className="block truncate text-sm text-muted-text">{message.message}</span>
                     {message.replies.length > 0 && (
-                      <span className="flex items-center gap-1 pt-1 text-xs text-forest">
+                      <span className="flex items-center gap-1 pt-1 text-xs text-brand-ink">
                         <CornerUpLeft aria-hidden className="size-3.5" />
                         {t("admin.messages.replied")}
                       </span>

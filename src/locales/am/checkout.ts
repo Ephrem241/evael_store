@@ -3,9 +3,14 @@ import type { Dictionary } from "@/locales/en"
 export const cart: Dictionary["cart"] = {
   title: "የእርስዎ ጋሪ",
   subtitle: "ከክፍያ በፊት ዕቃዎችዎን ይመልከቱ።",
-  emptyTitle: "ጋሪዎ እየጠበቀዎት ነው።",
-  emptyText: "ለመጀመር የሚወዱትን ነገር ይጨምሩ።",
+  emptyTitle: "ጋሪዎ ባዶ ነው።",
+  emptyText: "የሚወዱትን ነገር እንፈልግ።",
   startShopping: "ግብይት ጀምር",
+  continueShopping: "ግብይት ይቀጥሉ",
+  moveToWishlist: "ወደ የምኞት ዝርዝር ውሰድ",
+  moveItemToWishlist: "{name}ን ወደ የምኞት ዝርዝርዎ ውሰድ",
+  movedToWishlist: "ወደ የምኞት ዝርዝርዎ ተወስዷል።",
+  viewWishlist: "የምኞት ዝርዝሩን ይመልከቱ",
   unavailable: "ይህ ዕቃ ከአሁን በኋላ አይገኝም።",
   remove: "አስወግድ",
   removeItem: "{name}ን ከጋሪ አስወግድ",
@@ -21,6 +26,7 @@ export const cart: Dictionary["cart"] = {
     free: "ነፃ",
     freeDeliveryOffer: "ከ{amount} በላይ ለሆኑ ትዕዛዞች ነፃ ማድረስ።",
     freeDeliveryUnlocked: "ነፃ ማድረስ አግኝተዋል!",
+    freeDeliveryAway: "ነፃ ማድረስ ለማግኘት {amount} ብቻ ይቀርዎታል።",
   },
   syncFailed: "ጋሪዎን ማመሳሰል አልተቻለም። ለውጦችዎ በዚህ መሣሪያ ላይ ተቀምጠዋል።",
 }
@@ -48,6 +54,8 @@ export const checkout: Dictionary["checkout"] = {
   },
   review: {
     title: "የትዕዛዝ ግምገማ",
+    editCart: "ጋሪውን አስተካክል",
+    trust: "መረጃዎ በደህንነት ይላካል። ትዕዛዝዎ ሲደርስ በጥሬ ገንዘብ ይከፍላሉ።",
     qty: "ብዛት {count}",
     insufficientStock: "ለ{names} በቂ ክምችት የለም። ለመቀጠል ጋሪዎን ያስተካክሉ።",
     unavailable: "በጋሪዎ ውስጥ ያሉ አንዳንድ ዕቃዎች ከአሁን በኋላ አይገኙም። ለመቀጠል ከጋሪዎ ያስወግዷቸው።",

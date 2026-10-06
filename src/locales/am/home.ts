@@ -4,13 +4,19 @@ import type { Dictionary } from "@/locales/en"
 // (the same caveat as the rest of this folder).
 export const home: Dictionary["home"] = {
   hero: {
-    imageAlt: "ክሬም ቀለም ያለው ሶፋ፣ አረንጓዴና ቡናማ ትራሶች፣ ክብ የእንጨት ጠረጴዛና ዕፅዋት ያሉት በፀሐይ የበራ የመኖሪያ ክፍል",
+    imageAlt: "የብርቱካናማ የኢቫኤል ስቶር የግብይት ቦርሳ የያዘች ፈገግ ያለች ሴት፣ በዙሪያዋ የእጅ ቦርሳ፣ ስኒከር ጫማ፣ ስልክ፣ የጆሮ ማዳመጫ፣ የውበት ምርቶች፣ ኤር ፍራየር፣ ስማርት ሰዓትና ተክል",
   },
   categoriesTitle: "በምድብ ይግዙ",
   viewAll: "ሁሉንም ይመልከቱ",
-  categoryShopNow: "አሁን ይግዙ",
-  featuredTitle: "ተመራጭ ምርቶች",
+  categoryItems: { one: "{count} ዕቃ", other: "{count} ዕቃዎች" },
+  featuredTitle: "አሁን ተፈላጊ",
   newArrivalsTitle: "አዳዲስ ምርቶች",
+  popularTitle: "ተወዳጅ ምርጫዎች",
+  shopByNeed: {
+    title: "ምን መግዛት ይፈልጋሉ?",
+    subtitle: "ወደሚፈልጉት በቀጥታ ይሂዱ።",
+    cta: "{category} ይግዙ",
+  },
   carousel: {
     previous: "ቀዳሚ ምርቶች",
     next: "ቀጣይ ምርቶች",
@@ -35,12 +41,12 @@ export const home: Dictionary["home"] = {
     badgeLabel: "{percent}% ቅናሽ፦ የዛሬውን ቅናሽ ይመልከቱ",
   },
   flashTitle: "ፈጣን ቅናሾች",
-  flashSubtitle: "በተመረጡ ምርቶች ላይ ለአጭር ጊዜ የሚቆዩ ቅናሾች።",
-  flashBadge: "ፈጣን ቅናሽ",
-  trustTitle: "ለምን ከ{brand} ይገዛሉ?",
+  flashSubtitle: "በሚወዷቸው ምርቶች ላይ ለአጭር ጊዜ የሚቆዩ ዋጋዎች።",
+  trustTitle: "ለምን {brand}?",
+  trustLabel: "ከእኛ ጋር መገበያየት",
   trust: {
-    qualityTitle: "ጥራት ያላቸው ምርቶች",
-    qualityText: "ለዕለት ተዕለት ኑሮ በጥንቃቄ የተመረጡ ምርቶች።",
+    codTitle: "ሲደርስ ይክፈሉ",
+    codText: "ትዕዛዝዎ ሲደርስ በጥሬ ገንዘብ ይክፈሉ።",
     secureTitle: "ደህንነቱ የተጠበቀ ግብይት",
     secureText: "አስተማማኝና ደህንነቱ የተጠበቀ የግብይት ተሞክሮ።",
     fastTitle: "ፈጣን ማድረስ",
@@ -48,10 +54,18 @@ export const home: Dictionary["home"] = {
     supportTitle: "የደንበኞች ድጋፍ",
     supportText: "እርዳታ ሲፈልጉ ወዳጃዊ ድጋፍ።",
   },
+  why: {
+    valueTitle: "ግልጽና ፍትሐዊ ዋጋ",
+    valueText: "ሁሉም ዋጋ በብር፣ ቅናሾች በግልጽ ይታያሉ።",
+    rangeTitle: "ሁሉም በአንድ ቦታ",
+    rangeText: "ፋሽን፣ ቤት፣ ወጥ ቤት፣ ውበትና ኤሌክትሮኒክስ በአንድ ሱቅ።",
+    localTitle: "ለኢትዮጵያ የተሰራ",
+    localText: "በአማርኛ ወይም በእንግሊዝኛ ይግዙ፤ ትዕዛዝዎ ሲደርስ በጥሬ ገንዘብ ይክፈሉ።",
+  },
   lifestyle: {
     title: "የዕለት ተዕለት ኑሮዎን ያሻሽሉ",
-    text: "ቤትዎን፣ ወጥ ቤትዎንና አኗኗርዎን የሚያሻሽሉ ምርቶችን ያግኙ።",
-    cta: "ስብስቡን ይግዙ",
+    text: "ለዘመናዊ የኢትዮጵያ አኗኗር የተመረጡ ምርቶችን ያግኙ።",
+    cta: "ስብስቡን ያስሱ",
     imageAlt: "ዕፅዋት፣ የእንጨት መደርደሪያና ከበስተጀርባ ወጥ ቤት ያለው ብሩህ ክፍት ቦታ",
   },
   payments: {

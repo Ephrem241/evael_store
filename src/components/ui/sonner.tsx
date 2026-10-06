@@ -18,10 +18,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       mobileOffset={{ bottom: 84 }}
       icons={{
         success: (
-          <CircleCheckIcon className="size-4 text-forest" />
+          <CircleCheckIcon className="size-4 text-brand-ink" />
         ),
         info: (
-          <InfoIcon className="size-4 text-forest" />
+          <InfoIcon className="size-4 text-brand-ink" />
         ),
         warning: (
           <TriangleAlertIcon className="size-4 text-warning" />
@@ -45,7 +45,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast: "cn-toast shadow-lift",
-          actionButton: "!bg-forest !text-white !rounded-lg",
+          actionButton: "!bg-brand-strong !text-white !rounded-lg",
         },
       }}
       {...props}

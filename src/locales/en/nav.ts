@@ -31,12 +31,15 @@ export const nav = {
 }
 
 export const search = {
-  placeholder: "Search products...",
+  placeholder: "Search products and categories...",
   label: "Search products",
   submit: "Search",
   recent: "Recent searches",
   categories: "Categories",
   products: "Products",
+  clearRecent: "Clear",
+  // The last row of the suggestions: runs the full search. {query} is what was typed.
+  seeAll: "See all results for “{query}”",
   // Read out when suggestions appear under the field (they are otherwise silent).
   suggestionCount: {
     one: "{count} suggestion available. Press the down arrow to browse.",
@@ -53,7 +56,7 @@ export const footer = {
   delivery: "Delivery Information",
   returns: "Returns",
   faq: "FAQ",
-  company: "Company",
+  company: "About",
   about: "About Us",
   privacy: "Privacy Policy",
   terms: "Terms & Conditions",

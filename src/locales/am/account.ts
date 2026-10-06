@@ -3,6 +3,7 @@ import type { Dictionary } from "@/locales/en"
 export const account: Dictionary["account"] = {
   nav: {
     label: "መለያ",
+    overview: "የእኔ መለያ",
     profile: "መገለጫ",
     orders: "ትዕዛዞች",
     favorites: "ተወዳጆች",
@@ -11,6 +12,14 @@ export const account: Dictionary["account"] = {
     admin: "የአስተዳዳሪ ገጽ",
     logout: "ውጣ",
     loggedOut: "ወጥተዋል።",
+  },
+  overview: {
+    title: "የእኔ መለያ",
+    greeting: "ሰላም፣ {name}!",
+    intro: "ትዕዛዞችዎን ይከታተሉ፣ የምኞት ዝርዝርዎን ያስተዳድሩ፣ መረጃዎን ወቅታዊ ያድርጉ።",
+    recentOrders: "የቅርብ ጊዜ ትዕዛዞች",
+    allOrders: "ሁሉም ትዕዛዞች",
+    shortcuts: "የመለያ አቋራጮች",
   },
   profile: {
     title: "መገለጫ",
@@ -68,9 +77,9 @@ export const account: Dictionary["account"] = {
   favorites: {
     title: "ተወዳጆች",
     subtitle: "ለኋላ ያስቀመጧቸው ምርቶች።",
-    emptyTitle: "እስካሁን ተወዳጅ የለም።",
-    emptyText: "የሚወዷቸውን ምርቶች ያስቀምጡ — በማንኛውም ምርት ላይ ያለውን ልብ ይንኩ።",
-    browse: "ምርቶችን ያስሱ",
+    emptyTitle: "የምኞት ዝርዝርዎ እየጠበቀዎት ነው።",
+    emptyText: "የሚወዷቸውን ምርቶች ያስቀምጡ፤ በኋላ እዚህ ያገኟቸዋል።",
+    browse: "ግብይት ይጀምሩ",
     syncFailed: "ተወዳጆችዎን ማመሳሰል አልተቻለም። ለውጦችዎ በዚህ መሣሪያ ላይ ተቀምጠዋል።",
   },
   orders: {

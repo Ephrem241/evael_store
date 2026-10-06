@@ -46,7 +46,7 @@ function OrderItemsSection({ items }: { items: OrderItemRecord[] }) {
                   />
                 </Link>
               ) : (
-                <div className="size-14 shrink-0 rounded-image bg-sand/40" />
+                <div className="size-14 shrink-0 rounded-image bg-subtle/40" />
               )}
               <div className="flex-1">
                 {product ? (

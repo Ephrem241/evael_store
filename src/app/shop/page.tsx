@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/layout/page-header"
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
-// /shop?sale=1 is the "Deals" page and is indexable; sorted/filtered variants
+// /shop?sale=1 (every discounted product, filterable) is indexable; sorted/filtered variants
 // are hidden and canonical to the plain listing (see listingSeo).
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const [raw, t] = await Promise.all([searchParams, getT()])
@@ -42,8 +42,8 @@ export default async function ShopPage({
     getT(),
   ])
 
-  // The "Deals" link lands here (/deals redirects to ?sale=1), so the heading
-  // says so — the same words the browser tab and search result use above.
+  // /deals links here ("Filter & sort deals"), so the heading says Deals —
+  // the same words the browser tab and search result use above.
   const deals = parsed.onSaleOnly
   const title = deals ? t("nav.deals") : t("catalog.shopTitle")
 

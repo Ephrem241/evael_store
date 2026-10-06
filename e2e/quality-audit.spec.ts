@@ -48,6 +48,7 @@ const ROUTES: Route[] = [
   guest("/"),
   guest("/shop"),
   guest("/shop?sale=1"),
+  guest("/deals"),
   guest("/categories"),
   guest((d) => `/category/${d.categorySlug}`),
   guest((d) => `/product/${d.productSlug}`),
@@ -236,9 +237,9 @@ test.describe("Quality audit: every route at every size", () => {
     expect(broken).toEqual([])
   })
 
-  test("the Deals link goes to the sale listing, and the page is headed Deals", async ({ page }) => {
+  test("the Deals page lists the deals, and is headed Deals", async ({ page }) => {
     await page.goto("/deals")
-    await expect(page).toHaveURL(/\/shop\?sale=1$/)
+    await expect(page).toHaveURL(/\/deals$/)
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.nav.deals)
     await expect(page).toHaveTitle(new RegExp(en.nav.deals))
   })

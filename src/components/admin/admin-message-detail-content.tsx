@@ -110,7 +110,7 @@ function AdminMessageDetailContent({ messageId }: { messageId: string }) {
     <div className="space-y-6">
       <Link
         href="/admin/messages"
-        className="inline-flex items-center gap-1 text-sm text-forest underline underline-offset-4 hover:no-underline"
+        className="inline-flex items-center gap-1 text-sm text-brand-ink underline underline-offset-4 hover:no-underline"
       >
         <ArrowLeft aria-hidden className="size-4" />
         {t("admin.messages.backToMessages")}
@@ -143,7 +143,7 @@ function AdminMessageDetailContent({ messageId }: { messageId: string }) {
             {t("admin.messages.from", { name: message.name })}
           </h2>
           <p>
-            <a href={`mailto:${message.email}`} className="break-all text-forest underline underline-offset-4 hover:no-underline">
+            <a href={`mailto:${message.email}`} className="break-all text-brand-ink underline underline-offset-4 hover:no-underline">
               {message.email}
             </a>
           </p>
@@ -159,7 +159,7 @@ function AdminMessageDetailContent({ messageId }: { messageId: string }) {
           </h2>
           <ol className="space-y-3">
             {message.replies.map((reply) => (
-              <li key={reply.id} className="space-y-2 rounded-card border border-border bg-cream/60 p-4">
+              <li key={reply.id} className="space-y-2 rounded-card border border-border bg-brand-soft/60 p-4">
                 <p className="text-xs text-muted-text">
                   {t("admin.messages.repliedBy", {
                     name: reply.adminName ?? BRAND_NAME,

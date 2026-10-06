@@ -27,7 +27,7 @@ function LanguageSwitcher({
   labels?: "short" | "full"
   /** A single "switch to the other language" button — for the narrow phone header. */
   compact?: boolean
-  /** "dark" is for the forest footer. */
+  /** "dark" is for the dark footer. */
   tone?: "light" | "dark"
 }) {
   const t = useT()
@@ -62,7 +62,7 @@ function LanguageSwitcher({
         // Named in its own language: the button says which language it switches TO.
         aria-label={LOCALE_NAMES[other].native}
         className={cn(
-          "inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-border bg-card px-3 text-xs font-medium text-charcoal transition-colors hover:bg-cream focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none max-lg:h-11 max-lg:min-w-11",
+          "inline-flex h-9 min-w-10 items-center justify-center rounded-full border border-border bg-card px-3 text-xs font-medium text-charcoal transition-colors hover:bg-subtle focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none max-lg:h-11 max-lg:min-w-11",
           other === "am" && "font-ethiopic-system",
           pending && "opacity-70",
           className
@@ -102,11 +102,11 @@ function LanguageSwitcher({
               locale === "am" && "font-ethiopic-system",
               dark
                 ? active
-                  ? "bg-gold text-forest-dark"
+                  ? "bg-brand-strong text-white"
                   : "text-white/80 hover:bg-white/10"
                 : active
-                  ? "bg-forest text-white"
-                  : "text-charcoal hover:bg-cream"
+                  ? "bg-brand-strong text-white"
+                  : "text-charcoal hover:bg-subtle"
             )}
           >
             {labels === "full" ? LOCALE_NAMES[locale].native : LOCALE_NAMES[locale].short}

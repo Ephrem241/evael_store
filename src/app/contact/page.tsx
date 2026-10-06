@@ -36,23 +36,25 @@ function ContactRow({
   value: string
   href?: string
 }) {
+  // A <dl> group may only hold the <dt> and its <dd>, so the round icon lives
+  // inside the <dt> and is pinned into the row's left padding.
   return (
-    <div className="flex items-start gap-4">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sand/70 text-forest">
-        <Icon aria-hidden className="size-5" strokeWidth={1.6} />
-      </span>
-      <div className="min-w-0">
-        <dt className="text-sm text-muted-text">{label}</dt>
-        <dd className="font-medium break-words text-charcoal">
-          {href ? (
-            <a href={href} className={linkClass}>
-              {value}
-            </a>
-          ) : (
-            value
-          )}
-        </dd>
-      </div>
+    <div className="relative min-h-11 ps-15">
+      <dt className="text-sm text-muted-text">
+        <span className="absolute start-0 top-0 flex size-11 items-center justify-center rounded-full bg-brand-soft text-brand">
+          <Icon aria-hidden className="size-5" strokeWidth={1.6} />
+        </span>
+        {label}
+      </dt>
+      <dd className="font-medium break-words text-charcoal">
+        {href ? (
+          <a href={href} className={linkClass}>
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
     </div>
   )
 }
@@ -88,7 +90,7 @@ export default async function ContactPage() {
           {contact.hours && <ContactRow icon={Clock} label={t("info.contact.hours")} value={contact.hours} />}
         </dl>
       ) : (
-        <div className="space-y-4 rounded-card bg-cream/70 p-5 sm:p-7">
+        <div className="space-y-4 rounded-card bg-brand-soft/70 p-5 sm:p-7">
           <p className="leading-relaxed text-charcoal/80">{t("info.contact.notSet")}</p>
           <InfoLink href="/faq">{t("info.common.faqLink")}</InfoLink>
         </div>

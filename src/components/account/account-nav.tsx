@@ -13,7 +13,7 @@ import { signOut } from "@/lib/services/auth"
 import { Button } from "@/components/ui/button"
 
 const ACCOUNT_NAV_ITEMS: { href: string; label: MessageKey; icon: typeof User }[] = [
-  { href: "/account", label: "account.nav.profile", icon: User },
+  { href: "/account", label: "account.nav.overview", icon: User },
   { href: "/account/orders", label: "account.nav.orders", icon: Package },
   { href: "/account/favorites", label: "account.nav.favorites", icon: Heart },
   { href: "/account/addresses", label: "account.nav.addresses", icon: MapPin },
@@ -47,9 +47,13 @@ function AccountNav() {
   return (
     <div className="space-y-4">
       {user && (
-        <div className="flex items-center gap-3 rounded-card border border-border bg-card p-4 lg:hidden">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-sand">
-            <User aria-hidden className="size-6 text-forest" />
+        <div className="flex items-center gap-3 rounded-card border border-border bg-card p-4 shadow-soft">
+          {/* The first letter of the name, on the soft orange. */}
+          <div
+            aria-hidden
+            className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-soft text-lg font-bold text-brand-ink uppercase"
+          >
+            {user.fullName.trim().charAt(0) || <User className="size-6" />}
           </div>
           <div className="min-w-0">
             <p className="truncate font-medium text-charcoal">{user.fullName}</p>
@@ -68,14 +72,14 @@ function AccountNav() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center justify-between rounded-xl border border-border bg-card p-3 text-sm transition-colors lg:justify-start lg:gap-2 lg:border-transparent lg:p-2",
+                "flex items-center justify-between rounded-xl border border-border bg-card p-3 text-sm transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-12 lg:justify-start lg:gap-2 lg:border-transparent lg:bg-transparent lg:px-3 lg:py-2.5",
                 active
-                  ? "bg-cream font-medium text-forest lg:bg-cream"
-                  : "text-charcoal hover:bg-cream/70"
+                  ? "bg-brand-soft font-semibold text-brand-ink lg:bg-brand-soft"
+                  : "text-charcoal hover:bg-subtle"
               )}
             >
               <span className="flex items-center gap-2">
-                <Icon aria-hidden className="size-4" />
+                <Icon aria-hidden className={cn("size-[18px]", active ? "text-brand" : "text-muted-text")} />
                 {t(item.label)}
               </span>
               <ChevronRight aria-hidden className="size-4 text-muted-text lg:hidden" />

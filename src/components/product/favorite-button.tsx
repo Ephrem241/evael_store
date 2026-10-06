@@ -38,11 +38,11 @@ function FavoriteButton({
       onClick={handleToggle}
       aria-label={isFavorited ? t("product.favorites.remove") : t("product.favorites.add")}
       className={cn(
-        "size-9 rounded-full bg-white/95 text-charcoal shadow-soft hover:bg-white hover:text-error",
+        "size-9 rounded-full bg-white/95 text-charcoal shadow-soft hover:bg-white hover:text-sale",
         className
       )}
     >
-      <Heart className={cn("size-[18px]", isFavorited && "fill-error text-error")} />
+      <Heart className={cn("size-[18px]", isFavorited && "fill-sale text-sale")} />
     </Button>
   )
 }

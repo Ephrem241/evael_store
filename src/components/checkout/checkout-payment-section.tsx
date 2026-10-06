@@ -29,15 +29,15 @@ function CheckoutPaymentSection() {
           <label
             key={provider.id}
             className={cn(
-              "flex items-start gap-3 rounded-xl border border-border p-4 text-sm transition-colors has-[:checked]:border-forest has-[:checked]:bg-cream",
-              provider.enabled ? "cursor-pointer hover:border-forest/50" : "cursor-not-allowed opacity-60"
+              "flex items-start gap-3 rounded-xl border border-border p-4 text-sm transition-colors has-[:checked]:border-brand has-[:checked]:bg-brand-soft",
+              provider.enabled ? "cursor-pointer hover:border-brand/50" : "cursor-not-allowed opacity-60"
             )}
           >
             <input
               type="radio"
               value={provider.id}
               disabled={!provider.enabled}
-              className="mt-0.5 accent-forest"
+              className="mt-0.5 accent-brand"
               {...register("paymentMethod")}
             />
             <span>

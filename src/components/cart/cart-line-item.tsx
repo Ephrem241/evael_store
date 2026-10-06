@@ -1,12 +1,15 @@
 "use client"
 
 import Link from "next/link"
-import { Trash2 } from "lucide-react"
+import { Heart, Trash2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 import { categoryNameOf, nameOf } from "@/lib/i18n/content"
 import { useT } from "@/lib/i18n/provider"
 import type { CartLine } from "@/lib/store/cart"
 import { useCartStore } from "@/lib/store/cart"
+import { useFavoritesStore } from "@/lib/store/favorites"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { isOnSale } from "@/lib/services/catalog"
 import { getCategoryIcon } from "@/components/product/category-icons"
@@ -20,17 +23,35 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
   const t = useT()
   const setQuantity = useCartStore((s) => s.setQuantity)
   const removeItem = useCartStore((s) => s.removeItem)
+  const router = useRouter()
+  const isFavorited = useFavoritesStore((s) => s.ids.includes(line.productId))
+  const toggleFavorite = useFavoritesStore((s) => s.toggle)
   const Icon = getCategoryIcon(product.categorySlug)
   const hasDiscount = isOnSale(product)
   const lineSubtotal = product.price * line.quantity
   const name = nameOf(product, t.locale)
 
+  // "Save for later": the item goes to the wishlist (the shopper's saved
+  // products, kept with their account) and leaves the cart.
+  function moveToWishlist() {
+    if (!isFavorited) toggleFavorite(product.id)
+    removeItem(product.id)
+    toast.success(t("cart.movedToWishlist"), {
+      action: { label: t("cart.viewWishlist"), onClick: () => router.push("/account/favorites") },
+    })
+  }
+
   // Phones: a compact row — an 80px photo, the name in at most two lines, and
   // tighter spacing; from `sm` up the photo is 112px as before.
   return (
-    <div className="flex gap-4 rounded-card border border-border/70 bg-card p-3 shadow-soft max-lg:gap-3 sm:p-4">
-      <Link href={`/product/${product.slug}`} className="w-20 shrink-0 self-start sm:w-28">
-        <ImagePlaceholder seed={product.id} icon={Icon} label={name} imageUrl={product.image_url} sizes="96px" />
+    <div className="flex gap-4 rounded-card border border-border bg-card p-3 shadow-soft max-lg:gap-3 sm:p-4">
+      <Link
+        href={`/product/${product.slug}`}
+        tabIndex={-1}
+        aria-hidden
+        className="w-20 shrink-0 self-start overflow-hidden rounded-xl bg-subtle sm:w-28"
+      >
+        <ImagePlaceholder seed={product.id} icon={Icon} label={name} decorative imageUrl={product.image_url} sizes="112px" />
       </Link>
 
       <div className="flex flex-1 flex-col gap-2">
@@ -38,7 +59,7 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
           <div>
             <Link
               href={`/product/${product.slug}`}
-              className="font-medium text-charcoal hover:text-forest max-lg:line-clamp-2 max-lg:text-[15px]"
+              className="font-medium text-charcoal hover:text-brand-ink max-lg:line-clamp-2 max-lg:text-[15px]"
             >
               {name}
             </Link>
@@ -68,8 +89,18 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
             onChange={(q) => setQuantity(product.id, q)}
             max={product.stock}
           />
-          <Price amount={lineSubtotal} t={t} />
+          <Price amount={lineSubtotal} t={t} className="text-charcoal" />
         </div>
+
+        <button
+          type="button"
+          onClick={moveToWishlist}
+          aria-label={t("cart.moveItemToWishlist", { name })}
+          className="inline-flex w-fit items-center gap-1.5 rounded-md text-sm font-medium text-muted-text transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11"
+        >
+          <Heart aria-hidden className="size-4" />
+          {t("cart.moveToWishlist")}
+        </button>
       </div>
     </div>
   )

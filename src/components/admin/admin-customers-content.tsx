@@ -100,7 +100,7 @@ function AdminCustomersContent() {
                   <span
                     className={cn(
                       "inline-flex rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap",
-                      isAdmin ? "bg-forest text-white" : "bg-cream text-charcoal"
+                      isAdmin ? "bg-brand-strong text-white" : "bg-brand-soft text-charcoal"
                     )}
                   >
                     {isAdmin ? t("admin.customers.roleAdmin") : t("admin.customers.roleCustomer")}

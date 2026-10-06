@@ -3,13 +3,15 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Search, Clock } from "lucide-react"
+import { ArrowRight, Clock, ImageIcon, Search } from "lucide-react"
 import { cn } from "cn"
 
+import { formatPrice } from "@/lib/currency"
 import { nameOf } from "@/lib/i18n/content"
 import { useT } from "@/lib/i18n/provider"
 import type { SearchSuggestions } from "@/lib/services/catalog-client"
 import { getCategoryIcon } from "@/components/product/category-icons"
+import { RemoteProductImage } from "@/components/product/remote-product-image"
 import { useRecentSearchesStore } from "@/lib/store/recent-searches"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -35,6 +37,7 @@ function SearchBar({
   const uid = React.useId()
   const recentQueries = useRecentSearchesStore((s) => s.queries)
   const addRecentSearch = useRecentSearchesStore((s) => s.add)
+  const clearRecentSearches = useRecentSearchesStore((s) => s.clear)
   const [suggestions, setSuggestions] = React.useState<SearchSuggestions>({
     products: [],
     categories: [],
@@ -66,8 +69,8 @@ function SearchBar({
   const matchingProducts = trimmed ? suggestions.products : []
   const matchingCategories = trimmed ? suggestions.categories : []
   const showRecent = !trimmed && recentQueries.length > 0
-  const showSuggestions =
-    open && (matchingProducts.length > 0 || matchingCategories.length > 0 || showRecent)
+  const hasMatches = matchingProducts.length > 0 || matchingCategories.length > 0
+  const showSuggestions = open && (hasMatches || showRecent)
 
   function go(url: string) {
     setOpen(false)
@@ -148,19 +151,20 @@ function SearchBar({
         // set for every width (`max-lg:` too), or the Input's phone height
         // would replace them there.
         className={cn(
-          "rounded-full border-input bg-card pl-5 pr-14 text-[15px] shadow-soft placeholder:text-muted-text",
+          "rounded-full border-charcoal/15 bg-subtle/60 pl-11 pr-14 text-[15px] transition-[background-color,border-color,box-shadow] placeholder:text-muted-text hover:border-charcoal/25 focus-visible:bg-card",
           size === "lg" ? "h-12 max-lg:h-12" : "h-11 max-lg:h-11"
         )}
       />
+      <Search aria-hidden className="pointer-events-none absolute left-4 size-[18px] text-muted-text" />
       <Button
         type="submit"
         size="icon"
         // 44px below `lg` (the Button's icon size there), 2px in from the field's
         // edge on every side of the 48px phone search field.
-        className="absolute right-1.5 size-9 rounded-full bg-forest text-white hover:bg-forest-dark max-lg:right-0.5"
+        className="absolute right-1.5 size-9 rounded-full bg-brand-strong text-white hover:bg-brand-deep max-lg:right-0.5"
         aria-label={t("search.submit")}
       >
-        <Search className="size-4" />
+        <ArrowRight className="size-4" />
       </Button>
 
       {/* Suggestions appear without any focus change, so their number is read out. */}
@@ -182,17 +186,30 @@ function SearchBar({
               closeSuggestions()
             }
           }}
-          className="absolute top-full left-0 z-40 mt-2 w-full overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lift">
+          className="absolute top-full left-0 z-40 mt-2 w-full animate-in overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lift duration-150 fade-in slide-in-from-top-1">
           {showRecent && (
             <div role="group" aria-labelledby={`${uid}-recent`} className="border-b border-border p-2 last:border-b-0">
-              <p id={`${uid}-recent`} className="px-2 py-1 text-xs font-medium text-muted-text">{t("search.recent")}</p>
+              <div className="flex items-center justify-between px-2 py-1">
+                <p id={`${uid}-recent`} className="text-xs font-medium text-muted-text">{t("search.recent")}</p>
+                <button
+                  type="button"
+                  data-suggestion
+                  onClick={() => {
+                    clearRecentSearches()
+                    inputRef.current?.focus()
+                  }}
+                  className="rounded-md px-1.5 py-0.5 text-xs font-medium text-brand-ink hover:bg-brand-soft focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                >
+                  {t("search.clearRecent")}
+                </button>
+              </div>
               {recentQueries.map((q) => (
                 <button
                   key={q}
                   type="button"
                   data-suggestion
                   onClick={() => submitSearch(q)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-cream"
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-subtle"
                 >
                   <Clock aria-hidden className="size-3.5 text-muted-text" />
                   {q}
@@ -212,7 +229,7 @@ function SearchBar({
                     href={`/category/${c.slug}`}
                     data-suggestion
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-cream"
+                    className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-subtle"
                   >
                     <Icon aria-hidden className="size-3.5 text-muted-text" />
                     {nameOf(c, t.locale)}
@@ -223,7 +240,7 @@ function SearchBar({
           )}
 
           {matchingProducts.length > 0 && (
-            <div role="group" aria-labelledby={`${uid}-products`} className="p-2 last:border-b-0">
+            <div role="group" aria-labelledby={`${uid}-products`} className="border-b border-border p-2">
               <p id={`${uid}-products`} className="px-2 py-1 text-xs font-medium text-muted-text">{t("search.products")}</p>
               {matchingProducts.map((p) => (
                 <Link
@@ -231,11 +248,30 @@ function SearchBar({
                   href={`/product/${p.slug}`}
                   data-suggestion
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-cream"
+                  className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-sm hover:bg-subtle"
                 >
-                  {nameOf(p, t.locale)}
+                  <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-subtle">
+                    <ImageIcon aria-hidden className="size-4 text-muted-text" />
+                    {p.image_url && <RemoteProductImage src={p.image_url} alt="" sizes="40px" />}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{nameOf(p, t.locale)}</span>
+                  <span className="shrink-0 text-xs font-semibold text-brand-ink">{formatPrice(p.price, t)}</span>
                 </Link>
               ))}
+            </div>
+          )}
+
+          {trimmed && (
+            <div className="p-2">
+              <button
+                type="button"
+                data-suggestion
+                onClick={() => submitSearch(query)}
+                className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-2 text-left text-sm font-medium text-brand-ink hover:bg-brand-soft"
+              >
+                <span className="truncate">{t("search.seeAll", { query: trimmed })}</span>
+                <ArrowRight aria-hidden className="size-4 shrink-0" />
+              </button>
             </div>
           )}
         </div>

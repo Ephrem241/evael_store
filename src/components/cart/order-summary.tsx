@@ -55,10 +55,16 @@ function OrderSummary({
     }
   }, [])
   const unlocked = threshold != null && subtotal > threshold
+  // How far along the way to the offer the cart is (the bar), and how much is
+  // still missing. The offer is "over" the threshold — strictly above it — so
+  // at exactly the threshold nothing is "away", yet it is not unlocked either:
+  // the plain offer line is shown then.
+  const progress = threshold != null && threshold > 0 ? Math.min(100, (subtotal / threshold) * 100) : 0
+  const remaining = threshold != null ? threshold - subtotal : 0
 
   return (
-    <div className={bare ? "space-y-4" : "space-y-4 rounded-card border border-border/70 bg-card p-5 shadow-soft sm:p-6"}>
-      {!bare && <h2 className="font-display text-lg font-semibold text-charcoal">{t("cart.summary.title")}</h2>}
+    <div className={bare ? "space-y-4" : "space-y-4 rounded-card border border-border bg-card p-5 shadow-soft sm:p-6"}>
+      {!bare && <h2 className="font-display text-lg font-bold tracking-tight text-charcoal">{t("cart.summary.title")}</h2>}
 
       <div className="space-y-2.5 text-sm">
         <div className="flex justify-between">
@@ -88,24 +94,29 @@ function OrderSummary({
       </div>
 
       {threshold != null && deliveryFee == null && (
-        <p
-          className={
-            unlocked
-              ? "flex items-start gap-2 rounded-xl bg-success/10 px-3 py-2.5 text-sm text-success"
-              : "flex items-start gap-2 rounded-xl bg-cream px-3 py-2.5 text-sm text-charcoal/80"
-          }
-        >
-          <Truck aria-hidden className="mt-0.5 size-4 shrink-0" />
-          {unlocked
-            ? t("cart.summary.freeDeliveryUnlocked")
-            : t("cart.summary.freeDeliveryOffer", { amount: formatPrice(threshold, t) })}
-        </p>
+        <div className={cn("space-y-2.5 rounded-xl px-3.5 py-3", unlocked ? "bg-success/10" : "bg-brand-soft")}>
+          <p className={cn("flex items-start gap-2 text-sm", unlocked ? "font-medium text-success" : "text-charcoal")}>
+            <Truck aria-hidden className={cn("mt-0.5 size-4 shrink-0", !unlocked && "text-brand")} />
+            {unlocked
+              ? t("cart.summary.freeDeliveryUnlocked")
+              : remaining > 0
+                ? t("cart.summary.freeDeliveryAway", { amount: formatPrice(remaining, t) })
+                : t("cart.summary.freeDeliveryOffer", { amount: formatPrice(threshold, t) })}
+          </p>
+          {/* The sentence above says it in words; the bar only shows it. */}
+          <div aria-hidden className="h-1.5 overflow-hidden rounded-full bg-white">
+            <div
+              className={cn("h-full rounded-full transition-[width] duration-500 ease-out", unlocked ? "bg-success" : "bg-brand")}
+              style={{ width: `${unlocked ? 100 : progress}%` }}
+            />
+          </div>
+        </div>
       )}
 
       <div className={cn("border-t border-border pt-4", ctaDesktopOnly && "max-lg:mb-0")}>
         <div className="flex items-baseline justify-between">
-          <span className="font-medium text-charcoal">{t("cart.summary.total")}</span>
-          <span className="text-xl font-semibold text-forest">{formatPrice(total, t)}</span>
+          <span className="font-semibold text-charcoal">{t("cart.summary.total")}</span>
+          <span className="text-xl font-bold tracking-tight text-charcoal">{formatPrice(total, t)}</span>
         </div>
         {deliveryFee == null && (
           <p className="mt-1 text-xs text-muted-text">{t("cart.summary.deliveryAdded")}</p>

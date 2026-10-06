@@ -254,6 +254,7 @@ export const admin = {
     nameAm: "Enter an Amharic name.",
     slug: "Enter a slug.",
     slugFormat: "Use lowercase letters, numbers, and hyphens only.",
+    slugLength: "Keep the slug to {max} characters or fewer.",
     descriptionEn: "Enter an English description.",
     descriptionAm: "Enter an Amharic description.",
     price: "Enter a price greater than 0.",

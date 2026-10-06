@@ -2,6 +2,7 @@
 export const account = {
   nav: {
     label: "Account",
+    overview: "My account",
     profile: "Profile",
     orders: "Orders",
     favorites: "Favorites",
@@ -10,6 +11,15 @@ export const account = {
     admin: "Admin dashboard",
     logout: "Log out",
     loggedOut: "You've been logged out.",
+  },
+  // The top of /account. {name} is the customer's first name.
+  overview: {
+    title: "My Account",
+    greeting: "Hello, {name}!",
+    intro: "Track your orders, manage your wishlist and keep your details up to date.",
+    recentOrders: "Recent orders",
+    allOrders: "All orders",
+    shortcuts: "Account shortcuts",
   },
   profile: {
     title: "Profile",
@@ -67,9 +77,9 @@ export const account = {
   favorites: {
     title: "Favorites",
     subtitle: "Products you've saved for later.",
-    emptyTitle: "No favorites yet.",
-    emptyText: "Save products you love — tap the heart on any product.",
-    browse: "Browse products",
+    emptyTitle: "Your wishlist is waiting.",
+    emptyText: "Save products you love and find them here later.",
+    browse: "Start shopping",
     syncFailed: "Couldn't sync your favorites. Your changes are saved on this device.",
   },
   orders: {

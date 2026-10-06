@@ -20,7 +20,7 @@ function DesktopNav({ links }: { links: NavLink[] }) {
   const pathname = usePathname()
 
   return (
-    <nav aria-label={t("nav.primary")} className="flex h-12 items-center justify-center gap-7 xl:gap-9">
+    <nav aria-label={t("nav.primary")} className="flex h-12 items-center gap-7 xl:gap-9">
       {links.map((link) => {
         const active = isActivePath(pathname, link.href)
         return (
@@ -29,10 +29,10 @@ function DesktopNav({ links }: { links: NavLink[] }) {
             href={link.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex h-full items-center text-[13.5px] font-medium tracking-wide whitespace-nowrap transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
+              "relative flex h-full items-center text-sm font-medium whitespace-nowrap transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
               active
-                ? "text-forest after:bg-gold"
-                : "text-charcoal/80 after:bg-transparent hover:text-forest hover:after:bg-forest/20"
+                ? "font-semibold text-brand-ink after:bg-brand"
+                : "text-charcoal/85 after:bg-transparent hover:text-brand-ink hover:after:bg-brand/30"
             )}
           >
             {link.label}

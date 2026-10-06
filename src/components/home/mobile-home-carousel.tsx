@@ -5,7 +5,7 @@ import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 
-// The homepage's marketing banners (hero, special deals, lifestyle), combined
+// The homepage's marketing banners (hero and special deals), combined
 // into one swipeable full-bleed carousel — phones only; desktop keeps each
 // banner as its own separate, stacked section (see app/page.tsx). Reuses the
 // exact scroll-tracking approach the product gallery already uses
@@ -54,7 +54,10 @@ function MobileHomeCarousel({ slides }: { slides: ReactNode[] }) {
         {slides.map((_, i) => (
           <span
             key={i}
-            className={cn("size-1.5 rounded-full transition-colors", i === activeIndex ? "bg-forest" : "bg-border")}
+            className={cn(
+              "h-1.5 rounded-full transition-[width,background-color] duration-300",
+              i === activeIndex ? "w-5 bg-brand" : "w-1.5 bg-charcoal/20"
+            )}
           />
         ))}
       </div>

@@ -29,12 +29,14 @@ export const nav: Dictionary["nav"] = {
 }
 
 export const search: Dictionary["search"] = {
-  placeholder: "ምን ይፈልጋሉ?",
+  placeholder: "ምርቶችን እና ምድቦችን ይፈልጉ...",
   label: "ምርቶችን ፈልግ",
   submit: "ፈልግ",
   recent: "የቅርብ ጊዜ ፍለጋዎች",
   categories: "ምድቦች",
   products: "ምርቶች",
+  clearRecent: "አጽዳ",
+  seeAll: "ለ“{query}” ሁሉንም ውጤቶች ይመልከቱ",
   suggestionCount: {
     one: "{count} አስተያየት አለ። ለማሰስ የታች ቀስቱን ይጫኑ።",
     other: "{count} አስተያየቶች አሉ። ለማሰስ የታች ቀስቱን ይጫኑ።",

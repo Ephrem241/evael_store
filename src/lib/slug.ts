@@ -8,7 +8,11 @@
 // turn into a server error page.)
 export const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/
 
-const MAX_SLUG_LENGTH = 200
+// Shared with the admin forms (product and category schemas), so the admin can
+// never save a slug the storefront would then refuse to open. Long product
+// names make long slugs: 255 leaves room for them while still turning away
+// absurd input before it reaches the database.
+export const MAX_SLUG_LENGTH = 255
 
 export function isValidSlug(value: string): boolean {
   return value.length <= MAX_SLUG_LENGTH && SLUG_RE.test(value)

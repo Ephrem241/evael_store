@@ -133,7 +133,7 @@ function AdminCategoriesContent() {
                       aria-label={t("admin.categories.moveUp")}
                       disabled={index === 0}
                       onClick={() => handleMove(category.id, "up")}
-                      className="flex h-6 w-8 items-center justify-center rounded-md outline-none hover:bg-cream focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-30"
+                      className="flex h-6 w-8 items-center justify-center rounded-md outline-none hover:bg-subtle focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-30"
                     >
                       <ArrowUp className="size-3.5" />
                     </button>
@@ -142,7 +142,7 @@ function AdminCategoriesContent() {
                       aria-label={t("admin.categories.moveDown")}
                       disabled={index === sorted.length - 1}
                       onClick={() => handleMove(category.id, "down")}
-                      className="flex h-6 w-8 items-center justify-center rounded-md outline-none hover:bg-cream focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-30"
+                      className="flex h-6 w-8 items-center justify-center rounded-md outline-none hover:bg-subtle focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-30"
                     >
                       <ArrowDown className="size-3.5" />
                     </button>

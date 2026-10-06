@@ -94,7 +94,7 @@ function AdminOrdersContent() {
                 </div>
               </TableCell>
               <TableCell>
-                <Link href={`/admin/orders/${order.id}`} className="text-sm text-forest hover:underline">
+                <Link href={`/admin/orders/${order.id}`} className="text-sm text-brand-ink hover:underline">
                   {t("admin.orders.view")}
                 </Link>
               </TableCell>
