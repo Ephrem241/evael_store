@@ -78,6 +78,7 @@ export const catalog = {
 export const product = {
   stock: {
     out: "Out of stock",
+    soldOut: "Sold out",
     low: "Only {count} left in stock",
     in: "In stock",
   },

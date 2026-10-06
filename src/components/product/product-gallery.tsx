@@ -7,6 +7,7 @@ import { cn } from "cn"
 import { useT } from "@/lib/i18n/provider"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { getCategoryIcon } from "@/components/product/category-icons"
+import { SoldOutStamp } from "@/components/product/sold-out-stamp"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 
 // Takes categorySlug (a plain string) rather than the resolved icon
@@ -29,6 +30,7 @@ function ProductGallery({
   productName,
   categorySlug,
   imageUrls,
+  soldOut = false,
 }: {
   productId: string
   productName: string
@@ -36,6 +38,8 @@ function ProductGallery({
   // The product's photos, main one first (plain strings, so they can cross the
   // server/client boundary).
   imageUrls: string[]
+  // Marked sold out by the admin (stock 0): a SOLD OUT stamp sits over the photo.
+  soldOut?: boolean
 }) {
   const t = useT()
   const Icon = getCategoryIcon(categorySlug)
@@ -88,6 +92,7 @@ function ProductGallery({
             </button>
           ))}
         </div>
+        {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} size="lg" />}
         <span
           aria-hidden
           className="pointer-events-none absolute right-3 bottom-3 flex size-10 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-soft"
@@ -136,13 +141,16 @@ function ProductGallery({
         <DialogContent className="sm:max-w-lg" aria-describedby={undefined}>
           {/* Names the dialog for screen readers; the picture is the visible content. */}
           <DialogTitle className="sr-only">{productName}</DialogTitle>
-          <ImagePlaceholder
-            seed={`${productId}-${activeIndex}`}
-            icon={Icon}
-            label={productName}
-            imageUrl={views[activeIndex] ?? null}
-            sizes="(min-width: 640px) 512px, calc(100vw - 2rem)"
-          />
+          <div className="relative overflow-hidden rounded-image">
+            <ImagePlaceholder
+              seed={`${productId}-${activeIndex}`}
+              icon={Icon}
+              label={productName}
+              imageUrl={views[activeIndex] ?? null}
+              sizes="(min-width: 640px) 512px, calc(100vw - 2rem)"
+            />
+            {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} size="lg" />}
+          </div>
         </DialogContent>
       </Dialog>
     </div>

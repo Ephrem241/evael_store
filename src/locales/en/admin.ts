@@ -109,7 +109,7 @@ export const admin = {
     discountPercent: "Discount (%)",
     discountHint: "Sets the price to this much off the original price (the compare-at price, or the price when there is none). 0 removes the discount.",
     soldOut: "Sold out",
-    soldOutHint: "Sets stock to 0 so nobody can order it. To sell it again, enter the new stock.",
+    soldOutHint: "Sets stock to 0 so nobody can order it and puts a SOLD OUT stamp on the product's photo. To sell it again, enter the new stock.",
     save: "Save changes",
     create: "Create product",
   },

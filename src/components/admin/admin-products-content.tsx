@@ -191,7 +191,7 @@ function AdminProductsContent() {
               <TableRow key={product.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <div className="size-10 shrink-0">
+                    <div className="relative size-10 shrink-0">
                       <ImagePlaceholder
                         seed={product.id}
                         icon={getCategoryIcon(category?.slug ?? "")}
@@ -199,7 +199,13 @@ function AdminProductsContent() {
                         decorative
                         imageUrl={product.image_url}
                         sizes="40px"
+                        className={soldOut ? "grayscale" : undefined}
                       />
+                      {/* Mirrors the storefront's SOLD OUT stamp; too small for text, and
+                          the Sold out badge in the stock column already says it. */}
+                      {soldOut && (
+                        <span aria-hidden className="pointer-events-none absolute inset-0 rounded-image bg-error/20 ring-2 ring-error ring-inset" />
+                      )}
                     </div>
                     <span className="max-w-40 truncate font-medium">{productName}</span>
                   </div>

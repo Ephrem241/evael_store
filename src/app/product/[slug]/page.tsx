@@ -113,6 +113,7 @@ export default async function ProductPage({
           productName={name}
           categorySlug={product.categorySlug}
           imageUrls={product.image_urls ?? (product.image_url ? [product.image_url] : [])}
+          soldOut={product.stock <= 0}
         />
 
         {/* Below `lg` a flex column, so the price can move to the top (order)

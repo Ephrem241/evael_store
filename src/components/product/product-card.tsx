@@ -12,6 +12,7 @@ import { QuickViewButton } from "@/components/product/quick-view"
 import { Price } from "@/components/product/price"
 import { DiscountBadge } from "@/components/product/discount-badge"
 import { Rating } from "@/components/product/rating"
+import { SoldOutStamp } from "@/components/product/sold-out-stamp"
 
 // The one product card, everywhere a product is listed:
 //
@@ -67,6 +68,7 @@ function ProductCard({
   const href = `/product/${product.slug}`
   const name = nameOf(product, t.locale)
   const onSale = !!product.compare_at_price && product.compare_at_price > product.price
+  const soldOut = product.stock <= 0
 
   return (
     <article
@@ -83,17 +85,16 @@ function ProductCard({
           imageUrl={product.image_url}
           sizes={sizes}
           eager={eager}
-          className="rounded-none transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          className={cn(
+            "rounded-none transition-transform duration-500 ease-out group-hover:scale-[1.04]",
+            soldOut && "grayscale-[40%]"
+          )}
         />
+        {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} />}
         {/* The badges and buttons are siblings of the Link (not nested inside
             it) — a <button> inside an <a> is invalid HTML and unreliable for
             keyboard/screen-reader users. */}
         <div className="pointer-events-none absolute top-2.5 left-2.5 z-10 flex flex-col items-start gap-1.5">
-          {product.stock <= 0 && (
-            <span className="inline-flex h-6 items-center rounded-md bg-charcoal px-2 text-[11px] font-semibold tracking-wide text-white">
-              {t("product.stock.out")}
-            </span>
-          )}
           <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
           {badge && (
             <span className="inline-flex h-6 items-center rounded-md bg-charcoal px-2 text-[11px] font-semibold tracking-wide text-white">
@@ -129,7 +130,7 @@ function ProductCard({
           {onSale && <Price amount={product.compare_at_price!} t={t} variant="compare" className="text-xs" />}
         </div>
         {!compact && (
-          <AddToCartButton productId={product.id} outOfStock={product.stock <= 0} className="relative z-10 mt-1 w-full" />
+          <AddToCartButton productId={product.id} outOfStock={soldOut} className="relative z-10 mt-1 w-full" />
         )}
       </div>
     </article>
