@@ -5,6 +5,7 @@ import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { useAddToCart } from "@/lib/hooks/use-add-to-cart"
+import { useIsAdmin } from "@/lib/store/auth"
 import { Button } from "@/components/ui/button"
 
 // The card's (and Quick View's) "Add to cart": a small client island (it needs
@@ -27,6 +28,10 @@ function AddToCartButton({
 }) {
   const t = useT()
   const addToCart = useAddToCart()
+  const isAdmin = useIsAdmin()
+
+  // Admins don't shop (see useIsAdmin).
+  if (isAdmin) return null
 
   return (
     <Button

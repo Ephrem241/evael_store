@@ -1,15 +1,16 @@
 -- ---------------------------------------------------------------------------
--- "New order" tracking for the admin.
+-- 0023: new-order alerts in the admin panel.
 --
--- Applied straight to the database on 2026-10-05 (version 20261005062812)
--- and recovered here from its migration history, so a fresh database matches
--- the live one. It ran before 0022; it does not depend on it either way.
+-- orders.admin_seen_at: when an admin first opened (or dismissed) the order.
+-- NULL = a new order the admin hasn't looked at yet; the admin panel counts
+-- these, pops up an alert when one arrives, and marks them "New".
 --
--- - orders.admin_seen_at: null until an admin has seen the order. Every order
---   that existed when this ran counts as seen.
--- - A partial index over the unseen orders, newest first.
--- - mark_orders_seen(ids): marks the given orders seen, or all of them when
---   called with no ids. Admins only.
+-- Orders that already exist are marked seen, so only orders placed from now
+-- on count as new.
+--
+-- Setting it goes through mark_orders_seen() (admin only). It touches no
+-- other column, so the status triggers (`update of status`: transition rules,
+-- stock, status emails) never fire for it.
 -- ---------------------------------------------------------------------------
 
 alter table public.orders add column if not exists admin_seen_at timestamptz;
@@ -18,6 +19,7 @@ update public.orders set admin_seen_at = now() where admin_seen_at is null;
 
 create index if not exists orders_unseen_idx on public.orders (created_at desc) where admin_seen_at is null;
 
+-- Marks the given orders seen; NULL marks every unseen order seen.
 create or replace function public.mark_orders_seen(p_order_ids uuid[] default null)
 returns void
 language plpgsql

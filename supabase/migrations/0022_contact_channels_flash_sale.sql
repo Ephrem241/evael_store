@@ -1,14 +1,13 @@
 -- ---------------------------------------------------------------------------
--- Contact channels and a flash-sale flag on products.
+-- 0022: Telegram / WhatsApp / phone contact, and a per-product flash sale.
 --
--- Applied straight to the database on 2026-10-05 (version 20261005060211)
--- and recovered here from its migration history, so a fresh database matches
--- the live one. It ran before 0022; it does not depend on it either way.
---
--- - products.is_flash_sale, switched on for every product already on sale
---   (a compare-at price above the selling price).
--- - Phone, WhatsApp and Telegram contact numbers in store_settings. Existing
---   values are left alone.
+-- - products.is_flash_sale: the admin chooses which discounted products the
+--   homepage's Flash Deals row shows (it used to show every discounted one).
+--   Products already on sale start switched on, so the row doesn't go empty.
+-- - store_settings: the shop's phone, WhatsApp and Telegram, shown on the
+--   Contact page and in the footer and edited on /admin/settings. Existing
+--   values are kept (on conflict do nothing). Reads are public and writes
+--   admin-only, as for every store_settings row (0014).
 -- ---------------------------------------------------------------------------
 
 alter table public.products

@@ -9,6 +9,7 @@ import {
   isLocale,
 } from "@/lib/i18n/config"
 import { hasMalformedEncoding } from "@/lib/slug"
+import { isAdminPath } from "@/lib/admin-path"
 
 // Two unrelated jobs share this file because Next allows one proxy:
 //  1. Route protection for signed-in areas (authProxy below).
@@ -106,12 +107,17 @@ async function authProxy(request: NextRequest) {
     return redirectTo(loginUrl)
   }
 
-  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
-    // One primary-key lookup, only for /admin/* (a handful of requests from
-    // a handful of people) — the JWT carries no role claim to check instead.
+  const isAdminArea = isAdminPath(pathname)
+  if (isAdminArea || pathname === "/checkout") {
+    // One primary-key lookup, only for /admin/* and /checkout — the JWT
+    // carries no role claim to check instead.
     const { data: profile } = await supabase.from("profiles").select("role").eq("id", userId).single()
-    if (profile?.role !== "admin") {
+    if (isAdminArea && profile?.role !== "admin") {
       return redirectTo(new URL("/", request.url))
+    }
+    // Admins browse the shop but don't order.
+    if (!isAdminArea && profile?.role === "admin") {
+      return redirectTo(new URL("/admin", request.url))
     }
   }
 

@@ -4,8 +4,10 @@ import { Clock, Mail, MapPin, Phone, type LucideIcon } from "lucide-react"
 import { getT } from "@/lib/i18n/server"
 import { pageMetadata } from "@/lib/seo/metadata"
 import { getStoreContact } from "@/lib/services/store-info"
+import { telLink } from "@/lib/contact-links"
 import { InfoLink, InfoPage, InfoSection, linkClass } from "@/components/info/info-page"
 import { ContactForm } from "@/components/contact/contact-form"
+import { ContactChannels } from "@/components/contact/contact-channels"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT()
@@ -23,7 +25,6 @@ const ORDER_NUMBER_EXAMPLE = "ETM-YYYYMMDD-XXXX"
 // Only a plausible address/number becomes a mailto:/tel: link; anything else the
 // shop typed in is shown as plain text.
 const EMAIL = /^[^\s@?&#]+@[^\s@?&#]+\.[^\s@?&#]+$/
-const PHONE = /^\+?[\d\s\-()]{6,}$/
 
 function ContactRow({
   icon: Icon,
@@ -64,12 +65,22 @@ function ContactRow({
 // emails the shop (it works whether or not those details are set).
 export default async function ContactPage() {
   const [t, contact] = await Promise.all([getT(), getStoreContact()])
-  const hasDetails = Boolean(contact.email || contact.phone || contact.address || contact.hours)
+  const hasDetails = Boolean(
+    contact.email || contact.phone || contact.whatsapp || contact.telegram || contact.address || contact.hours
+  )
 
   return (
     <InfoPage title={t("info.contact.title")} description={t("info.contact.subtitle")}>
       {hasDetails ? (
         <dl className="space-y-6 rounded-card border border-border bg-white p-5 sm:p-7">
+          {(contact.telegram || contact.whatsapp || contact.phone) && (
+            <div className="space-y-3">
+              <dt className="text-sm text-muted-text">{t("info.contact.channelsTitle")}</dt>
+              <dd>
+                <ContactChannels contact={contact} />
+              </dd>
+            </div>
+          )}
           {contact.email && (
             <ContactRow
               icon={Mail}
@@ -83,7 +94,7 @@ export default async function ContactPage() {
               icon={Phone}
               label={t("info.contact.phone")}
               value={contact.phone}
-              href={PHONE.test(contact.phone) ? `tel:${contact.phone.replace(/[^\d+]/g, "")}` : undefined}
+              href={telLink(contact.phone) ?? undefined}
             />
           )}
           {contact.address && <ContactRow icon={MapPin} label={t("info.contact.address")} value={contact.address} />}

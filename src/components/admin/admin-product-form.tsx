@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useForm, Controller } from "react-hook-form"
+import { useForm, useWatch, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 
@@ -11,9 +11,11 @@ import { useT } from "@/lib/i18n/provider"
 import { useAdminCategories } from "@/lib/hooks/use-admin-data"
 import { createProduct, updateProduct } from "@/lib/services/admin-catalog"
 import { MAX_SLUG_LENGTH } from "@/lib/slug"
+import { applyDiscount, discountPercent, MAX_DISCOUNT_PERCENT } from "@/lib/discount"
 import { productSchema, type ProductValues } from "@/components/admin/product-schema"
 import { FormField } from "@/components/forms/form-field"
 import { ProductImagesField } from "@/components/admin/product-images-field"
+import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
@@ -48,6 +50,7 @@ function toDefaultValues(product?: Product): ProductValues {
     is_featured: product?.is_featured ?? false,
     is_popular: product?.is_popular ?? false,
     is_active: product?.is_active ?? true,
+    is_flash_sale: product?.is_flash_sale ?? false,
   }
 }
 
@@ -56,17 +59,39 @@ function AdminProductForm({ product }: { product?: Product }) {
   const router = useRouter()
   const { data: categories = [] } = useAdminCategories()
   const [slugTouched, setSlugTouched] = useState(!!product)
+  const [discount, setDiscount] = useState(() =>
+    product ? String(discountPercent(product.price, product.compare_at_price) || "") : ""
+  )
 
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    getValues,
+    setFocus,
     formState: { errors, isSubmitting },
   } = useForm<ProductValues>({
     resolver: zodResolver(productSchema),
     defaultValues: toDefaultValues(product),
   })
+
+  const stock = useWatch({ control, name: "stock" })
+
+  // Rewrites price / compare-at price for `value`% off the original price.
+  function handleDiscountChange(value: string) {
+    setDiscount(value)
+    const percent = value === "" ? 0 : Number(value)
+    if (!Number.isFinite(percent) || percent < 0) return
+    const next = applyDiscount({ price: getValues("price"), compare_at_price: getValues("compare_at_price") }, percent)
+    setValue("price", next.price, { shouldValidate: true, shouldDirty: true })
+    setValue("compare_at_price", next.compare_at_price, { shouldValidate: true, shouldDirty: true })
+  }
+
+  function handleSoldOutChange(soldOut: boolean) {
+    if (soldOut) setValue("stock", 0, { shouldValidate: true, shouldDirty: true })
+    else setFocus("stock")
+  }
 
   function handleNameChange(value: string) {
     if (!slugTouched) {
@@ -152,6 +177,37 @@ function AdminProductForm({ product }: { product?: Product }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label htmlFor="discount_percent" className="text-sm font-medium text-charcoal">
+            {t("admin.productForm.discountPercent")}
+          </label>
+          <Input
+            id="discount_percent"
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={MAX_DISCOUNT_PERCENT}
+            step={1}
+            value={discount}
+            onChange={(e) => handleDiscountChange(e.target.value)}
+            aria-describedby="discount_percent-hint"
+          />
+          <p id="discount_percent-hint" className="text-xs text-muted-text">
+            {t("admin.productForm.discountHint")}
+          </p>
+        </div>
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
+            <Switch checked={Number(stock) === 0} onCheckedChange={handleSoldOutChange} aria-describedby="sold_out-hint" />
+            {t("admin.productForm.soldOut")}
+          </label>
+          <p id="sold_out-hint" className="text-xs text-muted-text">
+            {t("admin.productForm.soldOutHint")}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
         <FormField id="sku" label={t("admin.productForm.sku")} registration={register("sku")} error={errors.sku?.message} />
         <div className="space-y-1.5">
           <label htmlFor="category_id" className="text-sm font-medium text-charcoal">
@@ -213,7 +269,16 @@ function AdminProductForm({ product }: { product?: Product }) {
           )} />
           {t("admin.productForm.popular")}
         </label>
+        <label className="flex items-center gap-2 text-sm text-charcoal">
+          <Controller name="is_flash_sale" control={control} render={({ field }) => (
+            <Switch checked={field.value} onCheckedChange={field.onChange} aria-describedby="flash_sale-hint" />
+          )} />
+          {t("admin.productForm.flashSale")}
+        </label>
       </div>
+      <p id="flash_sale-hint" className="text-xs text-muted-text">
+        {t("admin.productForm.flashSaleHint")}
+      </p>
 
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={() => router.push("/admin/products")}>

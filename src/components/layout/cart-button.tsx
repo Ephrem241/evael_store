@@ -6,6 +6,7 @@ import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { useCartStore, selectCartCount } from "@/lib/store/cart"
+import { useIsAdmin } from "@/lib/store/auth"
 import { Button } from "@/components/ui/button"
 
 // Links straight to /cart rather than opening a mini-cart drawer. Spec
@@ -27,6 +28,7 @@ function CartButton({
 }) {
   const t = useT()
   const count = useCartStore(selectCartCount)
+  const isAdmin = useIsAdmin()
   const label = count > 0 ? t.plural("nav.cartCount", count) : t("nav.cart")
   // Keyed on the count, so the badge re-mounts and plays its small "pop"
   // whenever something is added (the animation is off under reduced motion).
@@ -39,6 +41,9 @@ function CartButton({
       {count > 99 ? "99+" : count}
     </span>
   )
+
+  // Admins don't shop (see useIsAdmin).
+  if (isAdmin) return null
 
   if (variant === "stacked") {
     return (

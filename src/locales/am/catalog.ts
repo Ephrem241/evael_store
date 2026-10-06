@@ -79,6 +79,8 @@ export const product: Dictionary["product"] = {
   },
   addToCart: "ወደ ጋሪ ጨምር",
   buyNow: "አሁን ግዛ",
+  adminNotice: "እንደ አስተዳዳሪ ስለገቡ ማዘዝ አይቻልም።",
+  editProduct: "ምርቱን ያስተካክሉ",
   addedToCart: "ወደ ጋሪዎ ተጨምሯል።",
   viewCart: "ጋሪን ይመልከቱ",
   rated: "ከ5 {value} ተሰጥቶታል",

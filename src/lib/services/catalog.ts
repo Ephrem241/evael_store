@@ -96,7 +96,7 @@ export function pickPopular(products: Product[], categories: Category[], limit =
 
 export function pickFlashDeals(products: Product[], categories: Category[], limit = 8): ProductWithCategory[] {
   return products
-    .filter((p) => p.is_active && isOnSale(p))
+    .filter((p) => p.is_active && (p.is_flash_sale ?? true) && isOnSale(p))
     .slice(0, limit)
     .map((p) => withCategory(p, categories))
 }

@@ -2,6 +2,7 @@
 
 import { OrderDetailSkeleton } from "@/components/feedback/skeletons"
 import Link from "next/link"
+import { useEffect } from "react"
 import { toast } from "sonner"
 import { PackageX } from "lucide-react"
 
@@ -10,6 +11,7 @@ import type { OrderStatus as Status } from "@/lib/types/orders"
 import { useOrder } from "@/lib/hooks/use-orders"
 import { useProfiles } from "@/lib/hooks/use-admin-data"
 import { updateOrderStatus } from "@/lib/services/orders"
+import { useOrderAlertsStore } from "@/lib/store/order-alerts"
 import { statusMenuOptions } from "@/lib/order-status"
 import { formatOrderDateTime } from "@/lib/date"
 import { OrderStatus } from "@/components/order/order-status"
@@ -32,6 +34,13 @@ function AdminOrderDetailContent({ orderId }: { orderId: string }) {
   const t = useT()
   const { data: order, loading: orderLoading, reload } = useOrder(orderId)
   const { data: profiles, loading: profilesLoading } = useProfiles()
+  const markSeen = useOrderAlertsStore((s) => s.markSeen)
+
+  // Opening an order means the admin has seen it: it stops counting as new.
+  const orderFound = Boolean(order)
+  useEffect(() => {
+    if (orderFound) void markSeen([orderId])
+  }, [orderFound, orderId, markSeen])
 
   if (orderLoading || profilesLoading) return <OrderDetailSkeleton />
 

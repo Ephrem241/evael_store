@@ -4,6 +4,7 @@ import { useRemote, type Remote } from "@/lib/hooks/use-remote"
 import { fetchAdminCategories, fetchAdminProduct, fetchAdminProducts } from "@/lib/services/admin-catalog"
 import { fetchProfiles, type AdminProfile } from "@/lib/services/admin-customers"
 import { fetchHomepageSettings } from "@/lib/services/admin-homepage"
+import { fetchStoreContactSettings, type StoreContactSettings } from "@/lib/services/admin-store-settings"
 import {
   countUnreadMessages,
   fetchContactMessage,
@@ -40,6 +41,12 @@ const loadHomepage = () => fetchHomepageSettings()
 
 export function useHomepageSettings(): Remote<HomepageSettings> {
   return useRemote("homepage", loadHomepage)
+}
+
+const loadStoreSettings = () => fetchStoreContactSettings()
+
+export function useStoreContactSettings(): Remote<StoreContactSettings> {
+  return useRemote("store-settings", loadStoreSettings)
 }
 
 export function useProfiles(): Remote<AdminProfile[]> {

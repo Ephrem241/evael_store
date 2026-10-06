@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BadgePercent, Home, LayoutGrid, ShoppingCart, User } from "lucide-react"
+import { BadgePercent, Home, LayoutGrid, LayoutDashboard, ShoppingCart, User } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -18,16 +18,26 @@ function BottomNav() {
 
   // The product page has its own sticky Add to Cart / Buy Now bar, which
   // takes this bar's place there — showing both would stack two fixed bottom
-  // bars and eat into the one screen where extra room matters most.
-  if (pathname.startsWith("/product/")) return null
+  // bars and eat into the one screen where extra room matters most. Admins
+  // get no buy bar, so they keep this one.
+  if (pathname.startsWith("/product/") && user?.role !== "admin") return null
 
-  const items: { href: string; label: MessageKey; icon: typeof Home }[] = [
-    { href: "/", label: "nav.home", icon: Home },
-    { href: "/categories", label: "nav.categories", icon: LayoutGrid },
-    { href: "/deals", label: "nav.deals", icon: BadgePercent },
-    { href: "/cart", label: "nav.cart", icon: ShoppingCart },
-    { href: user ? "/account" : "/login", label: "nav.account", icon: User },
-  ]
+  // An admin browsing the shop doesn't shop: no deals or cart, and the last
+  // tab leads back to the dashboard.
+  const items: { href: string; label: MessageKey; icon: typeof Home }[] =
+    user?.role === "admin"
+      ? [
+          { href: "/", label: "nav.home", icon: Home },
+          { href: "/categories", label: "nav.categories", icon: LayoutGrid },
+          { href: "/admin", label: "admin.nav.dashboard", icon: LayoutDashboard },
+        ]
+      : [
+          { href: "/", label: "nav.home", icon: Home },
+          { href: "/categories", label: "nav.categories", icon: LayoutGrid },
+          { href: "/deals", label: "nav.deals", icon: BadgePercent },
+          { href: "/cart", label: "nav.cart", icon: ShoppingCart },
+          { href: user ? "/account" : "/login", label: "nav.account", icon: User },
+        ]
 
   return (
     <nav

@@ -8,6 +8,7 @@ import "@/lib/i18n/zod" // translated fallbacks for zod's default messages
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
+import { isAdminPath } from "@/lib/admin-path"
 import { useT } from "@/lib/i18n/provider"
 import { translate } from "@/lib/i18n/translate"
 import { signIn } from "@/lib/services/auth"
@@ -38,9 +39,9 @@ function LoginForm({ redirectTo }: { redirectTo: string }) {
       return
     }
     toast.success(t("auth.login.welcome", { name: result.user.fullName.split(" ")[0] }))
-    // An admin with nowhere particular to go lands in the admin area; a
-    // requested page (?redirect=…) still wins.
-    router.push(result.user.role === "admin" && redirectTo === "/account" ? "/admin" : redirectTo)
+    // An admin always lands in the admin area (they don't shop), unless they
+    // were already on their way to a particular admin page.
+    router.push(result.user.role === "admin" && !isAdminPath(redirectTo) ? "/admin" : redirectTo)
   }
 
   return (

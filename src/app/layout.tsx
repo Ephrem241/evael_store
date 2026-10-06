@@ -15,6 +15,7 @@ import { MobileHeader } from "@/components/layout/mobile-header";
 import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/layout/container";
 import { BottomNav } from "@/components/navigation/bottom-nav";
+import { StorefrontOnly } from "@/components/layout/storefront-only";
 
 // The two typefaces are SELF-HOSTED (./fonts, all SIL Open Font License,
 // fetched from Google Fonts): the same fonts next/font/google would serve, but
@@ -103,15 +104,25 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               {t("nav.skipToContent")}
             </a>
             <div className="flex min-h-dvh flex-col">
-              <AnnouncementBar />
-              <Header />
-              <MobileHeader />
+              {/* /admin/* is its own app (AdminShell draws its own chrome), so the
+                  shop's bars, footer and content container are left out there. */}
+              <StorefrontOnly>
+                <AnnouncementBar />
+                <Header />
+                <MobileHeader />
+              </StorefrontOnly>
               <main id="main-content" tabIndex={-1} className="flex-1 overflow-x-clip outline-none">
-                <Container>{children}</Container>
+                <StorefrontOnly fallback={children}>
+                  <Container>{children}</Container>
+                </StorefrontOnly>
               </main>
-              <Footer />
+              <StorefrontOnly>
+                <Footer />
+              </StorefrontOnly>
             </div>
-            <BottomNav />
+            <StorefrontOnly>
+              <BottomNav />
+            </StorefrontOnly>
             <Toaster />
             <AuthProvider />
           </MotionProvider>

@@ -7,6 +7,7 @@ import { Logo } from "@/components/layout/logo"
 import { CartButton } from "@/components/layout/cart-button"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
 import { SearchBar } from "@/components/navigation/search-bar"
+import { HideForAdmin } from "@/components/layout/storefront-only"
 import { Button } from "@/components/ui/button"
 
 // Phones: the logo/language/wishlist/cart row AND the full-width search bar
@@ -25,11 +26,13 @@ async function MobileHeader() {
           <LanguageSwitcher compact className="mr-1" />
           {/* The wishlist's only phone entry point besides the account menu
               (the bottom bar has Deals in its place), so it shows at every width. */}
-          <Button variant="ghost" size="icon-lg" asChild>
-            <Link href="/account/favorites" aria-label={t("nav.wishlist")}>
-              <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
-            </Link>
-          </Button>
+          <HideForAdmin>
+            <Button variant="ghost" size="icon-lg" asChild>
+              <Link href="/account/favorites" aria-label={t("nav.wishlist")}>
+                <Heart aria-hidden className="size-[22px]" strokeWidth={1.75} />
+              </Link>
+            </Button>
+          </HideForAdmin>
           <CartButton />
         </div>
       </Container>

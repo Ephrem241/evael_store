@@ -7,9 +7,10 @@ import { createClient } from "@/lib/supabase/server"
 // `store_settings` and `delivery_fees` tables are readable by anyone (RLS), and
 // the pages show only what has actually been set — nothing is invented.
 //
-// `store_settings` keys used here (JSON values; set them in the Supabase
-// dashboard until an admin screen exists):
-//   contact_email, contact_phone, contact_address, support_hours  -> text
+// `store_settings` keys used here (JSON values; the admin edits the contact
+// ones on /admin/settings):
+//   contact_email, contact_phone, contact_whatsapp, contact_telegram,
+//   contact_address, support_hours                                -> text
 //   return_window_days                                            -> number
 
 async function readSettings(keys: string[]): Promise<Map<string, unknown>> {
@@ -29,17 +30,30 @@ function text(value: unknown): string | null {
 export interface StoreContact {
   email: string | null
   phone: string | null
+  whatsapp: string | null
+  telegram: string | null
   address: string | null
   hours: string | null
 }
 
+export const STORE_CONTACT_KEYS = [
+  "contact_email",
+  "contact_phone",
+  "contact_whatsapp",
+  "contact_telegram",
+  "contact_address",
+  "support_hours",
+] as const
+
 // Each field is null until the shop has set it; the contact page shows only the
 // ones that exist.
 export const getStoreContact = cache(async (): Promise<StoreContact> => {
-  const settings = await readSettings(["contact_email", "contact_phone", "contact_address", "support_hours"])
+  const settings = await readSettings([...STORE_CONTACT_KEYS])
   return {
     email: text(settings.get("contact_email")),
     phone: text(settings.get("contact_phone")),
+    whatsapp: text(settings.get("contact_whatsapp")),
+    telegram: text(settings.get("contact_telegram")),
     address: text(settings.get("contact_address")),
     hours: text(settings.get("support_hours")),
   }

@@ -26,6 +26,7 @@ const tileClass =
 async function PaymentMethods() {
   const t = await getT()
   const codAvailable = cashOnDeliveryProvider.enabled
+  const upcoming = METHODS.filter((method) => !method.available)
 
   return (
     <div className="space-y-4">
@@ -35,11 +36,48 @@ async function PaymentMethods() {
         </h3>
         <p className="max-w-xl text-sm leading-relaxed text-muted-text">{t("home.payments.text")}</p>
       </div>
-      <ul
-        aria-labelledby="payments-heading"
-        className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap"
-      >
-        <li className={cn(tileClass, "col-span-2 border-success/40 bg-success/5 sm:col-span-1")}>
+      {/* Phones: a tile per bank stacked three rows of near-identical
+          "coming soon" cards. Here Cash on Delivery keeps its own (shorter)
+          tile, and the banks share one card with a single caption. Only one
+          of the two lists is displayed, so screen readers hear it once. */}
+      <ul aria-labelledby="payments-heading" className="space-y-3 sm:hidden">
+        <li className={cn(tileClass, "h-14 border-success/40 bg-success/5")}>
+          <span className="flex items-center gap-2 text-base font-bold text-charcoal">
+            <Banknote aria-hidden className="size-5 text-success" strokeWidth={1.75} />
+            {t("home.payments.cod")}
+          </span>
+          <span className="text-[11px] font-semibold text-success">
+            {codAvailable ? t("home.payments.available") : t("home.payments.comingSoon")}
+          </span>
+        </li>
+        {METHODS.filter((method) => method.available).map((method) => (
+          <li key={method.name} className={cn(tileClass, "h-14")}>
+            <span className={cn("text-base font-bold tracking-tight", method.colorClass)}>{method.name}</span>
+            <span className="text-[11px] font-medium text-muted-text">{t("home.payments.available")}</span>
+          </li>
+        ))}
+        {upcoming.length > 0 && (
+          <li className="space-y-2.5 rounded-xl border border-border bg-card px-3 py-3 text-center">
+            <p className="text-[11px] font-medium text-muted-text">{t("home.payments.comingSoon")}</p>
+            <ul className="flex flex-wrap justify-center gap-2">
+              {upcoming.map((method) => (
+                <li
+                  key={method.name}
+                  className={cn(
+                    "rounded-lg border border-border px-2.5 py-1 text-sm font-bold tracking-tight",
+                    method.colorClass
+                  )}
+                >
+                  {method.name}
+                </li>
+              ))}
+            </ul>
+          </li>
+        )}
+      </ul>
+
+      <ul aria-labelledby="payments-heading" className="hidden flex-wrap gap-3 sm:flex">
+        <li className={cn(tileClass, "border-success/40 bg-success/5")}>
           <span className="flex items-center gap-2 text-base font-bold text-charcoal">
             <Banknote aria-hidden className="size-5 text-success" strokeWidth={1.75} />
             {t("home.payments.cod")}
@@ -49,15 +87,7 @@ async function PaymentMethods() {
           </span>
         </li>
         {METHODS.map((method) => (
-          <li
-            key={method.name}
-            // On phones a lone last tile is centred, not left hanging. Cash on
-            // Delivery (item 1) spans both columns, so a lone tile is an EVEN item.
-            className={cn(
-              tileClass,
-              "last:even:col-span-2 last:even:w-[calc(50%-0.375rem)] last:even:justify-self-center sm:last:even:w-auto"
-            )}
-          >
+          <li key={method.name} className={tileClass}>
             {/* Not faded for "coming soon": fading brand-coloured text to 70% drops it to
                 2.8-3.3:1 (WCAG AA needs 4.5:1), and the caption below already says it in words. */}
             <span className={cn("line-clamp-1 text-base font-bold tracking-tight", method.colorClass)}>

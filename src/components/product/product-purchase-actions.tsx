@@ -1,13 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ShoppingCart } from "lucide-react"
+import { Pencil, ShoppingCart } from "lucide-react"
 
 import { useT } from "@/lib/i18n/provider"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { useAddToCart } from "@/lib/hooks/use-add-to-cart"
 import { useCartStore } from "@/lib/store/cart"
+import { useIsAdmin } from "@/lib/store/auth"
 import { Button } from "@/components/ui/button"
 import { QuantitySelector } from "@/components/product/quantity-selector"
 import { FavoriteButton } from "@/components/product/favorite-button"
@@ -21,6 +23,7 @@ function ProductPurchaseActions({ product, name }: { product: ProductWithCategor
   const addToCart = useAddToCart()
   const addItem = useCartStore((s) => s.addItem)
   const outOfStock = product.stock <= 0
+  const isAdmin = useIsAdmin()
 
   function handleAddToCart() {
     addToCart(product.id, quantity)
@@ -29,6 +32,22 @@ function ProductPurchaseActions({ product, name }: { product: ProductWithCategor
   function handleBuyNow() {
     addItem(product.id, quantity)
     router.push("/cart")
+  }
+
+  // An admin is here to see how the product looks, not to buy it: no
+  // quantity, cart or buy buttons (nor the phone buy bar) — a way to edit it.
+  if (isAdmin) {
+    return (
+      <div className="space-y-3 rounded-xl border border-brand/40 bg-brand-soft/60 p-4">
+        <p className="text-sm text-charcoal">{t("product.adminNotice")}</p>
+        <Button asChild variant="outline" size="lg">
+          <Link href={`/admin/products/${product.id}/edit`}>
+            <Pencil aria-hidden className="size-4" />
+            {t("product.editProduct")}
+          </Link>
+        </Button>
+      </div>
+    )
   }
 
   return (

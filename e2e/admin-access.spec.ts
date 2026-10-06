@@ -17,15 +17,22 @@ test.describe("Admin access", () => {
     await expect(page.getByRole("heading", { level: 1, name: en.admin.dashboard.title })).toBeVisible()
   })
 
-  test("a page the admin asked for still wins over the admin landing", async ({ page, adminUser }) => {
-    await page.goto("/login?redirect=%2Faccount%2Forders")
-    await waitForHydration(page)
-    const main = page.locator("main")
-    await main.getByLabel(en.auth.fields.email, { exact: true }).fill(adminUser.email)
-    await main.getByLabel(en.auth.fields.password, { exact: true }).fill(adminUser.password)
-    await main.getByRole("button", { name: en.auth.login.submit, exact: true }).click()
-    await expect(page).toHaveURL(/\/account\/orders$/)
-  })
+  // Admins don't shop, so a shop page they were sent from doesn't hold them;
+  // an admin page they asked for does.
+  for (const [redirect, landing] of [
+    ["/account/orders", /\/admin$/],
+    ["/admin/orders", /\/admin\/orders$/],
+  ] as const) {
+    test(`an admin signing in with ?redirect=${redirect} lands on ${landing}`, async ({ page, adminUser }) => {
+      await page.goto(`/login?redirect=${encodeURIComponent(redirect)}`)
+      await waitForHydration(page)
+      const main = page.locator("main")
+      await main.getByLabel(en.auth.fields.email, { exact: true }).fill(adminUser.email)
+      await main.getByLabel(en.auth.fields.password, { exact: true }).fill(adminUser.password)
+      await main.getByRole("button", { name: en.auth.login.submit, exact: true }).click()
+      await expect(page).toHaveURL(landing)
+    })
+  }
 
   test("a customer stays in their account, sees no admin link, and can't open the admin", async ({ page, shopper }) => {
     await signIn(page, shopper, /\/account$/)
