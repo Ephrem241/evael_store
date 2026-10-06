@@ -21,17 +21,24 @@ export function telLink(value: string | null | undefined): string | null {
   return `tel:${value.trim().replace(/[^\d+]/g, "")}`
 }
 
-/** `https://wa.me/251949888889` — WhatsApp wants the number without + or spaces. */
+/**
+ * `whatsapp://send?phone=251949888889` — opens the WhatsApp chat with that
+ * number straight away, like `tel:` opens the dialler (no web landing page).
+ * WhatsApp wants the number without + or spaces.
+ */
 export function whatsappLink(value: string | null | undefined): string | null {
   if (!value || !isPhone(value)) return null
-  return `https://wa.me/${digits(value)}`
+  return `whatsapp://send?phone=${digits(value)}`
 }
 
-/** A phone number opens `https://t.me/+251949888889`; a username opens `https://t.me/name`. */
+/**
+ * A phone number opens the Telegram chat directly (`tg://resolve?phone=251949888889`);
+ * a username opens `https://t.me/name`.
+ */
 export function telegramLink(value: string | null | undefined): string | null {
   if (!value) return null
   const trimmed = value.trim()
-  if (isPhone(trimmed)) return `https://t.me/+${digits(trimmed)}`
+  if (isPhone(trimmed)) return `tg://resolve?phone=${digits(trimmed)}`
   const username = TELEGRAM_USERNAME.exec(trimmed)
   return username ? `https://t.me/${username[1]}` : null
 }
