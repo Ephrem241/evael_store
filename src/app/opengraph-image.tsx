@@ -9,8 +9,9 @@ import { BrandMarkImage } from "@/lib/brand-mark-image"
 // same image serves English and Amharic pages, and the image renderer has no
 // Ethiopic font, so text in it would be Latin-only anyway. (The wordmark is in
 // the renderer's own sans: it takes only ttf/otf/woff, and Inter is
-// self-hosted as woff2.) The lockup matches the header: "Evael" large in
-// orange, "Store" small beneath it.
+// self-hosted as woff2.) The lockup matches the header (layout/logo.tsx): the
+// bag mark, then "Evael" large in charcoal over "STORE" small, letter-spaced,
+// in orange.
 export const alt = BRAND_NAME
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
@@ -27,19 +28,29 @@ export default function OpenGraphImage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: 48,
+          gap: 52,
           background: BRAND_COLORS.background,
-          color: BRAND_COLORS.primary,
+          color: BRAND_COLORS.text,
         }}
       >
-        <BrandMarkImage height={220} />
+        <BrandMarkImage size={230} />
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 150, fontWeight: 700, letterSpacing: -4, lineHeight: 1 }}>
+          <div style={{ fontSize: 150, fontWeight: 700, letterSpacing: -6, lineHeight: 1 }}>
             {first}
           </div>
           {rest.length > 0 && (
-            <div style={{ display: "flex", marginTop: 12, marginLeft: 6, color: BRAND_COLORS.textSecondary, fontSize: 48, fontWeight: 500 }}>
-              {rest.join(" ")}
+            <div
+              style={{
+                display: "flex",
+                marginTop: 18,
+                marginLeft: 6,
+                color: BRAND_COLORS.primaryInk,
+                fontSize: 52,
+                fontWeight: 600,
+                letterSpacing: 12,
+              }}
+            >
+              {rest.join(" ").toUpperCase()}
             </div>
           )}
         </div>

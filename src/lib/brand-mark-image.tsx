@@ -1,30 +1,24 @@
-import { BRAND_COLORS, BRAND_MARK, BRAND_MARK_RATIO, BRAND_MARK_VIEWBOX } from "@/lib/brand-mark"
+import { BRAND_COLORS, BRAND_MARK, BRAND_MARK_SIZE, BRAND_MARK_VIEWBOX } from "@/lib/brand-mark"
 
-// The bag mark as plain SVG with inline colours, for the generated images
-// (next/og can't use Tailwind classes or CSS variables). The defaults are the
-// mark on a light background: an orange bag with a white "E".
-function BrandMarkImage({
-  height,
-  body = BRAND_COLORS.primary,
-  rim = BRAND_COLORS.primaryStrong,
-  handle = BRAND_COLORS.text,
-  letter = BRAND_COLORS.white,
-}: {
-  height: number
-  body?: string
-  rim?: string
-  handle?: string
-  letter?: string
-}) {
+// The mark (tile, bag and "E") as plain SVG with inline colours, for the
+// generated images (next/og can't use Tailwind classes or CSS variables).
+// `tileRadius` 0 gives a square tile, for icons the OS rounds itself.
+function BrandMarkImage({ size, tileRadius = BRAND_MARK.tileRadius }: { size: number; tileRadius?: number }) {
   return (
-    <svg width={Math.round(height * BRAND_MARK_RATIO)} height={height} viewBox={BRAND_MARK_VIEWBOX}>
-      <path d={BRAND_MARK.handle} fill="none" stroke={handle} strokeWidth={BRAND_MARK.handleWidth} strokeLinecap="round" />
-      <path d={BRAND_MARK.body} fill={body} />
-      <path d={BRAND_MARK.rim} fill={rim} />
+    <svg width={size} height={size} viewBox={BRAND_MARK_VIEWBOX}>
+      <rect width={BRAND_MARK_SIZE} height={BRAND_MARK_SIZE} rx={tileRadius} fill={BRAND_COLORS.primary} />
+      <path
+        d={BRAND_MARK.handle}
+        fill="none"
+        stroke={BRAND_COLORS.white}
+        strokeWidth={BRAND_MARK.handleWidth}
+        strokeLinecap="round"
+      />
+      <path d={BRAND_MARK.body} fill={BRAND_COLORS.white} />
       <path
         d={BRAND_MARK.letter}
         fill="none"
-        stroke={letter}
+        stroke={BRAND_COLORS.primaryStrong}
         strokeWidth={BRAND_MARK.letterWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
