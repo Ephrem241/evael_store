@@ -55,12 +55,12 @@ function Newsletter() {
           aria-label={t("home.newsletter.emailLabel")}
           aria-invalid={!!error}
           aria-describedby={error ? "newsletter-error" : undefined}
-          className="h-12 min-w-0 flex-1 rounded-xl border-transparent bg-white text-charcoal placeholder:text-muted-text max-lg:h-12"
+          className="h-11 min-w-0 flex-1 rounded-xl border-transparent bg-white text-charcoal placeholder:text-muted-text max-lg:h-11"
         />
         <Button
           type="submit"
           disabled={submitting}
-          className="h-12 px-6 max-lg:h-12"
+          className="h-11 px-6 max-lg:h-11"
         >
           {t("home.newsletter.subscribe")}
         </Button>

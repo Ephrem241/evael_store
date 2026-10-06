@@ -15,9 +15,10 @@ const HERO_IMAGE = "/images/home/hero-evael.jpg"
 // and home products).
 //
 // Desktop: the photograph fills the right of a full-width band, and its plain
-// cream wall fades into the page under the text, which sits on the left — on
-// the page's own off-white, so its contrast never depends on the picture.
-// Phones: a rounded card with the text, and the photograph below it.
+// cream wall fades into the band under the text, which sits on the left — on
+// the same soft orange as Flash Deals, so its contrast never depends on the
+// picture. Phones: a soft-orange rounded card with the text, and the
+// photograph below it (matching the deals slide beside it).
 //
 // The copy is the admin's (homepage_sections). Each line break in the headline
 // is kept: the lines before the last are the lead-in, and the LAST line is the
@@ -93,7 +94,7 @@ async function Hero({
   if (slide) {
     return (
       <section aria-labelledby="hero-heading" className="flex h-full w-full px-4 pt-4">
-        <div className="flex w-full flex-col justify-between gap-5 overflow-hidden rounded-hero border border-border bg-card p-5 shadow-soft">
+        <div className="flex w-full flex-col justify-between gap-5 overflow-hidden rounded-hero border border-brand/20 bg-brand-soft p-5 shadow-soft">
           <div className="animate-fade-up">
             {headline}
             <p className="mt-3 max-w-md text-sm leading-relaxed text-charcoal/80 sm:text-base">{settings.heroSubtext}</p>
@@ -117,7 +118,7 @@ async function Hero({
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative isolate left-1/2 -mt-6 flex min-h-[clamp(480px,38vw,640px)] w-screen -translate-x-1/2 items-center overflow-hidden border-b border-border/60 bg-background lg:-mt-10"
+      className="relative isolate left-1/2 -mt-6 flex min-h-[clamp(480px,38vw,640px)] w-screen -translate-x-1/2 items-center overflow-hidden border-b border-border/60 bg-brand-soft lg:-mt-10"
     >
       <div className="absolute inset-y-0 right-0 -z-10 w-[62%] max-w-[1120px]">
         <Image
@@ -128,11 +129,11 @@ async function Hero({
           sizes="(min-width: 1806px) 1120px, (min-width: 1024px) 62vw, 1vw"
           className="object-cover object-[55%_45%]"
         />
-        {/* The photograph's plain wall fades into the page, so the text beside
-            it always sits on the solid off-white. */}
+        {/* The photograph's plain wall fades into the band, so the text beside
+            it always sits on the solid soft orange. */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--color-background)_0%,var(--color-background)_10%,transparent_28%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--color-brand-soft)_0%,var(--color-brand-soft)_10%,transparent_28%)]"
         />
       </div>
       <Container className="py-12">
