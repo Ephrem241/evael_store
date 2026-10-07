@@ -8,6 +8,8 @@ import { getT } from "@/lib/i18n/server"
 import { ProductListing } from "@/components/catalog/product-listing"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { PageHeader } from "@/components/layout/page-header"
+import { CartButton } from "@/components/layout/cart-button"
+import { SearchBar } from "@/components/navigation/search-bar"
 import { ProductGrid } from "@/components/product/product-grid"
 import { CategoryChip } from "@/components/product/category-chip"
 import { Button } from "@/components/ui/button"
@@ -40,7 +42,12 @@ export default async function SearchPage({
   if (!q) {
     return (
       <div className="space-y-8 py-6 lg:py-8">
-        <PageHeader breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]} title={t("catalog.searchTitle")} />
+        <PageHeader
+          breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]}
+          title={t("catalog.searchTitle")}
+          mobileActions={<CartButton />}
+        />
+        <SearchBar className="lg:hidden" />
         <EmptyState
           icon={Search}
           title={t("catalog.searchEmptyTitle")}
@@ -66,7 +73,8 @@ export default async function SearchPage({
     const [categories, popular] = await Promise.all([getCategories(), getPopularProducts(8)])
     return (
       <div className="space-y-10 py-6 lg:py-8">
-        <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
+        <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} mobileActions={<CartButton />} />
+        <SearchBar defaultQuery={q} className="lg:hidden" />
         <EmptyState
           icon={SearchX}
           title={t("catalog.searchNoMatchTitle")}
@@ -103,7 +111,8 @@ export default async function SearchPage({
 
   return (
     <div className="space-y-8 py-6 lg:py-8">
-      <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
+      <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} mobileActions={<CartButton />} />
+      <SearchBar defaultQuery={q} className="lg:hidden" />
       <ProductListing
         products={result.products}
         total={result.total}

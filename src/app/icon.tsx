@@ -2,8 +2,8 @@ import { ImageResponse } from "next/og"
 
 import { BrandMarkImage } from "@/lib/brand-mark-image"
 
-// The browser-tab icon: the store's mark (a white bag with an orange "E" on a
-// rounded orange tile), the same one the header shows. Generated at build time.
+// The browser-tab icon: the store's mark (a gold bag with a burgundy "E" on a
+// rounded burgundy tile), the same one the header shows. Generated at build time.
 export const size = { width: 32, height: 32 }
 export const contentType = "image/png"
 

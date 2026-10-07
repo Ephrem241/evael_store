@@ -18,25 +18,32 @@ import { Button } from "@/components/ui/button"
 // cost either. Deliberately deferred, not overlooked.
 //
 // `variant="stacked"` is the desktop header's icon-over-label link; the
-// default is the compact icon button used on phones.
+// default is the icon button used on phones. `tone="dark"` is for the burgundy
+// phone header: a white icon and a gold badge with deep burgundy figures.
 function CartButton({
   className,
   variant = "icon",
+  tone = "light",
 }: {
   className?: string
   variant?: "icon" | "stacked"
+  tone?: "light" | "dark"
 }) {
   const t = useT()
   const count = useCartStore(selectCartCount)
   const isAdmin = useIsAdmin()
   const label = count > 0 ? t.plural("nav.cartCount", count) : t("nav.cart")
+  const dark = tone === "dark"
   // Keyed on the count, so the badge re-mounts and plays its small "pop"
   // whenever something is added (the animation is off under reduced motion).
   const badge = count > 0 && (
     <span
       key={count}
       aria-hidden
-      className="absolute -top-1.5 -right-2 flex h-[18px] min-w-[18px] animate-pop items-center justify-center rounded-full bg-brand-strong px-1 text-[10px] leading-none font-bold text-white ring-2 ring-background"
+      className={cn(
+        "absolute -top-1.5 -right-2 flex h-4 min-w-4 animate-pop items-center justify-center rounded-full px-1 text-[10px] leading-none font-bold tabular-nums",
+        dark ? "bg-gold text-brand-deepest" : "bg-brand-strong text-white ring-2 ring-background"
+      )}
     >
       {count > 99 ? "99+" : count}
     </span>
@@ -51,15 +58,15 @@ function CartButton({
         href="/cart"
         aria-label={label}
         className={cn(
-          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
+          "flex min-w-14 flex-col items-center gap-1 rounded-lg px-2 py-1 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-2 focus-visible:ring-ring",
           className
         )}
       >
         <span className="relative">
-          <ShoppingCart aria-hidden className="size-[22px]" strokeWidth={1.75} />
+          <ShoppingCart aria-hidden className="size-[22px]" strokeWidth={1.5} />
           {badge}
         </span>
-        <span aria-hidden className="text-[11px] leading-none font-medium">
+        <span aria-hidden className="text-xs leading-none">
           {t("nav.cart")}
         </span>
       </Link>
@@ -67,7 +74,12 @@ function CartButton({
   }
 
   return (
-    <Button variant="ghost" size="icon-lg" asChild className={cn("relative", className)}>
+    <Button
+      variant="ghost"
+      size="icon-lg"
+      asChild
+      className={cn("relative", dark && "text-white hover:bg-white/10 hover:text-white focus-visible:ring-gold", className)}
+    >
       <Link href="/cart" aria-label={label}>
         <span className="relative">
           <ShoppingCart aria-hidden className="size-[22px]" strokeWidth={1.75} />

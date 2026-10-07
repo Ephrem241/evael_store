@@ -16,6 +16,12 @@ export const nav = {
   breadcrumb: "Breadcrumb",
   language: "Language",
   wishlist: "Wishlist",
+  back: "Back",
+  // The phone header's menu (the ☰ button and the panel it opens).
+  menu: "Menu",
+  openMenu: "Open menu",
+  // Under the logo in the headers and the footer.
+  tagline: "Modern Shopping. Made for Ethiopia.",
   shopAll: "Shop All",
   // The first link on every page: lets keyboard users jump past the header.
   skipToContent: "Skip to main content",
@@ -24,14 +30,13 @@ export const nav = {
   // The thin bar above the header. {amount} is an already-formatted price.
   announcement: {
     freeDelivery: "Free delivery on orders over {amount}",
-    welcome: "Welcome to {brand} — your trusted online marketplace",
-    easyReturns: "Easy returns",
-    securePayments: "Secure payments",
+    // No delivery times: none are configured, so none are promised.
+    delivery: "Shop now — we deliver across Ethiopia.",
   },
 }
 
 export const search = {
-  placeholder: "Search products and categories...",
+  placeholder: "Search for products, brands and more…",
   label: "Search products",
   submit: "Search",
   recent: "Recent searches",
@@ -48,21 +53,22 @@ export const search = {
 }
 
 export const footer = {
-  tagline: "Your trusted destination for quality products in Ethiopia.",
   shop: "Shop",
-  allCategories: "All categories",
-  customerService: "Customer Service",
+  customerService: "Customer Care",
   contact: "Contact Us",
   delivery: "Delivery Information",
   returns: "Returns",
   faq: "FAQ",
-  company: "About",
+  company: "Company",
   about: "About Us",
   privacy: "Privacy Policy",
   terms: "Terms & Conditions",
   language: "Language",
   rights: "© {year} {brand}. All rights reserved.",
-  reachUs: "Reach us",
+  // The last footer column: the newsletter sign-up.
+  subscribe: "Subscribe",
+  subscribeText: "Get the latest updates and exclusive offers.",
+  madeFor: "Made for Ethiopia",
 }
 
 export const meta = {

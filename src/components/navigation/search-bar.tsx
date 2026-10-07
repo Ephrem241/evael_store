@@ -16,19 +16,32 @@ import { useRecentSearchesStore } from "@/lib/store/recent-searches"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+// The search field with live suggestions. Two looks:
+//   "joined" — the desktop header's: a white field fused to a square burgundy
+//              button with the search icon.
+//   "field"  — phones: a 44px white field with the icon inside on the left
+//              and no button (Enter searches); `tone="dark"` drops the border,
+//              for the burgundy header.
 function SearchBar({
   className,
   placeholder,
-  size = "md",
+  variant = "field",
+  tone = "light",
+  inputId,
+  defaultQuery = "",
 }: {
   className?: string
   placeholder?: string
-  /** "lg" is the roomier bar used on phones, where search is a primary action. */
-  size?: "md" | "lg"
+  variant?: "joined" | "field"
+  tone?: "light" | "dark"
+  /** For a <label htmlFor> elsewhere (the phone header's search icon). */
+  inputId?: string
+  /** What the field starts with (the query already searched, on /search). */
+  defaultQuery?: string
 }) {
   const t = useT()
   const router = useRouter()
-  const [query, setQuery] = React.useState("")
+  const [query, setQuery] = React.useState(defaultQuery)
   const [open, setOpen] = React.useState(false)
   const containerRef = React.useRef<HTMLFormElement>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -124,6 +137,7 @@ function SearchBar({
     >
       <Input
         ref={inputRef}
+        id={inputId}
         type="search"
         value={query}
         onChange={(e) => {
@@ -146,26 +160,28 @@ function SearchBar({
         placeholder={placeholder ?? t("search.placeholder")}
         aria-label={t("search.label")}
         autoComplete="off"
-        // 15px text from `lg` up; below it the Input's own 16px applies, so iOS
-        // doesn't zoom in when the phone search bar is tapped. The heights are
-        // set for every width (`max-lg:` too), or the Input's phone height
-        // would replace them there.
+        // Below `lg` the Input's own 16px text applies, so iOS doesn't zoom in
+        // when the phone search field is tapped; the placeholder alone is
+        // smaller (that doesn't trigger the zoom), so the whole hint fits.
         className={cn(
-          "rounded-full border-charcoal/15 bg-subtle/60 pl-11 pr-14 text-[15px] transition-[background-color,border-color,box-shadow] placeholder:text-muted-text hover:border-charcoal/25 focus-visible:bg-card",
-          size === "lg" ? "h-12 max-lg:h-12" : "h-11 max-lg:h-11"
+          "bg-card placeholder:text-muted-text",
+          variant === "joined"
+            ? "h-10 rounded-r-none pr-3 pl-3.5 max-lg:h-10"
+            : cn("h-11 rounded-[10px] pr-4 pl-11 placeholder:text-sm max-lg:h-11", tone === "dark" && "border-transparent")
         )}
       />
-      <Search aria-hidden className="pointer-events-none absolute left-4 size-[18px] text-muted-text" />
-      <Button
-        type="submit"
-        size="icon"
-        // 44px below `lg` (the Button's icon size there), 2px in from the field's
-        // edge on every side of the 48px phone search field.
-        className="absolute right-1.5 size-9 rounded-full bg-brand-strong text-white hover:bg-brand-deep max-lg:right-0.5"
-        aria-label={t("search.submit")}
-      >
-        <ArrowRight className="size-4" />
-      </Button>
+      {variant === "joined" ? (
+        <Button
+          type="submit"
+          size="icon"
+          className="size-10 shrink-0 rounded-l-none bg-brand-strong text-white hover:bg-brand-deep max-lg:size-10"
+          aria-label={t("search.submit")}
+        >
+          <Search className="size-[18px]" />
+        </Button>
+      ) : (
+        <Search aria-hidden className="pointer-events-none absolute left-3.5 size-[18px] text-muted-text" />
+      )}
 
       {/* Suggestions appear without any focus change, so their number is read out. */}
       <p role="status" className="sr-only">

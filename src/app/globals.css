@@ -48,6 +48,12 @@
        the cream page don't look grey-edged. */
     --shadow-soft: 0 1px 2px rgb(66 6 18 / 0.04), 0 6px 18px -10px rgb(66 6 18 / 0.12);
     --shadow-lift: 0 2px 6px rgb(66 6 18 / 0.05), 0 18px 36px -16px rgb(66 6 18 / 0.2);
+    /* Cast upwards, by the bars fixed to the bottom of a phone screen. */
+    --shadow-up: 0 -4px 16px -8px rgb(66 6 18 / 0.12);
+    --color-flag-green: var(--flag-green);
+    --color-flag-yellow: var(--flag-yellow);
+    --color-flag-red: var(--flag-red);
+    --color-flag-blue: var(--flag-blue);
     --animate-fade-up: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
     --animate-pop: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     --animate-shimmer: shimmer 1.6s ease-in-out infinite;
@@ -152,6 +158,17 @@
     --evael-error: #B42318;
     --evael-footer: #18181E; /* footer, newsletter card */
 
+    /* Not the store's palette: the Ethiopian flag (trust strip, footer) and
+       the messaging apps' own marks (contact buttons). Kept here so every
+       colour in the app still lives in this file. */
+    --flag-green: #078930;
+    --flag-yellow: #FCDD09;
+    --flag-red: #DA121A;
+    --flag-blue: #0F47AF;
+    --brand-telegram: #26A5E4;
+    --brand-whatsapp: #25D366;
+    --brand-call: #1F9D55;
+
     /* semantic tokens consumed by shadcn components */
     --background: var(--evael-background);
     --foreground: var(--evael-text);
@@ -231,20 +248,34 @@
   html {
     @apply font-sans;
     }
-  /* Phones and tablets: the header (MobileHeader: a 3.5rem logo row, the 3rem
-     search bar with 0.75rem above and below it, and a 1px border) stays pinned
-     while scrolling. Things that stick below it (the listing's Sort/Filter
-     bar) sit at this height; whatever is scrolled into view — a skip-link
-     jump, an anchor, the next field reached with Tab — stops below it rather
-     than under it. Desktop is left as it was. */
+  /* Phones and tablets: the header stays pinned while scrolling. Things that
+     stick below it (the listing's Sort/Filter bar) sit at this height;
+     whatever is scrolled into view — a skip-link jump, an anchor, the next
+     field reached with Tab — stops below it rather than under it.
+     Two headers exist: the burgundy brand header (MobileHeader: a 3.5rem logo
+     row, the 1.5rem tagline row, the 2.75rem search field and 0.75rem under
+     it) and, on inner pages, the plain 3.5rem bar with a 1px border that
+     PageHeader draws (marked data-page-bar). A page with the plain bar hides
+     the brand header, so the height follows whichever is shown.
+     Desktop is left as it was. */
   :root {
-    --mobile-header-height: calc(8rem + 1px);
+    --mobile-header-height: 8.5rem;
+  }
+  :root:has([data-page-bar]) {
+    --mobile-header-height: calc(3.5rem + 1px);
   }
   @media (width < 64rem) {
     html {
       scroll-padding-top: calc(var(--mobile-header-height) + 0.5rem);
     }
   }
+}
+
+/* Phones and tablets: an inner page draws its own plain bar (PageHeader,
+   data-page-bar), which takes the burgundy brand header's place. Pure CSS, so
+   the server sends the right header and nothing swaps after loading. */
+:root:has([data-page-bar]) [data-brand-header] {
+  display: none;
 }
 
 /* The language switcher's "አማ" / "አማርኛ" label is Ethiopic text on every page,

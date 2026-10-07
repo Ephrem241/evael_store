@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useId, useState } from "react"
+import { ArrowRight } from "lucide-react"
 import { toast } from "sonner"
 
 import { useT } from "@/lib/i18n/provider"
@@ -13,8 +14,13 @@ import { Button } from "@/components/ui/button"
 // would add ~100KB of JavaScript to the home page for it.
 const EMAIL_SHAPE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
+// The newsletter sign-up, on a dark surface (its heading and blurb are the
+// caller's): a dark pill field with a round burgundy arrow button inside its
+// right end. The field's error id is unique per form, so the footer's and the
+// home page's can share a page.
 function Newsletter() {
   const t = useT()
+  const errorId = useId()
   const [email, setEmail] = useState("")
   const [error, setError] = useState<string | undefined>()
   const [submitting, setSubmitting] = useState(false)
@@ -38,13 +44,11 @@ function Newsletter() {
     }
   }
 
-  // Lives in the dark footer (its heading and blurb are rendered by the footer
-  // itself): a light input beside the orange button.
   return (
     // method="post": if someone submits before this component has hydrated, the
     // browser's own submit must not put the address in the URL (a GET would).
     <form method="post" onSubmit={handleSubmit} noValidate className="space-y-2">
-      <div className="flex gap-2">
+      <div className="relative">
         <Input
           type="email"
           name="email"
@@ -54,19 +58,21 @@ function Newsletter() {
           placeholder={t("home.newsletter.emailPlaceholder")}
           aria-label={t("home.newsletter.emailLabel")}
           aria-invalid={!!error}
-          aria-describedby={error ? "newsletter-error" : undefined}
-          className="h-11 min-w-0 flex-1 rounded-xl border-transparent bg-white text-charcoal placeholder:text-muted-text max-lg:h-11"
+          aria-describedby={error ? errorId : undefined}
+          className="rounded-full border-white/15 bg-white/10 pr-14 pl-4 text-white placeholder:text-white/70 focus-visible:border-gold focus-visible:ring-gold/40"
         />
         <Button
           type="submit"
-          disabled={submitting}
-          className="h-11 px-6 max-lg:h-11"
+          size="icon"
+          loading={submitting}
+          aria-label={t("home.newsletter.subscribe")}
+          className="absolute top-1 right-1 size-9 rounded-full focus-visible:ring-offset-0 max-lg:size-9"
         >
-          {t("home.newsletter.subscribe")}
+          <ArrowRight aria-hidden />
         </Button>
       </div>
       {error && (
-        <p id="newsletter-error" role="alert" className="text-xs text-red-300">
+        <p id={errorId} role="alert" className="text-xs text-gold">
           {error}
         </p>
       )}

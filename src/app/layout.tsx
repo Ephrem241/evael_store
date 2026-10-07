@@ -16,6 +16,7 @@ import { Footer } from "@/components/layout/footer";
 import { Container } from "@/components/layout/container";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { StorefrontOnly } from "@/components/layout/storefront-only";
+import { NavigationHistory } from "@/components/navigation/back-button";
 
 // The typefaces are SELF-HOSTED (./fonts, all SIL Open Font License, fetched
 // from Google Fonts): the same fonts next/font/google would serve, but with no
@@ -164,6 +165,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             </StorefrontOnly>
             <Toaster />
             <AuthProvider />
+            <NavigationHistory />
           </MotionProvider>
         </LocaleProvider>
       </body>

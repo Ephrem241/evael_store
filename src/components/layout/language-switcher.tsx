@@ -9,26 +9,28 @@ import { LOCALES, LOCALE_NAMES, LOCALE_PARAM, type Locale } from "@/lib/i18n/con
 import { setLocale } from "@/lib/i18n/actions"
 import { useT } from "@/lib/i18n/provider"
 
-// Two-option segmented control. `labels="short"` (EN | አማ) fits the headers;
-// `labels="full"` (English | አማርኛ) is for the footer. Each option is written
+// Two-option control. `labels="short"` (EN | አማ) fits the bars; `labels="full"`
+// (English | አማርኛ) is for the footer and the phone menu. Each option is written
 // in its own language and script so it can be found without reading the
 // current one.
 //
-// `compact` (the phone header, where every pixel counts) is instead ONE button
-// that names the OTHER language ("አማ" while reading English, "EN" while reading
-// Amharic) and switches to it — about half the width of the two-option control.
+// Tones: "light" (a pill group on light surfaces), "dark" (the same on the
+// dark footer) and "bar" (plain white text with a divider, for the burgundy
+// announcement bar; the current language is bold and underlined).
+//
+// `compact` (the admin's narrow phone bar) is instead ONE button that names
+// the OTHER language ("አማ" while reading English, "EN" while reading Amharic)
+// and switches to it.
 function LanguageSwitcher({
   className,
   labels = "short",
-  compact = false,
   tone = "light",
+  compact = false,
 }: {
   className?: string
   labels?: "short" | "full"
-  /** A single "switch to the other language" button — for the narrow phone header. */
+  tone?: "light" | "dark" | "bar"
   compact?: boolean
-  /** "dark" is for the dark footer. */
-  tone?: "light" | "dark"
 }) {
   const t = useT()
   const router = useRouter()
@@ -70,6 +72,44 @@ function LanguageSwitcher({
       >
         {LOCALE_NAMES[other].short}
       </button>
+    )
+  }
+
+  if (tone === "bar") {
+    return (
+      <div
+        role="group"
+        aria-label={t("nav.language")}
+        aria-busy={pending}
+        className={cn("flex items-center gap-1.5 text-xs", pending && "opacity-70", className)}
+      >
+        {LOCALES.map((locale, i) => {
+          const active = locale === t.locale
+          return (
+            <span key={locale} className="flex items-center gap-1.5">
+              {i > 0 && (
+                <span aria-hidden className="text-white/50">
+                  |
+                </span>
+              )}
+              <button
+                type="button"
+                lang={locale}
+                aria-pressed={active}
+                disabled={pending}
+                onClick={() => choose(locale)}
+                className={cn(
+                  "min-h-6 rounded-sm px-1 text-white underline-offset-4 transition-colors outline-none hover:underline focus-visible:ring-2 focus-visible:ring-gold",
+                  active ? "font-semibold underline" : "text-white/85",
+                  locale === "am" && "font-ethiopic-system"
+                )}
+              >
+                {labels === "full" ? LOCALE_NAMES[locale].native : LOCALE_NAMES[locale].short}
+              </button>
+            </span>
+          )
+        })}
+      </div>
     )
   }
 

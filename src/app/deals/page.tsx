@@ -6,7 +6,7 @@ import { getT } from "@/lib/i18n/server"
 import { pageMetadata } from "@/lib/seo/metadata"
 import { isOnSale, type ProductWithCategory } from "@/lib/services/catalog"
 import { getFeaturedProducts, getFlashDeals } from "@/lib/services/catalog-queries"
-import { PageHeader } from "@/components/layout/page-header"
+import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 import { ProductGrid } from "@/components/product/product-grid"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { SectionHeading } from "@/components/home/section-heading"
@@ -55,6 +55,7 @@ export default async function DealsPage() {
     <div className="space-y-10 py-6 lg:space-y-14 lg:py-8">
       <PageHeader
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("nav.deals") }]}
+        mobileActions={<SearchAndCartActions />}
         title={t("nav.deals")}
         description={t("home.flashSubtitle")}
         aside={

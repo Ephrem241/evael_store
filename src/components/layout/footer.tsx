@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { Banknote, Mail } from "lucide-react"
 import { cn } from "cn"
 
 import { BRAND_NAME } from "@/lib/brand"
@@ -12,19 +11,20 @@ import { getStoreContact } from "@/lib/services/store-info"
 import { Container } from "@/components/layout/container"
 import { Logo } from "@/components/layout/logo"
 import { LanguageSwitcher } from "@/components/layout/language-switcher"
+import { EthiopiaFlag } from "@/components/layout/ethiopia-flag"
 import { Newsletter } from "@/components/home/newsletter"
 import { ContactChannels } from "@/components/contact/contact-channels"
 import { MobileCollapsible } from "@/components/ui/mobile-collapsible"
 
 const columns: { id: string; title: MessageKey; links: { href: string; label: MessageKey }[] }[] = [
   {
-    id: "footer-service",
+    id: "footer-care",
     title: "footer.customerService",
     links: [
       { href: "/contact", label: "footer.contact" },
+      { href: "/faq", label: "footer.faq" },
       { href: "/delivery", label: "footer.delivery" },
       { href: "/returns", label: "footer.returns" },
-      { href: "/faq", label: "footer.faq" },
     ],
   },
   {
@@ -38,29 +38,25 @@ const columns: { id: string; title: MessageKey; links: { href: string; label: Me
   },
 ]
 
-// How many categories the Shop column lists before "All categories".
+// How many categories the Shop column lists before Deals.
 const SHOP_LINKS = 4
-
-// The footer's content sits in a narrower column than the page (1024px, not
-// 1280px), so its few short links don't stretch across a wide screen.
-const FOOTER_WIDTH = "max-w-5xl"
 
 // Below `lg` every link is a full 44px row inside its folding section.
 const linkClass =
-  "rounded text-sm text-white/70 underline-offset-4 transition-colors outline-none hover:text-white hover:underline focus-visible:text-white focus-visible:underline max-lg:flex max-lg:min-h-11 max-lg:items-center"
-const listClass = "space-y-1.5 max-lg:space-y-0 max-lg:pb-2"
-const headingClass = "text-xs font-semibold tracking-[0.14em] text-white uppercase"
+  "rounded-sm text-xs text-white/70 transition-colors outline-none hover:text-gold focus-visible:text-gold focus-visible:underline max-lg:flex max-lg:min-h-11 max-lg:items-center max-lg:text-sm"
+const listClass = "space-y-2.5 max-lg:space-y-0 max-lg:pb-2"
+const headingClass = "text-[13px] font-semibold text-white"
 // The phone toggle row, styled like the desktop column heading.
 const triggerClass =
-  "min-h-11 px-0 font-sans text-xs tracking-[0.14em] text-white uppercase active:bg-white/5 focus-visible:ring-gold/60"
+  "min-h-12 px-0 font-sans text-sm font-semibold tracking-normal text-white active:bg-white/5 focus-visible:ring-gold/60"
 
-// One link column. From `lg` up: a heading and the list, as always. Below it:
-// a row that folds the list away (closed by default), so the footer is a few
-// short rows on a phone instead of a long page of links. The links stay in the
-// HTML either way (closed only hides them with CSS below `lg`).
+// One link column. From `lg` up: a heading and the list. Below it: a row that
+// folds the list away (closed by default), so the footer is a few short rows
+// on a phone instead of a long page of links. The links stay in the HTML
+// either way (closed only hides them with CSS below `lg`).
 function FooterColumn({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <nav aria-labelledby={id} className="space-y-2.5 max-lg:space-y-0 max-lg:border-b max-lg:border-white/10">
+    <nav aria-labelledby={id} className="space-y-3.5 max-lg:space-y-0 max-lg:border-b max-lg:border-white/10">
       <h2 id={id} className={cn(headingClass, "max-lg:hidden")}>
         {title}
       </h2>
@@ -71,50 +67,26 @@ function FooterColumn({ id, title, children }: { id: string; title: string; chil
   )
 }
 
-// The closing band: a warm near-black, white type, orange accents. It opens
-// with the newsletter (so every page ends on it, the homepage included). The
-// Shop column lists the shop's own categories (from the database), so it can
-// never point at one that doesn't exist. No social column: the store has no
-// social accounts configured yet, and a dead icon would be worse than none.
+// The closing band: near-black with white type and gold accents. Desktop: the
+// brand (logo, tagline, the shop's real contact channels), Shop (the shop's
+// own categories, from the database, so it can never point at one that
+// doesn't exist), Customer Care, Company and the newsletter. Phones: the brand,
+// the link columns folded away, the newsletter and a language switch (the
+// desktop one is in the announcement bar). No social-media icons: the store
+// has none configured, and a dead icon would be worse than none.
 async function Footer() {
   const [t, categories, contact] = await Promise.all([getT(), getNavCategories(), getStoreContact()])
-  const hasChannels = Boolean(contact.telegram || contact.whatsapp || contact.phone)
 
   return (
     // Bottom padding on phones: room for the fixed bottom bar (BottomNav, or
     // the product page's buy bar) — 4rem plus the iPhone home-indicator inset
-    // it grows by, so the language switcher in the last row stays clear of it.
-    <footer className="mt-8 bg-footer pb-[calc(4rem+env(safe-area-inset-bottom))] text-white/80 lg:mt-10 lg:pb-0">
-      <div className="border-b border-white/10">
-        <Container
-          className={cn(FOOTER_WIDTH, "grid gap-4 py-5 lg:grid-cols-[1fr_minmax(0,24rem)] lg:items-center lg:gap-8 lg:py-6")}
-        >
-          <div className="flex items-start gap-4">
-            <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold sm:flex">
-              <Mail aria-hidden className="size-5" />
-            </span>
-            <div className="space-y-1">
-              <h2 className="text-lg font-bold tracking-tight text-white lg:text-xl">{t("home.newsletter.title")}</h2>
-              <p className="max-w-md text-sm leading-relaxed text-white/70">
-                {t("home.newsletter.text", { brand: BRAND_NAME })}
-              </p>
-            </div>
-          </div>
-          <Newsletter />
-        </Container>
-      </div>
-
-      <Container className={cn(FOOTER_WIDTH, "grid py-3 lg:grid-cols-[1.3fr_1fr_1fr_1fr] lg:gap-8 lg:py-7")}>
-        <div className="space-y-3 max-lg:space-y-0 max-lg:pb-3">
+    // it grows by, so the last row stays clear of it.
+    <footer className="mt-8 bg-footer pb-[calc(4rem+env(safe-area-inset-bottom))] text-white/80 lg:mt-12 lg:pb-0">
+      <Container className="grid gap-x-10 gap-y-6 pt-8 pb-4 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.6fr] lg:pt-12 lg:pb-10">
+        <div className="space-y-4 max-lg:pb-2">
           <Logo variant="light" />
-          {/* Phones show the logo alone: the tagline is the first thing cut for height. */}
-          <p className="max-w-xs text-sm leading-relaxed text-white/70 max-lg:hidden">{t("footer.tagline")}</p>
-          {hasChannels && (
-            <div className="space-y-2 max-lg:pt-3">
-              <h2 className={headingClass}>{t("footer.reachUs")}</h2>
-              <ContactChannels contact={contact} variant="dark" />
-            </div>
-          )}
+          <p className="text-xs text-white/70">{t("nav.tagline")}</p>
+          <ContactChannels contact={contact} variant="dark" />
         </div>
 
         {/* The first folding row gets the top rule; each row draws the one below it. */}
@@ -131,11 +103,6 @@ async function Footer() {
               <li>
                 <Link href="/deals" className={linkClass}>
                   {t("nav.deals")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/categories" className={linkClass}>
-                  {t("footer.allCategories")}
                 </Link>
               </li>
             </ul>
@@ -155,23 +122,29 @@ async function Footer() {
             </ul>
           </FooterColumn>
         ))}
+
+        <section aria-labelledby="footer-subscribe" className="space-y-3 max-lg:pt-2">
+          <h2 id="footer-subscribe" className={headingClass}>
+            {t("footer.subscribe")}
+          </h2>
+          <p className="text-xs text-white/70">{t("footer.subscribeText")}</p>
+          <Newsletter />
+        </section>
       </Container>
 
       <div className="border-t border-white/10">
-        <Container className={cn(FOOTER_WIDTH, "flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between")}>
-          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-5">
-            <p className="text-xs text-white/60">
-              {t("footer.rights", { year: new Date().getFullYear(), brand: BRAND_NAME })}
+        <Container className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-white/60">{t("footer.rights", { year: new Date().getFullYear(), brand: BRAND_NAME })}</p>
+          <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+            {/* Phones and tablets only: the desktop switch is in the announcement bar. */}
+            <div className="flex items-center gap-2 text-xs text-white/60 lg:hidden">
+              <span>{t("footer.language")}</span>
+              <LanguageSwitcher labels="full" tone="dark" />
+            </div>
+            <p className="flex items-center gap-2 text-xs text-white/70">
+              {t("footer.madeFor")}
+              <EthiopiaFlag />
             </p>
-            {/* Only what checkout really takes — see the homepage's payment strip. */}
-            <p className="flex items-center gap-1.5 text-xs text-white/60">
-              <Banknote aria-hidden className="size-3.5 text-gold" />
-              {t("home.payments.weAccept", { methods: t("home.payments.cod") })}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-white/60">
-            <span>{t("footer.language")}</span>
-            <LanguageSwitcher labels="full" tone="dark" />
           </div>
         </Container>
       </div>

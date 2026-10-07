@@ -29,12 +29,12 @@ function AccountButton({
       <Link
         href={href}
         className={cn(
-          "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
+          "flex min-w-14 flex-col items-center gap-1 rounded-lg px-2 py-1 text-charcoal transition-colors outline-none hover:text-brand-ink focus-visible:ring-2 focus-visible:ring-ring",
           className
         )}
       >
-        <Icon aria-hidden className="size-[22px]" strokeWidth={1.75} />
-        <span className="text-[11px] leading-none font-medium">{label}</span>
+        <Icon aria-hidden className="size-[22px]" strokeWidth={1.5} />
+        <span className="text-xs leading-none">{label}</span>
       </Link>
     )
   }

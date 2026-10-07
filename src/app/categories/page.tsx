@@ -25,6 +25,7 @@ export default async function CategoriesPage() {
       <PageHeader
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.categoriesTitle") }]}
         title={t("catalog.categoriesTitle")}
+        mobileAlign="center"
         description={t("catalog.categoriesSubtitle")}
       />
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">

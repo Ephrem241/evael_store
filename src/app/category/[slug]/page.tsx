@@ -13,7 +13,7 @@ import { listingSeo, pageMetadata, truncateDescription, withPageNumber } from "@
 import { breadcrumbJsonLd, collectionJsonLd } from "@/lib/seo/json-ld"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ProductListing } from "@/components/catalog/product-listing"
-import { PageHeader } from "@/components/layout/page-header"
+import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { getCategoryIcon } from "@/components/product/category-icons"
 
@@ -65,7 +65,7 @@ export default async function CategoryPage({
   const categoryPath = `/category/${category.slug}`
 
   return (
-    <div className="space-y-8 py-8">
+    <div className="space-y-8 py-6 lg:py-8">
       <JsonLd
         nodes={[
           breadcrumbJsonLd([
@@ -82,6 +82,8 @@ export default async function CategoryPage({
       />
       <PageHeader
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: categoryName }]}
+        backHref="/categories"
+        mobileActions={<SearchAndCartActions />}
         title={categoryName}
         description={descriptionOf(category, t.locale)}
         aside={
