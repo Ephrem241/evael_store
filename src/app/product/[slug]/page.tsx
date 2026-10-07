@@ -134,7 +134,7 @@ export default async function ProductPage({
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 max-lg:order-first lg:border-y lg:border-border lg:py-5">
             <Price amount={product.price} t={t} className="text-3xl lg:text-[2rem]" />
             {hasDiscount && <Price amount={product.compare_at_price!} t={t} variant="compare" className="text-base" />}
-            <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
+            <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} variant="sale" />
           </div>
 
           <p

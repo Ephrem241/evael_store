@@ -1,353 +1,48 @@
-"use client"
-
 // Dev-only reference for the design system (a 404 in production builds, see
 // layout.tsx). Not linked from any navigation.
+//
+// Foundations (colours, type, shape) and the interactive primitives are client
+// components; the product card and the category tiles below are server
+// components, shown with real catalogue rows.
 
-import { useSyncExternalStore, type ReactNode } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet"
-import { toast } from "sonner"
+import { getT } from "@/lib/i18n/server"
+import { isOnSale } from "@/lib/services/catalog"
+import { getCategories, getFeaturedProducts } from "@/lib/services/catalog-queries"
+import { ProductCard } from "@/components/product/product-card"
+import { CategoryCard, DealsTile } from "@/components/product/category-card"
+import { Foundations } from "./foundations"
+import { Primitives } from "./primitives"
 
-// Each swatch is a token from globals.css; its value is read from the page at
-// runtime, so this file never repeats (and never drifts from) the palette.
-const palette: { group: string; swatches: { name: string; token: string; className: string }[] }[] = [
-  {
-    group: "Neutrals",
-    swatches: [
-      { name: "Background", token: "--evael-background", className: "bg-background" },
-      { name: "Surface", token: "--evael-surface", className: "bg-surface" },
-      { name: "Subtle", token: "--evael-subtle", className: "bg-subtle" },
-      { name: "Border", token: "--evael-border", className: "bg-border" },
-      { name: "Text", token: "--evael-text", className: "bg-charcoal" },
-      { name: "Secondary text", token: "--evael-text-secondary", className: "bg-muted-text" },
-    ],
-  },
-  {
-    group: "Burgundy",
-    swatches: [
-      { name: "Primary", token: "--evael-primary", className: "bg-brand" },
-      { name: "Primary strong", token: "--evael-primary-strong", className: "bg-brand-strong" },
-      { name: "Primary dark", token: "--evael-primary-dark", className: "bg-brand-deep" },
-      { name: "Primary deep (banner)", token: "--evael-primary-deep", className: "bg-brand-banner" },
-      { name: "Primary deepest", token: "--evael-primary-deepest", className: "bg-brand-deepest" },
-      { name: "Primary ink (text)", token: "--evael-primary-ink", className: "bg-brand-ink" },
-      { name: "Primary soft", token: "--evael-primary-soft", className: "bg-brand-soft" },
-    ],
-  },
-  {
-    group: "Gold",
-    swatches: [
-      { name: "Gold", token: "--evael-gold", className: "bg-gold" },
-      { name: "Gold display (24px+)", token: "--evael-gold-display", className: "bg-gold-display" },
-      { name: "Gold ink (text)", token: "--evael-gold-ink", className: "bg-gold-ink" },
-      { name: "Gold border", token: "--evael-gold-border", className: "bg-gold-border" },
-    ],
-  },
-  {
-    group: "Status and accents",
-    swatches: [
-      { name: "Sale", token: "--evael-sale", className: "bg-sale" },
-      { name: "Star (icons only)", token: "--evael-star", className: "bg-star" },
-      { name: "Success", token: "--evael-success", className: "bg-success" },
-      { name: "Warning", token: "--evael-warning", className: "bg-warning" },
-      { name: "Warning text", token: "--evael-warning-text", className: "bg-warning-text" },
-      { name: "Error", token: "--evael-error", className: "bg-error" },
-      { name: "Footer", token: "--evael-footer", className: "bg-footer" },
-      { name: "Input border", token: "--input", className: "bg-input" },
-    ],
-  },
-]
+export default async function StyleGuidePage() {
+  const [t, products, categories] = await Promise.all([getT(), getFeaturedProducts(4), getCategories()])
+  const discounted = products.find(isOnSale)
+  const stocked = categories.find((c) => c.image_url && c.productCount > 0)
+  const empty = categories.find((c) => c.productCount === 0)
 
-// The pairings section 2.3 of the spec allows, each drawn as it will be used.
-const pairings: { label: string; className: string }[] = [
-  { label: "White on primary", className: "bg-brand text-white" },
-  { label: "White on primary strong", className: "bg-brand-strong text-white" },
-  { label: "White on primary dark", className: "bg-brand-deep text-white" },
-  { label: "Gold on primary deep", className: "bg-brand-banner text-gold" },
-  { label: "Gold on primary deepest", className: "bg-brand-deepest text-gold" },
-  { label: "Deepest on gold (gold button)", className: "bg-gold text-brand-deepest" },
-  { label: "Gold on footer", className: "bg-footer text-gold" },
-  { label: "White on sale", className: "bg-sale text-white" },
-  { label: "Gold ink on surface (small)", className: "bg-surface text-gold-ink border border-border" },
-  { label: "Secondary on subtle", className: "bg-subtle text-muted-text" },
-  { label: "Ink on primary soft", className: "bg-brand-soft text-brand-ink" },
-]
-
-const radii: { name: string; className: string }[] = [
-  { name: "Card · 12px", className: "rounded-card" },
-  { name: "Image · 10px", className: "rounded-image" },
-  { name: "Hero / panel · 12px", className: "rounded-hero" },
-  { name: "Control · 8px", className: "rounded-control" },
-  { name: "Pill", className: "rounded-full" },
-]
-
-// The tokens never change while the page is open, so there is nothing to subscribe to.
-const subscribeNever = () => () => {}
-
-function TokenValue({ token }: { token: string }) {
-  const value = useSyncExternalStore(
-    subscribeNever,
-    () => getComputedStyle(document.documentElement).getPropertyValue(token).trim().toUpperCase(),
-    () => ""
-  )
-  return (
-    <span className="font-mono text-xs text-muted-text">
-      {token} {value && `· ${value}`}
-    </span>
-  )
-}
-
-function Specimen({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="grid gap-1 border-b border-border pb-4 sm:grid-cols-[180px_1fr] sm:items-baseline sm:gap-6">
-      <span className="font-mono text-xs text-muted-text">{label}</span>
-      <div className="min-w-0">{children}</div>
-    </div>
-  )
-}
-
-export default function StyleGuidePage() {
   return (
     <div className="mx-auto max-w-5xl space-y-16 py-12">
-      <header className="space-y-2">
-        <p className="type-eyebrow text-gold-ink">Evael Store design system</p>
-        <h1 className="type-section text-charcoal">Burgundy and gold: style guide</h1>
-        <p className="max-w-2xl text-muted-text">
-          Developer reference for the redesign (docs/design/EVAEL_REDESIGN_SPEC.md). Every colour below is a
-          token in globals.css; the value shown is read from the page.
-        </p>
-      </header>
-
-      <section className="space-y-8">
-        <h2 className="type-section text-charcoal">Colours</h2>
-        {palette.map((group) => (
-          <div key={group.group} className="space-y-3">
-            <h3 className="type-eyebrow text-muted-text">{group.group}</h3>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-              {group.swatches.map((s) => (
-                <div key={s.token} className="space-y-1.5">
-                  <div className={`h-16 rounded-card border border-border ${s.className}`} />
-                  <div className="text-sm font-medium text-charcoal">{s.name}</div>
-                  <TokenValue token={s.token} />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </section>
+      <Foundations />
+      <Primitives sample={discounted && { price: discounted.price, compareAtPrice: discounted.compare_at_price }} />
 
       <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Allowed pairings</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {pairings.map((p) => (
-            <div key={p.label} className={`rounded-card px-4 py-3 text-sm font-semibold ${p.className}`}>
-              {p.label}
-            </div>
+        <h2 className="type-section text-charcoal">Product card</h2>
+        <p className="text-sm text-muted-text">Real products. The last card previews the sold-out state of the first.</p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
+          {products.slice(0, 3).map((product) => (
+            <ProductCard key={product.id} product={product} t={t} />
           ))}
-          <div className="rounded-card border border-border bg-background px-4 py-3">
-            <p className="font-display text-2xl font-bold text-gold-display">Made for Ethiopia.</p>
-            <p className="text-xs text-muted-text">Gold display on cream: 24px+ bold only</p>
-          </div>
+          {products[0] && <ProductCard product={{ ...products[0], stock: 0 }} t={t} />}
         </div>
       </section>
 
       <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Type scale</h2>
-        <div className="space-y-4">
-          <Specimen label="type-hero · 60 / 36">
-            <p className="type-hero text-charcoal">Modern Shopping.</p>
-            <p className="type-hero text-gold-display">Made for Ethiopia.</p>
-          </Specimen>
-          <Specimen label="type-banner · 32 / 24">
-            <p className="type-banner text-charcoal">Big savings. Every day.</p>
-          </Specimen>
-          <Specimen label="type-section · 26 / 20">
-            <p className="type-section text-charcoal">Trending Products</p>
-          </Specimen>
-          <Specimen label="type-product-title · 28 / 22">
-            <p className="type-product-title text-charcoal">Premium Ceramic Table Lamp with Elegant Pattern Shade</p>
-          </Specimen>
-          <Specimen label="type-eyebrow · 12 / 11">
-            <p className="type-eyebrow text-charcoal">Your online marketplace in Ethiopia</p>
-          </Specimen>
-          <Specimen label="body · 16 / 14">
-            <p className="text-sm leading-[1.55] text-charcoal lg:text-base">
-              Discover fashion, electronics, beauty, home essentials and more — all in one place.
-            </p>
-          </Specimen>
-          <Specimen label="card title · 14 / 500">
-            <p className="truncate text-sm font-medium text-charcoal">
-              1pc DIY Ice Cube Mold Set, Includes Storage Box And Ice Scoop, Reusable Ice Cube Mold
-            </p>
-          </Specimen>
-          <Specimen label="meta · 12">
-            <p className="text-xs text-muted-text">Kitchen</p>
-          </Specimen>
-          <Specimen label="type-price / type-old-price">
-            <p className="flex items-baseline gap-2">
-              <span className="type-price text-brand-ink">1,850 ETB</span>
-              <span className="type-old-price text-muted-text">2,400 ETB</span>
-            </p>
-          </Specimen>
-          <Specimen label="type-price-lg · 28 / 24">
-            <p className="type-price-lg text-brand-ink">18,050 ETB</p>
-          </Specimen>
-          <Specimen label="button · 14 / 600">
-            <p className="text-sm font-semibold text-charcoal">Add to Cart</p>
-          </Specimen>
-          <Specimen label="script (lg+, decorative)">
-            <p className="font-script text-3xl font-semibold text-gold-display">Shop Local, Support Ethiopia</p>
-          </Specimen>
-          <Specimen label="Amharic in display">
-            <p className="type-hero text-charcoal">ዘመናዊ ግብይት።</p>
-            <p className="type-section text-charcoal">በመታየት ላይ ያሉ ምርቶች</p>
-          </Specimen>
-          <Specimen label="Amharic body">
-            <p className="text-sm leading-[1.55] text-charcoal lg:text-base">
-              ፋሽን፣ ኤሌክትሮኒክስ፣ የውበት ምርቶች፣ የቤት ቁሳቁሶች እና ሌሎችንም — ሁሉንም በአንድ ቦታ ያግኙ።
-            </p>
-          </Specimen>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Shape and shadow</h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
-          {radii.map((r) => (
-            <div key={r.name} className="space-y-1.5">
-              <div className={`h-16 border border-border bg-surface shadow-soft ${r.className}`} />
-              <p className="text-xs text-muted-text">{r.name}</p>
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-card border border-border bg-surface p-6 text-sm text-charcoal shadow-soft">shadow-soft (rest)</div>
-          <div className="rounded-card border border-border bg-surface p-6 text-sm text-charcoal shadow-lift">shadow-lift (hover)</div>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Buttons</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button>Primary</Button>
-          <Button variant="outline">Secondary</Button>
-          <Button variant="secondary">Filled Secondary</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="destructive">Destructive</Button>
-          <Button variant="link">Link</Button>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button size="sm">Small</Button>
-          <Button size="default">Default</Button>
-          <Button size="lg">Large</Button>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Inputs</h2>
-        <div className="max-w-sm space-y-3">
-          <Input placeholder="Search products..." />
-          <Input placeholder="Invalid field" aria-invalid />
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Card</h2>
-        <Card className="max-w-sm">
-          <CardHeader>
-            <CardTitle>Classic Leather Bag</CardTitle>
-            <CardDescription>Fashion</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg font-semibold text-brand-ink">1,850 ETB</p>
-          </CardContent>
-          <CardFooter>
-            <Button size="sm">Add to cart</Button>
-          </CardFooter>
-        </Card>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Badges</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <Badge>Default</Badge>
-          <Badge className="bg-success text-white">Success</Badge>
-          <Badge className="bg-warning text-white">Warning</Badge>
-          <Badge className="bg-error text-white">-23%</Badge>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Skeleton</h2>
-        <div className="max-w-sm space-y-2">
-          <Skeleton className="h-40 w-full rounded-image" />
-          <Skeleton className="h-4 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="type-section text-charcoal">Modal, Drawer &amp; Toast</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Open Modal</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Added to your cart</DialogTitle>
-                <DialogDescription>
-                  Classic Leather Bag has been added to your cart.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <Button>View cart</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline">Open Drawer</Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Filters</SheetTitle>
-                <SheetDescription>Category, price, availability, rating.</SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
-
-          <Button variant="outline" onClick={() => toast("Added to your cart")}>
-            Fire Toast
-          </Button>
+        <h2 className="type-section text-charcoal">Category tiles</h2>
+        <p className="text-sm text-muted-text">Portrait (home row), an empty category, the Deals tile, and landscape.</p>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
+          {stocked && <CategoryCard category={stocked} />}
+          {empty && <CategoryCard category={empty} />}
+          <DealsTile />
+          {stocked && <CategoryCard category={stocked} aspectClassName="aspect-[4/3]" className="self-end" />}
         </div>
       </section>
     </div>

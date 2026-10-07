@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { cn } from "cn"
 
-import { nameOf } from "@/lib/i18n/content"
+import { categoryNameOf, nameOf } from "@/lib/i18n/content"
 import type { Translator } from "@/lib/i18n/translator"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
@@ -17,13 +17,14 @@ import { SoldOutStamp } from "@/components/product/sold-out-stamp"
 // The one product card, everywhere a product is listed:
 //
 //   ┌──────────────────────┐
-//   │ -30%              ♡  │   discount (real compare-at price) · heart
-//   │        PHOTO         │   [Quick view] slides up on desktop hover/focus
+//   │ -23%              ♡  │   discount pill (real compare-at price) · heart
+//   │   PHOTO (contained)  │   [Quick view] slides up on desktop hover/focus
 //   ├──────────────────────┤
-//   │ Name (2 lines)       │
-//   │ ★★★★☆ 4.6            │   only if the product has a rating
+//   │ Name (1 line)        │
+//   │ Category             │
+//   │ ★ 4.6                │   only if the product has a rating
 //   │ 1,299 ETB  1,850 ETB │
-//   │ [   Add to cart    ] │
+//   │ [  🛒 Add to cart  ] │
 //   └──────────────────────┘
 //
 // Renders on the server (shop, home) and in the browser (favorites) alike:
@@ -32,9 +33,11 @@ import { SoldOutStamp } from "@/components/product/sold-out-stamp"
 // to cart are client islands, and they get the product's id — not the whole
 // record serialized into the page.
 //
-// Hover (desktop): the card lifts, the photo zooms slightly and Quick view
+// Hover (desktop): the shadow lifts, the photo grows 3% and Quick view
 // appears. Nothing depends on hover: on touch screens everything that matters
 // (the heart, Add to cart, the link to the product) is always visible.
+// Sold out: the photo fades to 60% under the SOLD OUT stamp, and the button
+// is disabled and says so.
 //
 // One link per product: the name. Its ::after is stretched over the whole
 // card, so the photo (and anywhere else on the card) opens the product too,
@@ -59,8 +62,7 @@ function ProductCard({
    * default fits the 4-column shop grid; a wider or narrower grid should say so. */
   sizes?: string
   /** No Add to cart button: for the "more like this" rows on a product page,
-   * where the page's own buttons are the ones that buy (the mockup's related
-   * products show the photo, name and price only). */
+   * where the page's own buttons are the ones that buy. */
   compact?: boolean
   className?: string
 }) {
@@ -73,7 +75,7 @@ function ProductCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-card border border-border bg-card shadow-soft transition-[box-shadow,transform,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-charcoal/10 hover:shadow-lift",
+        "group relative flex flex-col overflow-hidden rounded-card border border-border bg-card shadow-soft transition-shadow duration-200 ease-out hover:shadow-lift",
         className
       )}
     >
@@ -85,9 +87,10 @@ function ProductCard({
           imageUrl={product.image_url}
           sizes={sizes}
           eager={eager}
+          fit="contain"
           className={cn(
-            "rounded-none transition-transform duration-500 ease-out group-hover:scale-[1.04]",
-            soldOut && "grayscale-[40%]"
+            "rounded-none transition-transform duration-200 ease-out group-hover:scale-[1.03]",
+            soldOut && "opacity-60"
           )}
         />
         {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} />}
@@ -95,17 +98,17 @@ function ProductCard({
             it) — a <button> inside an <a> is invalid HTML and unreliable for
             keyboard/screen-reader users. */}
         <div className="pointer-events-none absolute top-2.5 left-2.5 z-10 flex flex-col items-start gap-1.5">
-          <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
+          <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} />
           {badge && (
-            <span className="inline-flex h-6 items-center rounded-md bg-charcoal px-2 text-[11px] font-semibold tracking-wide text-white">
+            <span className="inline-flex h-5 items-center rounded-full bg-charcoal px-2 text-[11px] font-semibold text-white">
               {badge}
             </span>
           )}
         </div>
-        {/* Phones: a 32px heart whose invisible ::after reaches the 44px tap size. */}
+        {/* 32px; below `lg` its invisible ::after reaches the 44px tap size. */}
         <FavoriteButton
           productId={product.id}
-          className="absolute top-2.5 right-2.5 z-10 max-lg:size-8 max-lg:after:absolute max-lg:after:-inset-1.5"
+          className="absolute top-2 right-2 z-10 size-8 border-transparent bg-surface/85 shadow-none max-lg:size-8 [&_svg]:size-4"
         />
         {/* Desktop only, and only once the card is hovered or a key reaches it. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 hidden justify-center lg:flex">
@@ -117,20 +120,22 @@ function ProductCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-3 lg:gap-2 lg:p-3.5">
+      <div className="flex flex-1 flex-col gap-1 p-3">
         <Link
           href={href}
-          className="line-clamp-2 min-h-10 text-sm leading-5 font-medium text-charcoal transition-colors outline-none group-hover:text-brand-ink after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-3 focus-visible:after:ring-ring/60 lg:min-h-[2.7rem] lg:text-[15px] lg:leading-[1.35rem]"
+          title={name}
+          className="truncate text-sm font-medium text-charcoal transition-colors outline-none group-hover:text-brand-ink after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-2 focus-visible:after:ring-ring"
         >
           {name}
         </Link>
+        <p className="truncate text-xs text-muted-text">{categoryNameOf(product, t.locale)}</p>
         {product.rating != null && <Rating value={product.rating} t={t} />}
-        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-0.5 pt-1">
-          <Price amount={product.price} t={t} className="text-base lg:text-lg" />
-          {onSale && <Price amount={product.compare_at_price!} t={t} variant="compare" className="text-xs" />}
+        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-0.5 pt-1.5">
+          <Price amount={product.price} t={t} className="text-[0.9375rem] lg:text-base" />
+          {onSale && <Price amount={product.compare_at_price!} t={t} variant="compare" />}
         </div>
         {!compact && (
-          <AddToCartButton productId={product.id} outOfStock={soldOut} className="relative z-10 mt-1 w-full" />
+          <AddToCartButton productId={product.id} outOfStock={soldOut} className="relative z-10 mt-2 w-full" />
         )}
       </div>
     </article>

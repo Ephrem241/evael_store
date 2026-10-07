@@ -64,7 +64,7 @@ function ProductPurchaseActions({ product, name }: { product: ProductWithCategor
           <QuantitySelector value={quantity} onChange={setQuantity} max={product.stock} className="h-12" />
         )}
         <div className="ml-auto flex items-center gap-2">
-          <FavoriteButton productId={product.id} className="size-12 shrink-0 border border-border shadow-none" />
+          <FavoriteButton productId={product.id} className="size-12 shrink-0 border border-border shadow-none max-lg:size-12" />
           <ShareButton title={name} />
         </div>
       </div>

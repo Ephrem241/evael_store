@@ -1,5 +1,3 @@
-import { Sparkles } from "lucide-react"
-
 import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductCard } from "@/components/product/product-card"
@@ -25,7 +23,6 @@ async function NewArrivals({ products }: { products: ProductWithCategory[] }) {
         <SectionHeading
           id="new-arrivals-heading"
           title={t("home.newArrivalsTitle")}
-          icon={<Sparkles aria-hidden className="size-6 shrink-0 text-brand" />}
           href="/shop?sort=newest"
           linkLabel={t("home.viewAll")}
           actions={<CarouselControls targetId={RAIL_ID} />}

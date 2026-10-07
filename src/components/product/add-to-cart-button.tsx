@@ -14,16 +14,17 @@ import { Button } from "@/components/ui/button"
 // toast ("Added to your cart" + View cart) is identical everywhere.
 //
 // A full-width labelled button at every width: on a phone's two-column grid
-// the words fit, and a word is clearer than an icon alone.
+// the words fit, and a word is clearer than an icon alone. The card's size is
+// 40px tall on desktop and 44px on phones (the Button's default).
 function AddToCartButton({
   productId,
   outOfStock,
-  size = "sm",
+  size = "default",
   className,
 }: {
   productId: string
   outOfStock?: boolean
-  size?: "sm" | "lg"
+  size?: "default" | "lg"
   className?: string
 }) {
   const t = useT()
@@ -39,7 +40,7 @@ function AddToCartButton({
       size={size}
       disabled={outOfStock}
       onClick={() => addToCart(productId)}
-      className={cn(size === "sm" && "h-10 text-[13px] max-lg:px-2 lg:text-sm", className)}
+      className={cn(size === "default" && "text-[13px] max-lg:px-2 lg:text-sm", className)}
     >
       {!outOfStock && <ShoppingCart aria-hidden className="max-[359px]:hidden" />}
       {outOfStock ? t("product.stock.out") : t("product.addToCart")}

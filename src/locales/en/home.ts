@@ -6,7 +6,9 @@ export const home = {
   categoriesTitle: "Shop by Category",
   viewAll: "View All",
   // Under each category card: how many products it really holds.
-  categoryItems: { one: "{count} item", other: "{count} items" },
+  categoryProducts: { one: "{count} product", other: "{count} products" },
+  // The Deals tile at the end of the category row (its title is nav.deals).
+  dealsTile: { subtitle: "Save More" },
   // The admin's "featured" products.
   featuredTitle: "Trending Now",
   newArrivalsTitle: "New Arrivals",

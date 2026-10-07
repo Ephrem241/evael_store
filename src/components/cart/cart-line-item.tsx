@@ -80,7 +80,7 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
         <div className="flex flex-wrap items-center gap-2">
           <Price amount={product.price} t={t} />
           {hasDiscount && <Price amount={product.compare_at_price!} t={t} variant="compare" />}
-          <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
+          <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} variant="sale" />
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">

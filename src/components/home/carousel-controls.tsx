@@ -46,23 +46,19 @@ function CarouselControls({ targetId }: { targetId: string }) {
     <div className="hidden items-center gap-2 sm:flex">
       <Button
         type="button"
-        variant="outline"
-        size="icon"
+        variant="icon-circle"
         disabled={!canPrev}
         onClick={() => page(-1)}
         aria-label={t("home.carousel.previous")}
-        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-subtle"
       >
         <ChevronLeft />
       </Button>
       <Button
         type="button"
-        variant="outline"
-        size="icon"
+        variant="icon-circle"
         disabled={!canNext}
         onClick={() => page(1)}
         aria-label={t("home.carousel.next")}
-        className="size-9 rounded-full border-border bg-card text-charcoal hover:bg-subtle"
       >
         <ChevronRight />
       </Button>

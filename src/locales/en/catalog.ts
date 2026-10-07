@@ -90,6 +90,8 @@ export const product = {
   addedToCart: "Added to your cart.",
   viewCart: "View cart",
   rated: "Rated {value} out of 5",
+  // The red sale pill on the product page and in the cart. {percent} is a whole number.
+  percentOff: "{percent}% OFF",
   favorites: {
     add: "Add to favorites",
     remove: "Remove from favorites",

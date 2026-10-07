@@ -115,6 +115,7 @@ function QuickViewBody({ product }: { product: ProductWithCategory }) {
         <DiscountBadge
           price={product.price}
           compareAtPrice={product.compare_at_price}
+          t={t}
           className="absolute top-3 left-3"
         />
       </div>

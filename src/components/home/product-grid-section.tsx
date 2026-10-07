@@ -1,5 +1,3 @@
-import type { ReactNode } from "react"
-
 import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductGrid } from "@/components/product/product-grid"
@@ -21,13 +19,11 @@ const HIDE_FOR_FOUR = "sm:max-lg:[&>*:nth-child(n+4)]:hidden"
 async function ProductGridSection({
   id,
   title,
-  icon,
   href,
   products,
 }: {
   id: string
   title: string
-  icon?: ReactNode
   href: string
   products: ProductWithCategory[]
 }) {
@@ -38,7 +34,7 @@ async function ProductGridSection({
   return (
     <Reveal>
       <section aria-labelledby={id} className="space-y-5 lg:space-y-6">
-        <SectionHeading id={id} title={title} icon={icon} href={href} linkLabel={t("home.viewAll")} />
+        <SectionHeading id={id} title={title} href={href} linkLabel={t("home.viewAll")} />
         <ProductGrid
           products={products.slice(0, count)}
           sizes={CARD_SIZES}

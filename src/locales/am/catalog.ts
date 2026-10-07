@@ -85,6 +85,7 @@ export const product: Dictionary["product"] = {
   addedToCart: "ወደ ጋሪዎ ተጨምሯል።",
   viewCart: "ጋሪን ይመልከቱ",
   rated: "ከ5 {value} ተሰጥቶታል",
+  percentOff: "{percent}% ቅናሽ",
   favorites: {
     add: "ወደ ተወዳጆች ጨምር",
     remove: "ከተወዳጆች አስወግድ",

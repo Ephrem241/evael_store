@@ -1,4 +1,3 @@
-import { ThumbsUp, TrendingUp } from "lucide-react"
 import {
   getCategories,
   getFeaturedProducts,
@@ -121,7 +120,6 @@ export default async function Home() {
       <ProductGridSection
         id="trending-heading"
         title={t("home.featuredTitle")}
-        icon={<TrendingUp aria-hidden className="size-6 shrink-0 text-brand" />}
         href="/shop"
         products={featured}
       />
@@ -129,7 +127,6 @@ export default async function Home() {
       <ProductGridSection
         id="popular-heading"
         title={t("home.popularTitle")}
-        icon={<ThumbsUp aria-hidden className="size-6 shrink-0 text-brand" />}
         href="/shop?sort=popular"
         products={popular}
       />

@@ -1,5 +1,3 @@
-import { Flame } from "lucide-react"
-
 import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductCard } from "@/components/product/product-card"
@@ -43,7 +41,6 @@ async function DealsRow({
           id="deals-row-heading"
           title={t("home.flashTitle")}
           subtitle={t("home.flashSubtitle")}
-          icon={<Flame aria-hidden className="size-7 shrink-0 fill-brand/20 text-brand" />}
           href="/deals"
           linkLabel={t("home.viewAll")}
           actions={

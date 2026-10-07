@@ -8,6 +8,10 @@ import { formatPrice } from "@/lib/currency"
 // instead of reading it from context — precisely so that it does NOT have to
 // be a client component (which would ship its code and the props of every
 // price to the browser for nothing).
+//
+// "1,850 ETB" in bold burgundy ink; the struck-through original ("compare")
+// in 12px secondary text. Figures are tabular, so prices line up. Callers set
+// the size of the current price.
 function Price({
   amount,
   t,
@@ -21,14 +25,14 @@ function Price({
 }) {
   if (variant === "compare") {
     return (
-      <span className={cn("text-sm text-muted-text line-through", className)}>
+      <span className={cn("text-xs text-muted-text tabular-nums line-through", className)}>
         {formatPrice(amount, t)}
       </span>
     )
   }
 
   return (
-    <span className={cn("font-bold tracking-tight text-brand-ink", className)}>
+    <span className={cn("font-bold text-brand-ink tabular-nums", className)}>
       {formatPrice(amount, t)}
     </span>
   )

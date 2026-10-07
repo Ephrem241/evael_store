@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { BadgePercent, Flame, SlidersHorizontal, Star, Timer } from "lucide-react"
+import { BadgePercent, SlidersHorizontal } from "lucide-react"
 
 import { getT } from "@/lib/i18n/server"
 import { pageMetadata } from "@/lib/seo/metadata"
@@ -45,10 +45,10 @@ export default async function DealsPage() {
   limited.forEach((p) => taken.add(p.id))
   const rest = deals.filter((p) => !taken.has(p.id))
 
-  const groups: { id: string; title: string; icon: typeof Flame; products: ProductWithCategory[] }[] = [
-    { id: "featured-offers", title: t("catalog.dealsPage.featured"), icon: Star, products: featuredOffers },
-    { id: "limited-stock", title: t("catalog.dealsPage.limited"), icon: Timer, products: limited },
-    { id: "on-sale", title: t("catalog.dealsPage.onSale"), icon: Flame, products: rest },
+  const groups: { id: string; title: string; products: ProductWithCategory[] }[] = [
+    { id: "featured-offers", title: t("catalog.dealsPage.featured"), products: featuredOffers },
+    { id: "limited-stock", title: t("catalog.dealsPage.limited"), products: limited },
+    { id: "on-sale", title: t("catalog.dealsPage.onSale"), products: rest },
   ]
 
   return (
@@ -94,7 +94,6 @@ export default async function DealsPage() {
               <SectionHeading
                 id={`${group.id}-heading`}
                 title={group.title}
-                icon={<group.icon aria-hidden className="size-6 shrink-0 text-brand" />}
               />
               <ProductGrid products={group.products} eagerCount={i === 0 ? 4 : 0} />
             </section>
