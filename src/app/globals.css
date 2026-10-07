@@ -8,9 +8,14 @@
     --font-heading: var(--font-sans), var(--font-amharic);
     --font-sans: var(--font-sans), var(--font-amharic);
     --font-amharic: var(--font-amharic);
-    /* Storefront headings: the same Inter as the body, set bold and tight.
-       Amharic falls through to the Ethiopic font. */
-    --font-display: var(--font-sans), var(--font-amharic), system-ui, sans-serif;
+    /* Storefront display type (hero, section titles, the product title, the
+       logo's wordmark, banner headlines): Playfair Display, set bold. It has
+       no Ethiopic glyphs, so Amharic headings fall through to the Ethiopic
+       font, then Georgia. Body and UI text stay in Inter (--font-sans). */
+    --font-display: var(--font-playfair), var(--font-amharic), Georgia, serif;
+    /* The two handwritten flourishes on the home page only (decorative,
+       hidden below `lg`). */
+    --font-script: var(--font-caveat), cursive;
     --color-surface: var(--evael-surface);
     --color-subtle: var(--evael-subtle);
     --color-charcoal: var(--evael-text);
@@ -18,8 +23,14 @@
     --color-brand: var(--evael-primary);
     --color-brand-strong: var(--evael-primary-strong);
     --color-brand-deep: var(--evael-primary-dark);
+    --color-brand-banner: var(--evael-primary-deep);
+    --color-brand-deepest: var(--evael-primary-deepest);
     --color-brand-ink: var(--evael-primary-ink);
     --color-brand-soft: var(--evael-primary-soft);
+    --color-gold: var(--evael-gold);
+    --color-gold-display: var(--evael-gold-display);
+    --color-gold-ink: var(--evael-gold-ink);
+    --color-gold-border: var(--evael-gold-border);
     --color-sale: var(--evael-sale);
     --color-star: var(--evael-star);
     --color-footer: var(--evael-footer);
@@ -27,11 +38,16 @@
     --color-warning: var(--evael-warning);
     --color-warning-text: var(--evael-warning-text);
     --color-error: var(--evael-error);
-    --radius-card: 1rem;
-    --radius-image: 0.75rem;
-    --radius-hero: 1.5rem;
-    --shadow-soft: 0 1px 2px rgb(23 23 23 / 0.04), 0 6px 18px -10px rgb(23 23 23 / 0.12);
-    --shadow-lift: 0 2px 6px rgb(23 23 23 / 0.05), 0 18px 36px -16px rgb(23 23 23 / 0.2);
+    --radius-card: 0.75rem;
+    --radius-image: 0.625rem;
+    /* Banners and panels. The desktop hero is full-bleed, with no radius. */
+    --radius-hero: 0.75rem;
+    /* Buttons, inputs, the quantity stepper. Hero buttons and chips are pills. */
+    --radius-control: 0.5rem;
+    /* Warm shadows: the deepest burgundy at the old opacities, so cards on
+       the cream page don't look grey-edged. */
+    --shadow-soft: 0 1px 2px rgb(66 6 18 / 0.04), 0 6px 18px -10px rgb(66 6 18 / 0.12);
+    --shadow-lift: 0 2px 6px rgb(66 6 18 / 0.05), 0 18px 36px -16px rgb(66 6 18 / 0.2);
     --animate-fade-up: fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
     --animate-pop: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     --animate-shimmer: shimmer 1.6s ease-in-out infinite;
@@ -90,38 +106,51 @@
 }
 
 :root {
-    /* Evael Store palette. Every colour in the app comes from here.
-       Orange guides the eye to actions; neutrals do most of the work
-       (roughly 70% neutral surfaces, 20% dark type, 10% accent).
+    /* Evael Store palette: burgundy and gold on warm cream. Every colour in
+       the app comes from here. Burgundy carries actions and brand moments,
+       gold is the accent, and the cream neutrals do most of the work.
 
        Contrast (WCAG AA, checked by the e2e axe audit):
-       - primary (#E86A33) is 3.2:1 with white. It is for icons, rings,
-         underlines, progress bars, the logo and display-size text only.
-       - primary-strong (#C94F20) carries white text: buttons, the
-         announcement bar, badges (4.5:1).
-       - primary-ink is orange TEXT on any light surface, tinted ones
-         included (4.6:1 on primary-soft, 5.1:1 on white).
-       - text-secondary, success and sale are the brief's #6B7280, #16845B
-         and #DC3A32 darkened a few percent, so they keep 4.5:1 on the soft
-         and subtle tints too (the brief's values drop to ~4.3:1 there). */
-    --evael-background: #FAFAF7;
-    --evael-surface: #FFFFFF;
-    --evael-subtle: #F3F2EE; /* neutral secondary surface: hovers, skeletons, chips */
-    --evael-text: #171717;
-    --evael-text-secondary: #646B78;
-    --evael-primary: #E86A33;
-    --evael-primary-strong: #C94F20;
-    --evael-primary-dark: #A9421A; /* hover/pressed for primary-strong */
-    --evael-primary-ink: #BA4A1C;
-    --evael-primary-soft: #FFF1E8;
+       - White text passes on every burgundy: primary 9.6:1, primary-strong
+         10.9:1, primary-dark 12.3:1, primary-deep 14.6:1, primary-deepest
+         16.6:1, sale 6.9:1.
+       - primary-ink is burgundy TEXT on light surfaces: prices, links
+         (10.9:1 on white, 9.4:1 on primary-soft).
+       - Gold (#D29C4E) never carries white text (2.4:1). Gold buttons use
+         primary-deepest text (6.8:1). Gold AS text only sits on burgundy
+         (6.0:1 on primary-deep, 6.8:1 on primary-deepest) or on the footer
+         (7.2:1).
+       - Gold text on cream or white: gold-display (3.5:1) for 24px+ bold
+         display text only; anything smaller uses gold-ink (5.5:1 on cream,
+         5.2:1 on subtle).
+       - text-secondary is meta text: 5.5:1 on subtle, 5.8:1 on cream.
+       - success, warning-text and error keep 4.6:1+ on the cream, subtle
+         and primary-soft tints.
+       - star is for icons beside a written rating, never text (2.1:1). */
+    --evael-background: #FBF6F0; /* page: warm cream */
+    --evael-surface: #FFFFFF; /* cards, inputs, sheets */
+    --evael-subtle: #F6F0EA; /* trust strip, image wells, chips, skeletons, hovers */
+    --evael-border: #EBE2D8;
+    --evael-text: #1A1414;
+    --evael-text-secondary: #66605C;
+    --evael-primary: #900018; /* hero CTA, icons, focus ring, active underline */
+    --evael-primary-strong: #7E061E; /* buttons, filled chips, badges, active nav */
+    --evael-primary-dark: #6C0C1E; /* hover/pressed; announcement bar, mobile header */
+    --evael-primary-deep: #540C18; /* "Big Savings" banner, Deals tile */
+    --evael-primary-deepest: #420612; /* Flash Deals panel, countdown; text on gold */
+    --evael-primary-ink: #7E061E; /* burgundy text on light surfaces */
+    --evael-primary-soft: #F8ECEA; /* tinted backgrounds, selected rows */
+    --evael-gold: #D29C4E; /* gold buttons, gold text on burgundy, logo mark */
+    --evael-gold-display: #B07A2A; /* gold display text on cream, 24px+ bold only */
+    --evael-gold-ink: #8A5A12; /* small gold text on light surfaces */
+    --evael-gold-border: #CCA884; /* outline-gold button border */
     --evael-success: #157A54;
-    --evael-sale: #D3352D;
-    --evael-star: #F59E0B;
+    --evael-sale: #B4122A; /* "23% OFF" pill, flash bolt */
+    --evael-star: #F6A22A;
     --evael-warning: #B7791F; /* icons, fills and tints */
-    --evael-warning-text: #8F5F0F; /* text on light surfaces, 4.6:1+ */
+    --evael-warning-text: #8F5F0F; /* text on light surfaces, 4.7:1+ */
     --evael-error: #B42318;
-    --evael-footer: #181818;
-    --evael-border: #E8E6E1;
+    --evael-footer: #18181E; /* footer, newsletter card */
 
     /* semantic tokens consumed by shadcn components */
     --background: var(--evael-background);
@@ -224,6 +253,34 @@
    (Nyala on Windows, Kefa on Apple devices, Noto on Android) instead. */
 @utility font-ethiopic-system {
   font-family: "Nyala", "Kefa", "Abyssinica SIL", "Noto Sans Ethiopic", sans-serif;
+}
+
+/* The type scale. Phones first; from `lg` up the desktop size. Typography
+   only: each place that uses one adds its own colour. Prices are tabular so
+   columns of figures line up. */
+@utility type-hero {
+  @apply font-display text-[2.25rem] leading-[1.1] font-bold tracking-[-0.02em] lg:text-[3.75rem] lg:leading-[1.05];
+}
+@utility type-banner {
+  @apply font-display text-2xl leading-[1.1] font-bold uppercase lg:text-[2rem];
+}
+@utility type-section {
+  @apply font-display text-xl leading-[1.2] font-bold lg:text-[1.625rem];
+}
+@utility type-product-title {
+  @apply font-display text-[1.375rem] leading-[1.2] font-bold lg:text-[1.75rem];
+}
+@utility type-eyebrow {
+  @apply font-sans text-[0.6875rem] font-semibold tracking-[0.18em] uppercase lg:text-xs;
+}
+@utility type-price {
+  @apply text-[0.9375rem] font-bold tabular-nums lg:text-base;
+}
+@utility type-price-lg {
+  @apply text-2xl font-bold tabular-nums lg:text-[1.75rem];
+}
+@utility type-old-price {
+  @apply text-xs tabular-nums line-through;
 }
 
 /* Horizontal carousels (new arrivals, mobile product rails) scroll and snap

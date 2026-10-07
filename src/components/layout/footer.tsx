@@ -52,7 +52,7 @@ const listClass = "space-y-1.5 max-lg:space-y-0 max-lg:pb-2"
 const headingClass = "text-xs font-semibold tracking-[0.14em] text-white uppercase"
 // The phone toggle row, styled like the desktop column heading.
 const triggerClass =
-  "min-h-11 px-0 font-sans text-xs tracking-[0.14em] text-white uppercase active:bg-white/5 focus-visible:ring-brand/50"
+  "min-h-11 px-0 font-sans text-xs tracking-[0.14em] text-white uppercase active:bg-white/5 focus-visible:ring-gold/60"
 
 // One link column. From `lg` up: a heading and the list, as always. Below it:
 // a row that folds the list away (closed by default), so the footer is a few
@@ -90,7 +90,7 @@ async function Footer() {
           className={cn(FOOTER_WIDTH, "grid gap-4 py-5 lg:grid-cols-[1fr_minmax(0,24rem)] lg:items-center lg:gap-8 lg:py-6")}
         >
           <div className="flex items-start gap-4">
-            <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand sm:flex">
+            <span className="hidden size-10 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold sm:flex">
               <Mail aria-hidden className="size-5" />
             </span>
             <div className="space-y-1">
@@ -165,7 +165,7 @@ async function Footer() {
             </p>
             {/* Only what checkout really takes — see the homepage's payment strip. */}
             <p className="flex items-center gap-1.5 text-xs text-white/60">
-              <Banknote aria-hidden className="size-3.5 text-brand" />
+              <Banknote aria-hidden className="size-3.5 text-gold" />
               {t("home.payments.weAccept", { methods: t("home.payments.cod") })}
             </p>
           </div>

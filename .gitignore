@@ -50,3 +50,7 @@ next-env.d.ts
 
 # local planning docs (not part of the app)
 /MVP.plan
+
+# redesign photo originals (2–3.5 MB each). Web-sized copies of the ones the
+# site uses live in public/images; the spec and the two mockups are committed.
+/docs/design/*.jpg

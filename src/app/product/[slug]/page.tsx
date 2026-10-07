@@ -138,7 +138,9 @@ export default async function ProductPage({
           </div>
 
           <p
-            className={`flex w-fit items-center gap-2 rounded-full bg-current/8 px-3 py-1 text-sm font-semibold ${stock.className}`}
+            // A 6% tint of the status colour: at 8% the green "In stock" drops
+            // below 4.5:1 on the cream page.
+            className={`flex w-fit items-center gap-2 rounded-full bg-current/6 px-3 py-1 text-sm font-semibold ${stock.className}`}
           >
             <span aria-hidden className="size-2 rounded-full bg-current" />
             {stock.label}

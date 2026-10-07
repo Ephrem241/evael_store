@@ -79,7 +79,7 @@ function AdminShell({ children }: { children: ReactNode }) {
           <div className="flex flex-col gap-1">
             <Link
               href="/"
-              className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-brand/60"
+              className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-gold/60"
             >
               <Store aria-hidden className="size-4" />
               {t("admin.shell.viewStore")}
@@ -87,7 +87,7 @@ function AdminShell({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={handleSignOut}
-              className="flex items-center gap-2 rounded-lg px-2 py-2 text-left text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-brand/60"
+              className="flex items-center gap-2 rounded-lg px-2 py-2 text-left text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-gold/60"
             >
               <LogOut aria-hidden className="size-4" />
               {t("account.nav.logout")}
@@ -109,7 +109,7 @@ function AdminShell({ children }: { children: ReactNode }) {
             <Link
               href="/"
               aria-label={t("admin.shell.viewStore")}
-              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-brand/60"
+              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-gold/60"
             >
               <Store aria-hidden className="size-5" />
             </Link>
@@ -117,7 +117,7 @@ function AdminShell({ children }: { children: ReactNode }) {
               type="button"
               onClick={handleSignOut}
               aria-label={t("account.nav.logout")}
-              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-brand/60"
+              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-gold/60"
             >
               <LogOut aria-hidden className="size-5" />
             </button>

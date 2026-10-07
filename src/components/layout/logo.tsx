@@ -41,8 +41,8 @@ function BrandMark({ className }: { className?: string }) {
 // one block of orange.
 //
 // `variant="light"` is for dark surfaces (the footer, the admin): the name
-// turns white and "STORE" takes the bright orange (5.4:1 on the near-black;
-// on light surfaces it is the darker ink orange, 5.1:1 on white).
+// turns white and "STORE" takes the gold (7.2:1 on the footer's near-black;
+// on light surfaces it is the burgundy ink, 10.9:1 on white).
 function Logo({
   className,
   variant = "default",
@@ -76,7 +76,7 @@ function Logo({
           <span
             className={cn(
               "mt-1 pl-px text-[0.625rem] font-semibold tracking-[0.24em] uppercase lg:text-[0.6875rem]",
-              light ? "text-brand" : "text-brand-ink"
+              light ? "text-gold" : "text-brand-ink"
             )}
           >
             {rest.join(" ")}

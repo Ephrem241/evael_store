@@ -34,7 +34,7 @@ const styles = {
     "inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white py-1.5 pr-4 pl-1.5 text-sm font-medium text-charcoal transition-colors outline-none hover:border-brand hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
   // In the dark footer: the logo alone (a full 44px tap target on phones,
   // a little smaller on desktop).
-  dark: "inline-flex size-11 lg:size-9 items-center justify-center rounded-full transition-transform outline-none hover:scale-110 focus-visible:ring-3 focus-visible:ring-brand/60",
+  dark: "inline-flex size-11 lg:size-9 items-center justify-center rounded-full transition-transform outline-none hover:scale-110 focus-visible:ring-3 focus-visible:ring-gold/60",
 }
 
 // Telegram, WhatsApp and Call buttons. Shows only the channels that are set;
