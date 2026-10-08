@@ -1,5 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, ChevronRight, ShoppingBag, Tag } from "lucide-react"
+import { ArrowRight, ChevronRight, ShoppingBag } from "lucide-react"
 import { cn } from "cn"
 
 import { nameOf } from "@/lib/i18n/content"
@@ -70,25 +71,40 @@ async function CategoryCard({
   )
 }
 
-// The last tile of a category row: deep burgundy, a gold sale tag, "Deals" in
-// the display face (gold on deep burgundy, 6.0:1), "Save More" under it, and a
-// gold arrow circle. Leads to /deals.
+// The last tile of a category row: the shopping-bags photograph (bags and a
+// gold tag on the right, calm table on the lower left), a deep burgundy fade
+// from the lower-left corner, "Deals" over it in gold in the display face,
+// "Save More" under it, and a gold arrow circle. Leads to /deals. Running
+// corner to corner, the fade is mostly sideways on the wide phone tile and
+// mostly upwards on the tall desktop one, so the bags stay clear on every
+// shape. Measured against the photo behind the words, at its worst (the cream
+// throw, two-across phone row): "Deals" 3.5:1 (large text), "Save More" 9.4:1.
+// Hover: the photo grows 4% over 300ms, like the category tiles.
 async function DealsTile({
   aspectClassName = "aspect-[3/4]",
+  sizes = "(min-width: 1024px) 200px, (min-width: 640px) 25vw, 100vw",
   className,
 }: {
   aspectClassName?: string
+  /** How wide the photo really is on screen (an HTML `sizes` value). */
+  sizes?: string
   className?: string
 }) {
   const t = await getT()
 
   return (
-    <Link href="/deals" className={cn(tileClass, "flex flex-col justify-between bg-brand-banner p-3", aspectClassName, className)}>
-      <Tag aria-hidden className="size-9 text-gold transition-transform duration-300 ease-out group-hover:scale-[1.04]" strokeWidth={1.5} />
-      <span className="flex items-end justify-between gap-2">
+    <Link href="/deals" className={cn(tileClass, "bg-brand-banner", aspectClassName, className)}>
+      <span className="absolute inset-0 -z-10 transition-transform duration-300 ease-out group-hover:scale-[1.04]">
+        <Image src="/images/home/deals-tile.jpg" alt="" fill sizes={sizes} className="object-cover object-[100%_35%]" />
+      </span>
+      <span
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-linear-to-tr from-brand-banner from-15% via-brand-banner/70 via-40% to-transparent to-70%"
+      />
+      <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
         <span className="min-w-0">
-          <span className="block font-display text-xl leading-tight font-bold text-gold">{t("nav.deals")}</span>
-          <span className="mt-0.5 block text-xs text-white/85">{t("home.dealsTile.subtitle")}</span>
+          <span className="block font-display text-xl leading-tight font-bold text-gold text-shadow-sm">{t("nav.deals")}</span>
+          <span className="mt-0.5 block text-xs text-white/85 text-shadow-sm">{t("home.dealsTile.subtitle")}</span>
         </span>
         <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gold text-brand-deepest">
           <ChevronRight className="size-4" />

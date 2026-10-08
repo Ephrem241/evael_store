@@ -20,6 +20,8 @@ The redesign photographs — `hero-shopper.jpg`, `hero-couple.jpg`,
 `hero-living-room.jpg`, `savings-banner.jpg`, `addis-skyline.jpg` and
 `newsletter-shopper.jpg` — were supplied by the store with the design brief
 (`docs/design/`) and resized for the web; they are not Unsplash photos.
+`deals-tile.jpg` (the shopping bags on the home page's Deals tile) was made by
+the store with Google Gemini; its original is `docs/design/Deals tile.jpg`.
 
 ## Catalog (`products/` and `categories/` here)
 
