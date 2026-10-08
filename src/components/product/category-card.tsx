@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, ChevronRight, ShoppingBag } from "lucide-react"
+import { ArrowRight, ChevronRight } from "lucide-react"
 import { cn } from "cn"
 
 import { nameOf } from "@/lib/i18n/content"
@@ -114,15 +114,32 @@ async function DealsTile({
   )
 }
 
-// The Categories page's full-width Deals row: deep burgundy, a gold shopping
-// bag, "Deals" in gold in the display face, "Save More" in white and a gold
-// circle with an arrow on the right. Leads to /deals.
+// The Categories page's full-width Deals row: deep burgundy, "Deals" in gold
+// in the display face with "Save More" in white under it on the left, a gold
+// circle with an arrow on the right, and between them the Deals tile's
+// shopping-bags photograph, fading into the burgundy on both sides. The photo
+// stops short of the arrow, so the words and the circle always sit on solid
+// burgundy (gold 6.0:1, white/90 11.9:1) and the circle never covers the bags.
+// Leads to /deals.
 async function DealsBanner({ className }: { className?: string }) {
   const t = await getT()
 
   return (
     <Link href="/deals" className={cn(tileClass, "flex items-center gap-4 bg-brand-banner px-5 py-4 lg:px-8 lg:py-5", className)}>
-      <ShoppingBag aria-hidden className="size-10 shrink-0 text-gold lg:size-12" strokeWidth={1.5} />
+      <span className="absolute inset-y-0 right-16 left-[38%] -z-10 overflow-hidden sm:left-1/2 lg:right-22 lg:left-[58%]">
+        <Image
+          src="/images/home/deals-tile.jpg"
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 420px, 50vw"
+          className="object-cover object-[72%_42%] transition-transform duration-300 ease-out group-hover:scale-[1.04]"
+        />
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-linear-to-r from-brand-banner via-brand-banner/55 via-25% to-transparent to-50%"
+        />
+        <span aria-hidden className="absolute inset-0 bg-linear-to-l from-brand-banner to-transparent to-18%" />
+      </span>
       <span className="min-w-0 flex-1">
         <span className="block font-display text-2xl leading-tight font-bold text-gold lg:text-3xl">{t("nav.deals")}</span>
         <span className="block text-sm text-white/90">{t("home.dealsTile.subtitle")}</span>
