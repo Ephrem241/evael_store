@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { cn } from "cn"
@@ -6,144 +5,72 @@ import { cn } from "cn"
 import { getT } from "@/lib/i18n/server"
 import type { HomepageSettings } from "@/lib/services/homepage"
 import { Button } from "@/components/ui/button"
-import { Container } from "@/components/layout/container"
+import { HeroSlideshow, type HeroPhoto } from "@/components/home/hero-slideshow"
 
-const HERO_IMAGE = "/images/home/hero-evael.jpg"
+// Each photo's subject stands on the right, beside a calm cream wall on the
+// left where the words go; `position` keeps the subject in frame on a phone.
+const PHOTOS: HeroPhoto[] = [
+  { src: "/images/home/hero-shopper.jpg", position: "68% 40%" },
+  { src: "/images/home/hero-couple.jpg", position: "75% 40%" },
+  { src: "/images/home/hero-living-room.jpg", position: "72% 50%" },
+]
 
-// The homepage's opening: the headline, its line and two buttons, with the
-// brand photograph (a shopper with an Evael bag among fashion, beauty, tech
-// and home products).
+// The homepage's opening: full-bleed photographs (cross-fading, see
+// HeroSlideshow) with the cream fading in from the left, and on it the
+// eyebrow, the headline, its line and two buttons.
 //
-// Desktop: the photograph fills the right of a full-width band, and its plain
-// cream wall fades into the band under the text, which sits on the left — on
-// the same soft orange as Flash Deals, so its contrast never depends on the
-// picture. Phones: a soft-orange rounded card with the text, and the
-// photograph below it (matching the deals slide beside it).
-//
-// The copy is the admin's (homepage_sections). Each line break in the headline
-// is kept: the lines before the last are the lead-in, and the LAST line is the
-// big one, in the brand orange — "Everything You Love. / Better Prices." The
-// orange is the bright primary: at this size (bold, 36px+) it is WCAG large
-// text, which needs 3:1 and gets it. A one-line headline is drawn big, in
-// charcoal.
-//
-// Both responsive copies are always in the page (one hidden by CSS), and both
-// are preloaded as the first thing painted, so each says it is 1vw wide where
-// it is hidden (`sizes`): the hidden copy then costs a 16px thumbnail rather
-// than a second full-size photograph. (A `vw` value, not `1px`: next/image
-// only offers its smallest widths when `sizes` asks for a small share of the
-// screen.) The text uses plain CSS animation, visible before JavaScript runs.
-async function Hero({
-  settings,
-  showHeading = true,
-  variant = "section",
-}: {
-  settings: HomepageSettings
-  // False when a separate, always-present <h1> elsewhere on the page already
-  // carries this text (see app/page.tsx) — this Hero is then one of two
-  // responsive copies (mobile carousel / desktop), and a second literal <h1>
-  // would exist in the DOM even while `display:none`, which is invalid
-  // regardless of which copy happens to be visible at a given width.
-  showHeading?: boolean
-  // "slide": the first slide of the phone carousel — a rounded card inside the
-  // page margins, with the photograph under the text.
-  variant?: "section" | "slide"
-}) {
+// The copy is the admin's (homepage_sections). Each line break in the
+// headline is kept: the LAST line is the big gold one ("Made for Ethiopia."),
+// in gold-display — at 36px+ bold it is large text, which needs 3:1 and gets
+// 3.5:1 on cream. On desktop the lines before it are as big, in the text
+// colour; on phones they become the small capitals over it ("MODERN
+// SHOPPING."), where a two-line display headline wouldn't fit beside the
+// photo. A one-line headline is drawn big, in the text colour. This is the
+// page's one <h1>. The fixed eyebrow shows on desktop only.
+async function Hero({ settings }: { settings: HomepageSettings }) {
   const t = await getT()
-  const HeadlineTag = showHeading ? "h1" : "p"
   const lines = settings.heroHeadline.split("\n").filter((line) => line.trim() !== "")
-  const slide = variant === "slide"
-
-  const big = slide
-    ? "text-[2.375rem] leading-[1.04] min-[400px]:text-[2.625rem] sm:text-5xl"
-    : "text-[3.5rem] leading-[1.02] xl:text-[4.25rem]"
-  const leadIn = slide
-    ? "text-[1.625rem] leading-[1.15] min-[400px]:text-[1.75rem] sm:text-[2rem]"
-    : "text-[2.5rem] leading-[1.1] xl:text-5xl"
-
-  const headline = (
-    <HeadlineTag
-      {...(showHeading ? { id: "hero-heading" } : { "aria-hidden": true })}
-      className="font-display font-bold tracking-[-0.035em] text-charcoal"
-    >
-      {lines.map((line, i) => {
-        const last = i === lines.length - 1
-        return (
-          <span key={i} className={cn("block", last ? big : leadIn, last && lines.length > 1 && "mt-1 text-brand")}>
-            {line}
-          </span>
-        )
-      })}
-    </HeadlineTag>
-  )
-
-  const actions = (
-    <div className={cn("flex flex-wrap gap-3", slide ? "mt-5" : "mt-8")}>
-      <Button size="lg" asChild>
-        <Link href={settings.heroCtaHref}>
-          {settings.heroCtaLabel}
-          <ArrowRight aria-hidden />
-        </Link>
-      </Button>
-      <Button size="lg" variant="outline" asChild>
-        <Link href={settings.heroSecondaryCtaHref}>{settings.heroSecondaryCtaLabel}</Link>
-      </Button>
-    </div>
-  )
-
-  if (slide) {
-    return (
-      <section aria-labelledby="hero-heading" className="flex h-full w-full px-4 pt-4">
-        <div className="flex w-full flex-col justify-between gap-5 overflow-hidden rounded-hero border border-brand/20 bg-brand-soft p-5 shadow-soft">
-          <div className="animate-fade-up">
-            {headline}
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-charcoal/80 sm:text-base">{settings.heroSubtext}</p>
-            {actions}
-          </div>
-          <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-subtle">
-            <Image
-              src={HERO_IMAGE}
-              alt={t("home.hero.imageAlt")}
-              fill
-              preload
-              sizes="(min-width: 1024px) 1vw, 100vw"
-              className="object-cover object-[60%_45%]"
-            />
-          </div>
-        </div>
-      </section>
-    )
-  }
 
   return (
-    <section
-      aria-labelledby="hero-heading"
-      className="relative isolate left-1/2 -mt-6 flex min-h-[clamp(480px,38vw,640px)] w-screen -translate-x-1/2 items-center overflow-hidden border-b border-border/60 bg-brand-soft lg:-mt-10"
-    >
-      <div className="absolute inset-y-0 right-0 -z-10 w-[62%] max-w-[1120px]">
-        <Image
-          src={HERO_IMAGE}
-          alt={t("home.hero.imageAlt")}
-          fill
-          preload
-          sizes="(min-width: 1806px) 1120px, (min-width: 1024px) 62vw, 1vw"
-          className="object-cover object-[55%_45%]"
-        />
-        {/* The photograph's plain wall fades into the band, so the text beside
-            it always sits on the solid soft orange. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,var(--color-brand-soft)_0%,var(--color-brand-soft)_10%,transparent_28%)]"
-        />
-      </div>
-      <Container className="py-12">
-        <div className="max-w-[36rem] animate-fade-up">
-          {headline}
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-charcoal/80">{settings.heroSubtext}</p>
-          {actions}
+    <HeroSlideshow photos={PHOTOS} labelledBy="hero-heading" flourish={t("home.hero.flourish")}>
+      {/* Phones: the words keep to the left 60%, clear of the subject; the
+          buttons may run on under the photo, on their own fills. */}
+      <div className="animate-fade-up lg:max-w-[38rem]">
+        <p className="mb-3 type-eyebrow text-gold-ink max-lg:hidden">{t("home.hero.eyebrow")}</p>
+        <h1 id="hero-heading" className="font-display font-bold tracking-[-0.02em] max-lg:max-w-[60%] sm:max-lg:max-w-sm">
+          {lines.map((line, i) => {
+            const last = i === lines.length - 1
+            const lead = !last
+            return (
+              <span
+                key={i}
+                className={cn(
+                  "block",
+                  lead
+                    ? "text-charcoal max-lg:mb-1.5 max-lg:font-sans max-lg:text-[11px] max-lg:font-semibold max-lg:tracking-[0.18em] max-lg:uppercase lg:text-[3.75rem] lg:leading-[1.05]"
+                    : "text-[2.25rem] leading-[1.1] lg:text-[3.75rem] lg:leading-[1.05]",
+                  last && (lines.length > 1 ? "text-gold-display" : "text-charcoal")
+                )}
+              >
+                {line}
+              </span>
+            )
+          })}
+        </h1>
+        <p className="mt-3 text-sm leading-[1.55] text-charcoal/85 max-lg:max-w-[58%] sm:max-lg:max-w-sm lg:mt-5 lg:max-w-md lg:text-base">{settings.heroSubtext}</p>
+        <div className="mt-5 flex flex-wrap gap-2.5 lg:mt-8 lg:gap-3">
+          <Button variant="hero" asChild className="max-lg:px-4 max-lg:text-[13px]">
+            <Link href={settings.heroCtaHref}>
+              {settings.heroCtaLabel}
+              <ArrowRight aria-hidden />
+            </Link>
+          </Button>
+          <Button variant="outline-gold" asChild className="bg-background/90 max-lg:px-4 max-lg:text-[13px]">
+            <Link href={settings.heroSecondaryCtaHref}>{settings.heroSecondaryCtaLabel}</Link>
+          </Button>
         </div>
-      </Container>
-    </section>
+      </div>
+    </HeroSlideshow>
   )
 }
 

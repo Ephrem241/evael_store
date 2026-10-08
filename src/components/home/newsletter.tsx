@@ -3,6 +3,7 @@
 import { useId, useState } from "react"
 import { ArrowRight } from "lucide-react"
 import { toast } from "sonner"
+import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { subscribeToNewsletter } from "@/lib/services/newsletter"
@@ -15,10 +16,15 @@ import { Button } from "@/components/ui/button"
 const EMAIL_SHAPE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
 // The newsletter sign-up, on a dark surface (its heading and blurb are the
-// caller's): a dark pill field with a round burgundy arrow button inside its
-// right end. The field's error id is unique per form, so the footer's and the
-// home page's can share a page.
-function Newsletter() {
+// caller's). Two looks:
+//   "pill"   — the footer's: a dark pill field with a round burgundy arrow
+//              button inside its right end.
+//   "joined" — the home page's card: a white field joined to a burgundy
+//              "Subscribe" button.
+// The field's error id is unique per form, so the footer's and the home
+// page's can share a page.
+function Newsletter({ variant = "pill" }: { variant?: "pill" | "joined" }) {
+  const joined = variant === "joined"
   const t = useT()
   const errorId = useId()
   const [email, setEmail] = useState("")
@@ -48,7 +54,7 @@ function Newsletter() {
     // method="post": if someone submits before this component has hydrated, the
     // browser's own submit must not put the address in the URL (a GET would).
     <form method="post" onSubmit={handleSubmit} noValidate className="space-y-2">
-      <div className="relative">
+      <div className={cn("relative", joined && "flex")}>
         <Input
           type="email"
           name="email"
@@ -59,17 +65,27 @@ function Newsletter() {
           aria-label={t("home.newsletter.emailLabel")}
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
-          className="rounded-full border-white/15 bg-white/10 pr-14 pl-4 text-white placeholder:text-white/70 focus-visible:border-gold focus-visible:ring-gold/40"
+          className={cn(
+            joined
+              ? "min-w-0 flex-1 rounded-r-none border-transparent bg-surface text-charcoal placeholder:text-muted-text focus-visible:ring-gold/50"
+              : "rounded-full border-white/15 bg-white/10 pr-14 pl-4 text-white placeholder:text-white/70 focus-visible:border-gold focus-visible:ring-gold/40"
+          )}
         />
-        <Button
-          type="submit"
-          size="icon"
-          loading={submitting}
-          aria-label={t("home.newsletter.subscribe")}
-          className="absolute top-1 right-1 size-9 rounded-full focus-visible:ring-offset-0 max-lg:size-9"
-        >
-          <ArrowRight aria-hidden />
-        </Button>
+        {joined ? (
+          <Button type="submit" loading={submitting} className="h-11 shrink-0 rounded-l-none px-5 focus-visible:ring-offset-0 max-lg:h-11">
+            {t("home.newsletter.subscribe")}
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            size="icon"
+            loading={submitting}
+            aria-label={t("home.newsletter.subscribe")}
+            className="absolute top-1 right-1 size-9 rounded-full focus-visible:ring-offset-0 max-lg:size-9"
+          >
+            <ArrowRight aria-hidden />
+          </Button>
+        )}
       </div>
       {error && (
         <p id={errorId} role="alert" className="text-xs text-gold">

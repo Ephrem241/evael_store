@@ -50,7 +50,8 @@ function ProductCard({
   badge,
   eager,
   sizes = "(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw",
-  compact = false,
+  hideAddToCart = false,
+  density = "default",
   className,
 }: {
   product: ProductWithCategory
@@ -63,7 +64,9 @@ function ProductCard({
   sizes?: string
   /** No Add to cart button: for the "more like this" rows on a product page,
    * where the page's own buttons are the ones that buy. */
-  compact?: boolean
+  hideAddToCart?: boolean
+  /** "compact": tighter padding and smaller type, for the Flash Deals panel. */
+  density?: "default" | "compact"
   className?: string
 }) {
   const Icon = getCategoryIcon(product.categorySlug)
@@ -71,6 +74,7 @@ function ProductCard({
   const name = nameOf(product, t.locale)
   const onSale = !!product.compare_at_price && product.compare_at_price > product.price
   const soldOut = product.stock <= 0
+  const compact = density === "compact"
 
   return (
     <article
@@ -120,22 +124,26 @@ function ProductCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-1 p-3">
+      <div className={cn("flex flex-1 flex-col gap-1", compact ? "p-2.5" : "p-3")}>
         <Link
           href={href}
           title={name}
-          className="truncate text-sm font-medium text-charcoal transition-colors outline-none group-hover:text-brand-ink after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-2 focus-visible:after:ring-ring"
+          className="truncate text-[13px] font-medium text-charcoal transition-colors lg:text-sm outline-none group-hover:text-brand-ink after:absolute after:inset-0 after:rounded-card focus-visible:after:ring-2 focus-visible:after:ring-ring"
         >
           {name}
         </Link>
         <p className="truncate text-xs text-muted-text">{categoryNameOf(product, t.locale)}</p>
         {product.rating != null && <Rating value={product.rating} t={t} />}
         <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-0.5 pt-1.5">
-          <Price amount={product.price} t={t} className="text-[0.9375rem] lg:text-base" />
+          <Price amount={product.price} t={t} className={compact ? "text-sm" : "text-[0.9375rem] lg:text-base"} />
           {onSale && <Price amount={product.compare_at_price!} t={t} variant="compare" />}
         </div>
-        {!compact && (
-          <AddToCartButton productId={product.id} outOfStock={soldOut} className="relative z-10 mt-2 w-full" />
+        {!hideAddToCart && (
+          <AddToCartButton
+            productId={product.id}
+            outOfStock={soldOut}
+            className={cn("relative z-10 mt-2 w-full", compact && "h-9 text-xs")}
+          />
         )}
       </div>
     </article>

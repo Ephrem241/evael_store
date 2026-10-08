@@ -186,7 +186,7 @@ export default async function ProductPage({
                 key={item.id}
                 product={item}
                 t={t}
-                compact
+                hideAddToCart
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 31vw, 46vw"
               />
             ))}

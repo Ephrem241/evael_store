@@ -18,7 +18,7 @@ const DAY = 24 * HOUR
 // `initialRemainingMs` is computed on the server and used for the first render,
 // so the server HTML and the browser's first paint agree (no hydration
 // mismatch); right after mounting, the browser switches to its own clock and
-// ticks once a second. Shared by the phone carousel's pill and the deal popup.
+// ticks once a second. Shared by the Flash Deals panel and the deal popup.
 function useDealCountdown(endsAt: string, initialRemainingMs: number, rolling: boolean): number {
   const [remaining, setRemaining] = useState(initialRemainingMs)
 
@@ -50,74 +50,58 @@ function countdownParts(remaining: number) {
   }
 }
 
-// "pill": one short line ("Deal ends in 05:12:33") for the phone carousel's
-// deals slide. "tiles": the Flash Deals header's orange number boxes
-// (05 : 42 : 18) with their units underneath.
+// The Flash Deals panel's clock: three 56px boxes on the deep burgundy
+// (05 : 42 : 18, a fourth for days when there are any), white tabular figures,
+// colons between and the units underneath. The figures change once a second
+// with no animation. role="timer" is not announced on every tick (its live
+// region is off), and its name says the time left to the minute, so a screen
+// reader hears it when it reaches the clock, not sixty times a minute.
 function DealsCountdown({
   endsAt,
   initialRemainingMs,
   rolling = false,
-  variant = "pill",
 }: {
   endsAt: string
   initialRemainingMs: number
   rolling?: boolean
-  variant?: "pill" | "tiles"
 }) {
   const t = useT()
   const remaining = useDealCountdown(endsAt, initialRemainingMs, rolling)
 
   if (remaining <= 0) {
-    return (
-      <p className="w-fit rounded-full bg-white/95 px-3.5 py-1.5 text-sm font-medium text-charcoal shadow-lift">
-        {t("home.deals.ended")}
-      </p>
-    )
+    return <p className="text-sm font-medium text-white/85">{t("home.deals.ended")}</p>
   }
 
   const { days, hours, minutes, seconds } = countdownParts(remaining)
-
-  if (variant === "tiles") {
-    const parts = [
-      ...(days > 0 ? [{ value: days, unit: t("home.deals.days") }] : []),
-      { value: hours, unit: t("home.deals.hours") },
-      { value: minutes, unit: t("home.deals.minutes") },
-      { value: seconds, unit: t("home.deals.seconds") },
-    ]
-    return (
-      <div role="timer" aria-label={t("home.deals.timeLeft")} className="flex items-start gap-1.5">
-        {parts.map((part, i) => (
-          <div key={part.unit} className="flex items-start gap-1.5">
-            {i > 0 && (
-              <span aria-hidden className="pt-1.5 text-lg font-bold text-brand-ink">
-                :
-              </span>
-            )}
-            <div className="flex flex-col items-center gap-1">
-              <span className="flex h-10 min-w-10 items-center justify-center rounded-lg bg-brand-strong px-1.5 text-lg font-bold text-white tabular-nums shadow-soft">
-                {String(part.value).padStart(2, "0")}
-              </span>
-              <span className="text-[11px] font-medium text-charcoal/70">{part.unit}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
+  const parts = [
+    ...(days > 0 ? [{ value: days, unit: t("home.deals.days") }] : []),
+    { value: hours, unit: t("home.deals.hours") },
+    { value: minutes, unit: t("home.deals.minutes") },
+    { value: seconds, unit: t("home.deals.seconds") },
+  ]
+  const spoken = parts
+    .slice(0, -1)
+    .map((part) => `${part.value} ${part.unit}`)
+    .join(" ")
 
   return (
-    // role="timer" is not announced on every tick (its live region is off by
-    // default), which is what we want; the label says what it counts.
     <div
       role="timer"
-      aria-label={t("home.deals.timeLeft")}
-      className="flex w-fit items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-sm shadow-lift"
+      aria-live="off"
+      aria-label={t("home.deals.timeLeftValue", { time: spoken })}
+      className="flex items-start gap-1.5"
     >
-      <span className="font-medium text-muted-text">{t("home.deals.endsIn")}</span>
-      <span className="font-semibold text-charcoal tabular-nums">
-        {days > 0 && `${days} ${t("home.deals.days")} `}
-        {[hours, minutes, seconds].map((part) => String(part).padStart(2, "0")).join(":")}
-      </span>
+      {parts.map((part, i) => (
+        <div key={part.unit} aria-hidden className="flex items-start gap-1.5">
+          {i > 0 && <span className="pt-3.5 text-lg font-bold text-white/60">:</span>}
+          <div className="flex flex-col items-center gap-1">
+            <span className="flex size-14 items-center justify-center rounded-lg bg-white/10 text-[22px] font-bold text-white tabular-nums">
+              {String(part.value).padStart(2, "0")}
+            </span>
+            <span className="text-[11px] text-white/80">{part.unit}</span>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

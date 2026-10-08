@@ -175,11 +175,12 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0024` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0025` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
-   advisors' report (see [Security](#security)); `0024` is the redesigned
-   homepage's hero copy.
+   advisors' report (see [Security](#security)); `0024` and `0025` are the
+   redesigned homepage's hero copy (each changes it only while the previous
+   wording is still there).
 2. **Seed** (from your computer, uses the service-role key): `npm run seed:catalog`,
    `npm run seed:admin` (prints the admin password once — **log in and change
    it**), `npm run seed:images`.

@@ -4,7 +4,6 @@ import {
   getNewArrivals,
   getDealsSummary,
   getFlashDeals,
-  getPopularProducts,
 } from "@/lib/services/catalog-queries"
 import { getHomepageSettings } from "@/lib/services/homepage-queries"
 import { dealsCountdown, fillDealTokens, localizeHomepage } from "@/lib/services/homepage"
@@ -16,16 +15,15 @@ import { SITE_NAME } from "@/lib/seo/site"
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo/json-ld"
 import { JsonLd } from "@/components/seo/json-ld"
 import { Hero } from "@/components/home/hero"
-import { MobileHomeCarousel } from "@/components/home/mobile-home-carousel"
-import { DealsSlide } from "@/components/home/mobile-home-slides"
 import { TrustSection } from "@/components/home/trust-section"
 import { DealsRow } from "@/components/home/deals-row"
 import { DealPopup } from "@/components/home/deal-popup"
 import { CategorySection } from "@/components/home/category-section"
 import { ProductGridSection } from "@/components/home/product-grid-section"
+import { SavingsBanner } from "@/components/home/savings-banner"
 import { NewArrivals } from "@/components/home/new-arrivals"
-import { ShopByNeed } from "@/components/home/shop-by-need"
-import { LifestyleBanner } from "@/components/home/lifestyle-banner"
+import { LocalFeatures } from "@/components/home/local-features"
+import { PaymentMethods } from "@/components/home/payment-methods"
 import { WhyEvael } from "@/components/home/why-evael"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,30 +36,28 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-// The homepage, in the order a shopper reads it: the hero, the trust strip,
-// flash deals, categories, trending (featured) products, new arrivals,
-// popular picks, shop by need, the promotional banner and "why Evael" (the
-// footer, with the newsletter, follows from the layout). Everything is read
+// The homepage, top to bottom as in the mockup: the hero (full-bleed, right
+// under the header) with the trust strip against it, Shop by Category,
+// Trending Products, the Big Savings banner, Flash Deals, New Arrivals, "Built
+// for Ethiopian Shoppers", Pay Your Way, and "Why Shop With Evael?" with the
+// newsletter card (the footer follows from the layout). Everything is read
 // from the database — the copy, the categories, the products, the size of the
-// deal and whether it has a real end date. The hero is full-bleed: it breaks
-// out of the layout's Container and cancels this wrapper's top padding itself.
+// deal and whether it has a real end date. Sections with nothing to show
+// (no discounts, no flash products, no stocked categories) are left out.
 //
 // The promotion (its copy and countdown) is also a popup that opens a few
 // seconds in, once per session, plus a small floating button to reopen it
 // (deal-popup.tsx).
 //
-// Phones: the hero and the special-deals card become one swipeable carousel
-// at the top — same copy, pictures and links, presented the way a shopping app
-// would. Desktop shows the hero alone (the `hidden lg:block` wrapper).
+// Sections are 48px apart on desktop, 28px on phones.
 export default async function Home() {
-  const [locale, categories, featured, newArrivals, popular, deals, flashDeals, rawSettings] = await Promise.all([
+  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings] = await Promise.all([
     getLocale(),
     getCategories(),
-    getFeaturedProducts(8),
-    getNewArrivals(10),
-    getPopularProducts(8),
+    getFeaturedProducts(12),
+    getNewArrivals(12),
     getDealsSummary(),
-    getFlashDeals(10),
+    getFlashDeals(12),
     getHomepageSettings(),
   ])
   const settings = localizeHomepage(rawSettings, locale)
@@ -73,8 +69,7 @@ export default async function Home() {
   const dealDeadline = countdown.rolling ? undefined : countdown
 
   return (
-    // Phones get the tighter rhythm of a shopping app (32px between sections).
-    <div className="space-y-8 py-6 sm:space-y-12 lg:space-y-16 lg:py-10">
+    <div className="space-y-7 pb-4 lg:space-y-12 lg:pb-6">
       <JsonLd nodes={[organizationJsonLd(t("meta.description")), websiteJsonLd(locale)]} />
 
       {/* Takes no room in the flow (a portal plus a fixed floating button).
@@ -92,46 +87,19 @@ export default async function Home() {
         />
       )}
 
-      {/* The page's one real <h1>, kept separate from the two Hero renders
-          below (mobile carousel + desktop): each of those draws the same
-          headline as plain, aria-hidden text, since a second literal <h1>
-          would exist in the DOM even while `display:none` — invalid
-          regardless of which copy is visible at a given width. */}
-      <h1 id="hero-heading" className="sr-only">
-        {settings.heroHeadline}
-      </h1>
-
-      <div className="-mt-6 lg:hidden">
-        <MobileHomeCarousel
-          slides={[
-            <Hero key="hero" settings={settings} showHeading={false} variant="slide" />,
-            ...(dealSettings ? [<DealsSlide key="deals" settings={dealSettings} />] : []),
-          ]}
-        />
-      </div>
-      {/* The trust strip tucks in close under the hero (a tighter gap than between sections). */}
-      <div className="hidden lg:block lg:mb-8!">
-        <Hero settings={settings} showHeading={false} />
+      {/* The hero and the trust strip are one block, with no gap between. */}
+      <div>
+        <Hero settings={settings} />
+        <TrustSection />
       </div>
 
-      <TrustSection />
-      <DealsRow products={flashDeals} countdown={dealDeadline} />
       <CategorySection categories={categories} />
-      <ProductGridSection
-        id="trending-heading"
-        title={t("home.featuredTitle")}
-        href="/shop"
-        products={featured}
-      />
+      <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />
+      {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
+      <DealsRow products={flashDeals} countdown={dealDeadline} />
       <NewArrivals products={newArrivals} />
-      <ProductGridSection
-        id="popular-heading"
-        title={t("home.popularTitle")}
-        href="/shop?sort=popular"
-        products={popular}
-      />
-      <ShopByNeed categories={categories} />
-      <LifestyleBanner />
+      <LocalFeatures />
+      <PaymentMethods />
       <WhyEvael />
     </div>
   )

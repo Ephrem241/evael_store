@@ -1,32 +1,35 @@
 export const home = {
+  // The hero's headline, text and buttons are the admin's (homepage_sections.hero);
+  // these are the fixed parts around them.
   hero: {
-    imageAlt:
-      "A smiling woman holding an orange Evael Store shopping bag, surrounded by a handbag, sneakers, a phone, headphones, beauty products, an air fryer, a smartwatch and a plant",
+    // Over the headline on desktop. Says what the shop is, without a
+    // superlative ("favourite", "best") it couldn't back up.
+    eyebrow: "Your online marketplace in Ethiopia",
+    // The handwritten note over the photo (decorative, desktop only).
+    flourish: "Shop Local, Support Ethiopia",
+    // The dots under the text and the button beside them. {index}/{total} are numbers.
+    showPhoto: "Show photo {index} of {total}",
+    pause: "Pause the photos",
+    play: "Play the photos",
   },
   categoriesTitle: "Shop by Category",
   viewAll: "View All",
+  viewAllCategories: "View All Categories",
   // Under each category card: how many products it really holds.
   categoryProducts: { one: "{count} product", other: "{count} products" },
   // The Deals tile at the end of the category row (its title is nav.deals).
   dealsTile: { subtitle: "Save More" },
   // The admin's "featured" products.
-  featuredTitle: "Trending Now",
+  featuredTitle: "Trending Products",
   newArrivalsTitle: "New Arrivals",
-  // The admin's "popular" products. Not "Best Sellers": no sales ranking exists.
+  // The admin's "popular" products (search results with no match). Not "Best
+  // Sellers": no sales ranking exists.
   popularTitle: "Popular Picks",
-  shopByNeed: {
-    title: "What are you shopping for?",
-    subtitle: "Jump straight to what you need today.",
-    // {category} is the category's name.
-    cta: "Shop {category}",
-  },
   carousel: {
     previous: "Previous products",
     next: "Next products",
     // The scrollable row of products; {title} is the section's heading.
     rail: "{title}, scrollable list",
-    // The phone-only carousel combining the hero, deals and lifestyle banners.
-    highlights: "Homepage highlights, scrollable",
   },
   // The Special Deals headline, subtext and button come from the admin-edited
   // homepage copy (homepage_sections.promo); these are the fixed parts around it.
@@ -39,6 +42,8 @@ export const home = {
     minutes: "Minutes",
     seconds: "Seconds",
     timeLeft: "Time left on this offer",
+    // The Flash Deals countdown's accessible name; {time} is e.g. "5 Hours 12 Minutes".
+    timeLeftValue: "Time left on this offer: {time}",
     ended: "This offer has ended",
   },
   // The deal popup and its floating reopen button (deal-popup.tsx); the
@@ -50,37 +55,56 @@ export const home = {
     badge: "{percent}% OFF",
     badgeLabel: "{percent}% OFF: show today's deal",
   },
-  // Also introduces /shop?sale=1.
+  // Also introduces /deals and /shop?sale=1.
   flashTitle: "Flash Deals",
-  flashSubtitle: "Limited-time prices on products you love.",
-  trustTitle: "Why {brand}?",
-  // The compact strip under the hero. Worded without promises the shop can't
-  // keep (no "guaranteed", no delivery times).
+  flashSubtitle: "Limited-time prices. Don't miss out.",
+  flashViewAll: "View All Deals",
+  // The strip under the hero. Worded without promises the shop can't keep
+  // (no "guaranteed", no delivery times).
   trustLabel: "Shopping with us",
   trust: {
-    codTitle: "Cash on Delivery",
-    codText: "Pay when your order arrives.",
-    secureTitle: "Secure Shopping",
-    secureText: "A safe and reliable shopping experience.",
     fastTitle: "Fast Delivery",
-    fastText: "Convenient delivery for your orders.",
-    supportTitle: "Customer Support",
-    supportText: "Friendly support whenever you need help.",
-  },
-  // The "Why Evael" band: what the store is, not claims about it.
-  why: {
-    valueTitle: "Clear, fair prices",
-    valueText: "Every price in birr, with discounts shown up front.",
-    rangeTitle: "Everything in one place",
-    rangeText: "Fashion, home, kitchen, beauty and electronics in one store.",
+    fastText: "Across Ethiopia",
+    secureTitle: "Secure Shopping",
+    secureText: "Your data is safe",
+    codTitle: "Cash on Delivery",
+    codText: "Pay when you receive",
     localTitle: "Made for Ethiopia",
-    localText: "Shop in English or Amharic, and pay in cash when your order arrives.",
+    localText: "Local support & service",
   },
-  lifestyle: {
-    title: "Upgrade Your Everyday",
-    text: "Discover products selected for modern Ethiopian lifestyles.",
-    cta: "Explore Collection",
-    imageAlt: "A bright open living space with plants, a wooden sideboard and a kitchen beyond",
+  // The burgundy banner. {percent} is the biggest discount really on sale.
+  savings: {
+    title: "Big savings. Every day.",
+    upTo: "Up to {percent}% OFF",
+    text: "on selected products",
+    cta: "Shop Deals",
+  },
+  // "Built for Ethiopian Shoppers": what the shop really offers today.
+  local: {
+    title: "Built for Ethiopian Shoppers",
+    text: "Your trusted local marketplace, designed for your needs.",
+    deliveryTitle: "Nationwide delivery",
+    deliveryText: "Across Ethiopia",
+    codTitle: "Cash on Delivery",
+    codText: "Pay when you receive",
+    languageTitle: "Amharic & English",
+    languageText: "Shop in your language",
+    supportTitle: "Local customer support",
+    supportText: "Here to help",
+    easyTitle: "Easy shopping",
+    easyText: "Simple & secure",
+  },
+  // "Why Shop With Evael?" {brand} is the store's short name.
+  why: {
+    title: "Why Shop With {brand}?",
+    secureTitle: "Secure Shopping",
+    secureText: "Your data is safe with us.",
+    deliveryTitle: "Fast Delivery",
+    deliveryText: "Delivered across Ethiopia.",
+    qualityTitle: "Quality Products",
+    qualityText: "Carefully selected for you.",
+    supportTitle: "Customer Support",
+    supportText: "We're here when you need help.",
   },
   // The "Pay your way" strip. Only Cash on Delivery works today; the banks and
   // wallets are shown as coming soon until checkout can actually take them.
@@ -88,14 +112,16 @@ export const home = {
     title: "Pay Your Way",
     text: "Pay in cash when your order arrives. Ethiopian bank and mobile-money payments are coming soon.",
     cod: "Cash on Delivery",
-    available: "Available now",
-    comingSoon: "Coming soon",
+    available: "Available",
+    comingSoon: "Coming Soon",
     listLabel: "Payment methods",
     weAccept: "We accept: {methods}",
   },
   newsletter: {
-    title: "Stay Updated",
-    text: "Get the latest products, deals and offers from {brand}.",
+    // The home page's newsletter card.
+    cardTitle: "Get the best deals first.",
+    cardText: "Subscribe for new arrivals, exclusive offers and more.",
+    flourish: "More Great Deals",
     emailPlaceholder: "Enter your email",
     emailLabel: "Email address",
     subscribe: "Subscribe",

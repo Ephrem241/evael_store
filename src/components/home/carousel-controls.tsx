@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { Button } from "@/components/ui/button"
@@ -9,8 +10,13 @@ import { Button } from "@/components/ui/button"
 // The previous/next arrows for a horizontally scrolling rail. The rail itself
 // is a plain server-rendered element (found here by id), so the product cards
 // inside it stay Server Components; only these two buttons need JavaScript.
-// An arrow disables itself at its end. The rail is also scrollable by touch,
-// trackpad and keyboard, so the arrows are a convenience, not the only way.
+// An arrow disappears at its end of the rail, and there are none when
+// everything fits. The rail is also scrollable by touch, trackpad and
+// keyboard, so the arrows are a convenience, not the only way — they show
+// from `lg` up only.
+//
+// Round white buttons centred on the rail's left and right edges, half
+// outside it (the parent must be `relative`).
 function CarouselControls({ targetId }: { targetId: string }) {
   const t = useT()
   const [canPrev, setCanPrev] = useState(false)
@@ -42,27 +48,33 @@ function CarouselControls({ targetId }: { targetId: string }) {
     rail?.scrollBy({ left: direction * rail.clientWidth * 0.8, behavior: "smooth" })
   }
 
+  const arrow = "absolute top-1/2 z-10 hidden -translate-y-1/2 lg:inline-flex"
+
   return (
-    <div className="hidden items-center gap-2 sm:flex">
-      <Button
-        type="button"
-        variant="icon-circle"
-        disabled={!canPrev}
-        onClick={() => page(-1)}
-        aria-label={t("home.carousel.previous")}
-      >
-        <ChevronLeft />
-      </Button>
-      <Button
-        type="button"
-        variant="icon-circle"
-        disabled={!canNext}
-        onClick={() => page(1)}
-        aria-label={t("home.carousel.next")}
-      >
-        <ChevronRight />
-      </Button>
-    </div>
+    <>
+      {canPrev && (
+        <Button
+          type="button"
+          variant="icon-circle"
+          onClick={() => page(-1)}
+          aria-label={t("home.carousel.previous")}
+          className={cn(arrow, "-left-5")}
+        >
+          <ChevronLeft />
+        </Button>
+      )}
+      {canNext && (
+        <Button
+          type="button"
+          variant="icon-circle"
+          onClick={() => page(1)}
+          aria-label={t("home.carousel.next")}
+          className={cn(arrow, "-right-5")}
+        >
+          <ChevronRight />
+        </Button>
+      )}
+    </>
   )
 }
 
