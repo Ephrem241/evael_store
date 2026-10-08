@@ -1,5 +1,6 @@
-// Fails if a Supabase SECRET key can be found anywhere the public could get it
-// (spec section 59, "No exposed Supabase service role key"):
+// Fails if a SECRET key (Supabase's, or the Gemini key behind the shopping
+// assistant) can be found anywhere the public could get it (spec section 59,
+// "No exposed Supabase service role key"):
 //   1. the built site: client JavaScript and CSS (.next/static), prerendered
 //      pages and server output (.next/server) and the public/ folder;
 //   2. the source files tracked by git, and any tracked .env file.
@@ -8,7 +9,9 @@
 // JWT keys carry their role in the payload ("anon" is meant to be public,
 // "service_role" is not), the newer opaque secret keys start "sb_secret_", and
 // the value of SUPABASE_SERVICE_ROLE_KEY from the environment is searched for
-// literally. Nothing found is ever printed in full.
+// literally. Google API keys (the Gemini key) start "AIza", and the value of
+// GEMINI_API_KEY is searched for literally too. Nothing found is ever printed
+// in full.
 //
 //   npm run build && npm run check:secrets
 
@@ -31,9 +34,18 @@ const findings: Finding[] = []
 let scanned = 0
 let publicKeysSeen = 0
 
+// A Google API key: "AIza" and 35 more characters, standing on its own (not
+// the middle of some longer encoded blob).
+const GOOGLE_API_KEY_PATTERN = /(?<![0-9A-Za-z_-])AIza[0-9A-Za-z_-]{35}(?![0-9A-Za-z_-])/g
+
+interface Secrets {
+  serviceKey: string | undefined
+  geminiKey: string | undefined
+}
+
 const redact = (secret: string) => `${secret.slice(0, 6)}…(${secret.length} characters)`
 
-async function scanFile(file: string, serviceKey: string | undefined) {
+async function scanFile(file: string, { serviceKey, geminiKey }: Secrets) {
   const info = await stat(file).catch(() => null)
   if (!info?.isFile() || info.size > MAX_BYTES) return
   if (!TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) return
@@ -53,13 +65,19 @@ async function scanFile(file: string, serviceKey: string | undefined) {
   if (serviceKey && text.includes(serviceKey)) {
     findings.push({ file: relative, what: "the value of SUPABASE_SERVICE_ROLE_KEY" })
   }
+  for (const key of new Set(text.match(GOOGLE_API_KEY_PATTERN) ?? [])) {
+    findings.push({ file: relative, what: `a Google API key (${redact(key)})` })
+  }
+  if (geminiKey && text.includes(geminiKey)) {
+    findings.push({ file: relative, what: "the value of GEMINI_API_KEY" })
+  }
 }
 
-async function scanDirectory(directory: string, serviceKey: string | undefined) {
+async function scanDirectory(directory: string, secrets: Secrets) {
   const entries = await readdir(directory, { recursive: true, withFileTypes: true }).catch(() => null)
   if (!entries) return false
   for (const entry of entries) {
-    if (entry.isFile() && !entry.name.endsWith(".map")) await scanFile(path.join(entry.parentPath, entry.name), serviceKey)
+    if (entry.isFile() && !entry.name.endsWith(".map")) await scanFile(path.join(entry.parentPath, entry.name), secrets)
   }
   return true
 }
@@ -73,12 +91,15 @@ function trackedFiles(): string[] {
 }
 
 async function main() {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || undefined
+  const secrets: Secrets = {
+    serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || undefined,
+    geminiKey: process.env.GEMINI_API_KEY?.trim() || undefined,
+  }
 
   // 1. The built site.
   const built: string[] = []
   for (const directory of [".next/static", ".next/server", "public"]) {
-    if (await scanDirectory(path.join(ROOT, directory), serviceKey)) built.push(directory)
+    if (await scanDirectory(path.join(ROOT, directory), secrets)) built.push(directory)
   }
   const hasBuild = built.some((directory) => directory.startsWith(".next"))
   if (!hasBuild) console.warn("Note: there is no build (.next) to scan. Run `npm run build` first to check what would be published.")
@@ -91,7 +112,7 @@ async function main() {
       findings.push({ file, what: "an environment file, which must never be committed" })
       continue
     }
-    await scanFile(path.join(ROOT, file), serviceKey)
+    await scanFile(path.join(ROOT, file), secrets)
   }
 
   console.log(`Scanned ${scanned} files (${built.join(", ") || "no build output"}${tracked.length ? `, ${tracked.length} tracked source files` : ""}).`)
@@ -103,7 +124,7 @@ async function main() {
   }
   console.error(`\n${findings.length} SECRET KEY EXPOSURE(S):`)
   for (const finding of findings) console.error(`  ${finding.file}\n      ${finding.what}`)
-  console.error("\nRotate any key that was published (Supabase → Settings → API), then remove it from the place above.")
+  console.error("\nRotate any key that was published (Supabase → Settings → API; a Gemini key in Google AI Studio), then remove it from the place above.")
   process.exitCode = 1
 }
 

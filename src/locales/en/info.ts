@@ -135,7 +135,7 @@ export const info = {
       "We use a small cookie to remember your language, and cookies from our sign-in provider to keep you signed in. Your cart, favorites and recent searches are kept in your browser's storage on your device (and saved to your account when you're signed in). We don't use advertising trackers.",
     shareTitle: "Who can see it",
     shareText:
-      "Only the people who run the store, and the couriers who deliver your order, see your delivery details. The services that store our data and host this website process it on our behalf. We don't sell your personal information.",
+      "Only the people who run the store, and the couriers who deliver your order, see your delivery details. The services that store our data and host this website process it on our behalf. If you use the shopping assistant, your questions are sent to Google's Gemini service to write the answers; we don't keep them, and the conversation is cleared when you close the tab. We don't sell your personal information.",
     keepTitle: "How long we keep it",
     keepText:
       "We keep your account and order records for as long as we need them to provide the service and meet our legal obligations. You can ask us to delete your account.",

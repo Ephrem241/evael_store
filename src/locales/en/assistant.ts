@@ -1,0 +1,32 @@
+// The shopping assistant: the chat button and panel (components/assistant).
+export const assistant = {
+  open: "Ask Evael",
+  title: "Evael Assistant",
+  subtitle: "Powered by Google Gemini",
+  conversation: "Conversation with the shopping assistant",
+  welcomeTitle: "Hi! How can I help you shop today?",
+  welcomeText: "Ask me about products, prices, deals, delivery or payment.",
+  suggestionsLabel: "Try asking",
+  suggestions: {
+    gift: "Help me find a gift under 2,000 ETB",
+    deals: "What's on sale right now?",
+    delivery: "How do delivery and payment work?",
+  },
+  inputLabel: "Your question",
+  placeholder: "Ask about products, delivery, payment…",
+  send: "Send",
+  stop: "Stop",
+  clear: "Clear conversation",
+  thinking: "Thinking…",
+  stopped: "Stopped.",
+  you: "You",
+  assistantName: "Assistant",
+  productsLabel: "Products in this answer",
+  disclaimer: "AI answers can be wrong: check the product page before you buy. Don't share personal details.",
+  errors: {
+    generic: "Sorry, something went wrong. Please try again.",
+    tooMany: "That's a lot of questions at once. Please wait a minute and try again.",
+    offline: "You're offline. Check your connection and try again.",
+    unavailable: "The assistant isn't available right now. Please try again later.",
+  },
+}

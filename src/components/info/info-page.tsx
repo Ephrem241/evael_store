@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/layout/page-header"
 
 // The day the current wording of the privacy policy and terms was written.
 // Bump it whenever those pages change in substance.
-export const LEGAL_LAST_UPDATED = "2026-09-24"
+export const LEGAL_LAST_UPDATED = "2026-10-08"
 
 const linkClass =
   "rounded-sm font-semibold text-brand-ink underline underline-offset-4 outline-none transition-colors hover:text-brand-deep focus-visible:ring-2 focus-visible:ring-ring"

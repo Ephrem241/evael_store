@@ -73,6 +73,7 @@ in Chrome:
 | `errors` | The ten error states: no internet, bad login, bad checkout, empty cart, out of stock, invalid product/category, unauthorized admin access, database failure, image failure — each with a useful screen |
 | `cart-sync` | An item added just before a reload is not lost when the server missed the save (the cart re-sends it) |
 | `admin-homepage` | The hero headline is a multi-line field, so the line break the storefront shows can be seen and kept |
+| `assistant` | The shopping assistant, with Gemini's answer faked (no call is made): open it, ask, a streamed reply with a product link and card, the conversation kept across pages, Clear, the "too many questions" message, and the button clear of the bottom bar on a phone. Needs the server started with `GEMINI_API_KEY` set (any value), and is skipped otherwise |
 | `security-headers` | Every response carries the security headers and the Content-Security-Policy; the design-system page is a 404 in production (run against a production build) |
 | `quality-audit` | Every route at 1280, 768 and 390 px: status, one `<h1>`, title, SEO tags (or `noindex` on private pages), no console errors, failed requests, broken images or sideways scrolling, and zero accessibility violations (axe, WCAG 2.2 AA); plus an internal-link crawl and the sitemap |
 
@@ -229,6 +230,7 @@ Add these environment variables to **Production and Preview**:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | required | the **anon / publishable** key — never the service-role/secret key |
 | `NEXT_PUBLIC_SITE_URL` | recommended | the public address, e.g. `https://www.your-shop.com`, no trailing slash (canonical links, sitemap, share previews). If unset, Vercel's production domain is used |
 | `RESEND_API_KEY`, `EMAIL_FROM`, `SHOP_NOTIFY_EMAIL`, `EMAIL_DISPATCH_SECRET` | recommended | the store's emails — see [5. Email](#5-email-resend). Without them the shop works, but no email is sent |
+| `GEMINI_API_KEY` (and optionally `GEMINI_MODEL`) | optional | the AI shopping assistant — see [6. AI shopping assistant](#6-ai-shopping-assistant-gemini). Without it there is no chat button |
 | `SUPABASE_SERVICE_ROLE_KEY` | **do not set** | The site never uses it; only the seed scripts and the test suite do. The server prints a warning at start-up if it is present |
 
 The server checks its configuration when it starts. In production it refuses to
@@ -243,7 +245,7 @@ Preview deployments are never indexed (robots.txt disallows everything).
 ```bash
 npm run lint && npx tsc --noEmit && npm run check:i18n && npm test
 npm run build
-npm run check:secrets     # no service-role key in the build output or in git
+npm run check:secrets     # no service-role or Gemini key in the build output or in git
 npm run test:e2e          # against a TEST Supabase project — it creates accounts and orders
 ```
 
@@ -356,6 +358,52 @@ key or an unverified sender domain shows up in `last_error`. Contact messages ar
 the `contact_messages` table, and admins read and answer them under **Admin → Messages**
 (migration 0020): a reply is emailed to the customer, in the language they wrote in, with
 `SHOP_NOTIFY_EMAIL` as Reply-To.
+
+### 6. AI shopping assistant (Gemini)
+
+With a Gemini key set, every shop page shows an **Ask Evael** button (bottom
+right; off the checkout and the admin). It opens a chat where shoppers ask
+things like "a gift under 2,000 ETB", "what's on sale?" or "how much is
+delivery to Adama?". Google Gemini writes the answer, in English or Amharic.
+Without a key there is no button, and the shop works as before.
+
+**What it knows.** Before every answer the server reads the live catalog
+(active products: names, prices, discounts, stock, ratings) and the same shop
+settings the information pages show: payment methods, free-delivery threshold,
+delivery fees, return window and contact details (`src/lib/ai/assistant-prompt.ts`).
+It is told to use only those facts. When it doesn't know, it says so and points
+to Contact. It links the products it recommends, and the server checks every
+link against the catalog. A product it made up gets no card and no link.
+Answers can still be wrong, and the panel says so.
+
+**What it can't do.** It can't see carts, orders or accounts, and it can't
+place or change orders.
+
+**Privacy.** The conversation is kept in the shopper's tab (session storage)
+and is gone when the tab closes. Questions are sent to Google to be answered and
+are not stored by the shop. The privacy policy says this.
+
+1. **Key.** Go to [Google AI Studio](https://aistudio.google.com) and choose
+   **Get API key** → **Create API key**. Use a project with billing enabled
+   (paid tier). On the free tier Google may use prompts to improve its products,
+   and the limits are low.
+2. **Spending cap.** Every question is one Gemini call. In the Google Cloud
+   console for that project, set a budget alert, and a quota on the Generative
+   Language API if you want a hard ceiling. The app also limits each visitor to
+   10 questions a minute and 60 an hour (`src/lib/ai/rate-limit.ts`). That limit
+   is kept in each server instance's memory, so on Vercel it is best effort, not
+   a ceiling.
+3. **The server's settings.** Add these to `.env` (local) and to Vercel
+   (Production and Preview), then redeploy:
+
+   | Variable | | Value |
+   | --- | --- | --- |
+   | `GEMINI_API_KEY` | required for the assistant | the key from step 1. Server-only: never `NEXT_PUBLIC_` (the server refuses to start if it is) |
+   | `GEMINI_MODEL` | optional | the model; default `gemini-3.5-flash-lite`, which answered as well as `gemini-3.8-flash` in tests, usually in 3–7 s, and costs less. Set `gemini-3.8-flash` for the stronger (slower, dearer) model |
+
+4. **Test.** Ask a few questions in both languages: a gift under a price, the
+   delivery fee to a city, something the shop hasn't set (it should say it
+   doesn't know). Check that the product links open the right pages.
 
 ### Security
 

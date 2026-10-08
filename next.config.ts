@@ -70,6 +70,11 @@ const nextConfig: NextConfig = {
   },
   // Do not advertise the framework in an `X-Powered-By` header.
   poweredByHeader: false,
+  // The Gemini SDK (the shopping assistant, src/lib/ai/gemini.ts) and what it
+  // brings along (google-auth-library, ws, protobufjs) are loaded by Node at
+  // run time instead of being bundled: bundling them stalled the route's
+  // compilation. Server only; the browser never loads it.
+  serverExternalPackages: ["@google/genai"],
   images: {
     remotePatterns: supabaseOrigin ? [new URL(`${supabaseOrigin}/storage/v1/object/public/**`)] : [],
     // Uploaded files get a random name and are never overwritten (see

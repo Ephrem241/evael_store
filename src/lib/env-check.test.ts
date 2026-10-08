@@ -13,6 +13,7 @@ const good = {
   NEXT_PUBLIC_SUPABASE_URL: "https://abcdefgh.supabase.co",
   NEXT_PUBLIC_SUPABASE_ANON_KEY: key("anon"),
   NEXT_PUBLIC_SITE_URL: "https://www.example.com",
+  GEMINI_API_KEY: "not-a-real-gemini-key",
   ...email(),
 }
 
@@ -121,5 +122,15 @@ describe("checkEnvironment", () => {
 
     expect(checkEnvironment({ ...good, RESEND_API_KEY: "smtp-password" }, { production: true }).warnings.some((w) => w.includes("starts with re_"))).toBe(true)
     expect(checkEnvironment({ ...good, NEXT_PUBLIC_RESEND_API_KEY: "anything" }, { production: false }).errors.some((w) => w.includes("NEXT_PUBLIC_RESEND_API_KEY"))).toBe(true)
+  })
+
+  it("shopping assistant: optional, a warning when off, never a public key", () => {
+    for (const off of [undefined, "", "   "]) {
+      const warnings = checkEnvironment({ ...good, GEMINI_API_KEY: off }, { production: true }).warnings
+      expect(warnings).toHaveLength(1)
+      expect(warnings[0]).toContain("GEMINI_API_KEY is not set")
+      expect(checkEnvironment({ ...good, GEMINI_API_KEY: off }, { production: false }).warnings).toEqual([])
+    }
+    expect(checkEnvironment({ ...good, NEXT_PUBLIC_GEMINI_API_KEY: "anything" }, { production: false }).errors.some((w) => w.includes("NEXT_PUBLIC_GEMINI_API_KEY"))).toBe(true)
   })
 })

@@ -10,6 +10,7 @@ import { account } from "./account"
 import { admin } from "./admin"
 import { info, contactForm } from "./info"
 import { email } from "./email"
+import { assistant } from "./assistant"
 
 // The English dictionary is the source of truth: its shape defines the
 // `Dictionary` type, and ../am must provide every key (a missing translation
@@ -35,6 +36,7 @@ export const en = {
   info,
   contactForm,
   email,
+  assistant,
 }
 
 export type Dictionary = typeof en

@@ -17,6 +17,8 @@ import { Container } from "@/components/layout/container";
 import { BottomNav } from "@/components/navigation/bottom-nav";
 import { StorefrontOnly } from "@/components/layout/storefront-only";
 import { NavigationHistory } from "@/components/navigation/back-button";
+import { AssistantLauncher } from "@/components/assistant/assistant-launcher";
+import { isAssistantConfigured } from "@/lib/ai/config";
 
 // The typefaces are SELF-HOSTED (./fonts, all SIL Open Font License, fetched
 // from Google Fonts): the same fonts next/font/google would serve, but with no
@@ -162,6 +164,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             </div>
             <StorefrontOnly>
               <BottomNav />
+              {/* Only when a Gemini key is set; the key itself stays on the server. */}
+              {isAssistantConfigured() && <AssistantLauncher />}
             </StorefrontOnly>
             <Toaster />
             <AuthProvider />

@@ -149,6 +149,13 @@ export async function getDealsSummary(): Promise<DealsSummary> {
   return { count: onSale.length, maxDiscountPercent }
 }
 
+// Every product a visitor can see, in catalog order — what the shopping
+// assistant is told the shop sells (lib/ai/assistant-context.ts).
+export async function getAllActiveProducts(): Promise<ProductWithCategory[]> {
+  const { categories, products } = await loadCatalog()
+  return products.map((product) => withCategory(product, categories))
+}
+
 export async function getProducts(params: GetProductsParams = {}): Promise<ProductListResult> {
   const { categories, products } = await loadCatalog()
   return listProducts(products, categories, params)

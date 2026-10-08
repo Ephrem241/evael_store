@@ -1,5 +1,6 @@
 import { jwtRole } from "@/lib/jwt-role"
 import { EMAIL_ENV_VARS, readEmailConfig } from "@/lib/email/config"
+import { isAssistantConfigured } from "@/lib/ai/config"
 
 // What the server needs to be configured with, checked when it starts (see
 // instrumentation.ts) so a mistake shows up in the deployment log at once,
@@ -78,6 +79,11 @@ export function checkEnvironment(env: Env, { production }: { production: boolean
       warnings.push(`Email is only partly configured, so nothing is sent (missing or invalid: ${email.missing.join(", ")}).`)
     } else if (!email.config) {
       warnings.push("Email is not configured (RESEND_API_KEY and the rest, see README \"Email\"): order emails and contact-form messages are queued but not sent.")
+    }
+
+    // The shopping assistant is optional: without a key its button is hidden.
+    if (!isAssistantConfigured(env)) {
+      warnings.push("GEMINI_API_KEY is not set: the AI shopping assistant is switched off (README \"AI shopping assistant\").")
     }
   }
 
