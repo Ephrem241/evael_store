@@ -19,14 +19,24 @@ test.describe("Flow 4: an administrator running the shop", () => {
       for (const label of [en.admin.dashboard.todaysSales, en.admin.dashboard.monthlySales, en.admin.dashboard.totalOrders, en.admin.dashboard.totalCustomers]) {
         await expect(main).toContainText(label)
       }
-      // Dashboard, Products, Categories, Orders, Customers, Messages, Homepage, Settings.
-      await expect(page.getByRole("navigation", { name: en.admin.nav.label }).getByRole("link")).toHaveCount(8)
+      // Dashboard, Orders, Customers, Messages, Homepage and Settings are links; Products is a group.
+      const nav = page.getByRole("navigation", { name: en.admin.nav.label })
+      for (const label of [en.admin.nav.dashboard, en.admin.nav.orders, en.admin.nav.customers, en.admin.nav.messages, en.admin.nav.homepage, en.admin.nav.settings]) {
+        await expect(nav.getByRole("link", { name: label })).toBeVisible()
+      }
+      await expect(nav.getByRole("link", { name: en.admin.nav.dashboard })).toHaveAttribute("aria-current", "page")
+      const products = nav.getByRole("button", { name: en.admin.nav.products })
+      await expect(products).toHaveAttribute("aria-expanded", "false")
+      await products.click()
+      for (const label of [en.admin.nav.allProducts, en.admin.nav.addProduct, en.admin.nav.categories]) {
+        await expect(nav.getByRole("link", { name: label, exact: true })).toBeVisible()
+      }
     })
 
     await test.step("creates a product", async () => {
-      await page.getByRole("navigation", { name: en.admin.nav.label }).getByRole("link", { name: en.admin.products.title }).click()
+      await page.getByRole("navigation", { name: en.admin.nav.label }).getByRole("link", { name: en.admin.nav.allProducts }).click()
       await expect(page).toHaveURL(/\/admin\/products$/)
-      await page.getByRole("link", { name: en.admin.products.add }).click()
+      await page.locator("main").getByRole("link", { name: en.admin.products.add }).click()
       await expect(page).toHaveURL(/\/admin\/products\/new$/)
       const form = page.locator("main form")
       await form.getByLabel(en.admin.productForm.nameEn, { exact: true }).fill(name)

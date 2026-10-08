@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 
 import { privateMetadata } from "@/lib/seo/metadata"
 import { getT } from "@/lib/i18n/server"
+import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { AdminHomepageContent } from "@/components/admin/admin-homepage-content"
 
 // Not for search results: it belongs to one visitor (see privateMetadata).
@@ -15,10 +16,7 @@ export default async function Page() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-charcoal">{t("admin.homepage.title")}</h1>
-        <p className="text-muted-text">{t("admin.homepage.subtitle")}</p>
-      </div>
+      <AdminPageHeader title={t("admin.homepage.title")} description={t("admin.homepage.subtitle")} />
       <AdminHomepageContent />
     </div>
   )

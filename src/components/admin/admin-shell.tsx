@@ -1,20 +1,18 @@
 "use client"
 
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { LogOut, Store } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { useState, type ReactNode } from "react"
 import { toast } from "sonner"
-import type { ReactNode } from "react"
 
 import { PageSkeleton } from "@/components/feedback/skeletons"
 import { useT } from "@/lib/i18n/provider"
 import { useRequireAdmin } from "@/lib/hooks/use-require-admin"
 import { signOut } from "@/lib/services/auth"
-import { AdminNav } from "@/components/admin/admin-nav"
-import { OrderAlertsBell } from "@/components/admin/order-alerts-bell"
+import { useNavCounts, useOpenGroups } from "@/components/admin/admin-nav"
+import { AdminSidebar } from "@/components/admin/admin-sidebar"
+import { AdminTopBar } from "@/components/admin/admin-top-bar"
 import { OrderAlertsWatcher } from "@/components/admin/order-alerts-watcher"
-import { Logo } from "@/components/layout/logo"
-import { LanguageSwitcher } from "@/components/layout/language-switcher"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 
 // The single authorization gate for every /admin/* page — centralized here
 // rather than per-content-component (unlike /account's pattern) because
@@ -25,13 +23,25 @@ import { LanguageSwitcher } from "@/components/layout/language-switcher"
 // non-admin visitor.
 //
 // The admin area is its own app, not a page of the shop: the root layout
-// leaves out the shop's bars, footer and bottom nav on /admin/* (see
-// StorefrontOnly), and this draws a dark sidebar on desktop and a dark top
-// bar with a scrolling section strip on phones instead.
+// leaves out the shop's bars, footer, bottom nav and <main> on /admin/* (see
+// StorefrontOnly), and this draws the admin's own (EVAEL_ADMIN_REDESIGN_SPEC
+// sections 4 and 8):
+//  - 1024px and up: the 252px dark sidebar, fixed;
+//  - 768–1023px: the same sidebar as a 64px column of icons;
+//  - phones: a menu button in the top bar opens it as a drawer.
+// The top bar and <main> sit to the right of the sidebar, so the skip link
+// ("#main-content") jumps past both the menu and the bar.
 function AdminShell({ children }: { children: ReactNode }) {
   const t = useT()
   const router = useRouter()
+  const pathname = usePathname()
   const { user, ready } = useRequireAdmin()
+  const counts = useNavCounts(ready)
+  const [openGroups, setGroupOpen] = useOpenGroups()
+  // The drawer belongs to the page it was opened on: moving to another page
+  // (tapping a link in it) closes it.
+  const [drawerPage, setDrawerPage] = useState<string | null>(null)
+  const drawerOpen = drawerPage === pathname
 
   async function handleSignOut() {
     await signOut()
@@ -39,94 +49,45 @@ function AdminShell({ children }: { children: ReactNode }) {
     router.push("/")
   }
 
-  if (!ready) {
+  if (!ready || !user) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <PageSkeleton />
-      </div>
+      <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+          <PageSkeleton />
+        </div>
+      </main>
     )
   }
 
-  const badge = (
-    <span className="rounded-md bg-brand-strong px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-white uppercase">
-      {t("admin.shell.badge")}
-    </span>
-  )
+  const nav = { counts, openGroups, onGroupOpenChange: setGroupOpen }
 
   return (
-    <div className="min-h-dvh bg-subtle/40 lg:pl-64">
+    <div className="min-h-dvh flex-1 bg-admin-bg md:pl-16 lg:pl-63">
       <OrderAlertsWatcher />
-      {/* Desktop: fixed dark sidebar. */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-footer text-white lg:flex">
-        <div className="flex flex-col items-start gap-3 px-5 pt-6 pb-5">
-          <Logo variant="light" />
-          <div className="flex w-full items-center justify-between gap-2">
-            {badge}
-            <OrderAlertsBell />
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto px-3">
-          <AdminNav />
-        </div>
-        <div className="space-y-3 border-t border-white/10 px-5 py-5">
-          {user && (
-            <div className="min-w-0 text-sm">
-              <p className="truncate font-medium">{user.fullName}</p>
-              <p className="truncate text-xs text-white/60">{user.email}</p>
-            </div>
-          )}
-          <LanguageSwitcher tone="dark" />
-          <div className="flex flex-col gap-1">
-            <Link
-              href="/"
-              className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-gold/60"
-            >
-              <Store aria-hidden className="size-4" />
-              {t("admin.shell.viewStore")}
-            </Link>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="flex items-center gap-2 rounded-lg px-2 py-2 text-left text-sm text-white/80 transition-colors outline-none hover:bg-white/5 hover:text-white focus-visible:ring-3 focus-visible:ring-gold/60"
-            >
-              <LogOut aria-hidden className="size-4" />
-              {t("account.nav.logout")}
-            </button>
-          </div>
-        </div>
-      </aside>
+      <AdminSidebar user={user} nav={nav} onSignOut={handleSignOut} className="fixed inset-y-0 left-0 z-30 hidden w-63 lg:flex" />
+      <AdminSidebar
+        variant="rail"
+        user={user}
+        nav={nav}
+        onSignOut={handleSignOut}
+        className="fixed inset-y-0 left-0 z-30 hidden w-16 md:flex lg:hidden"
+      />
+      <Sheet open={drawerOpen} onOpenChange={(open) => setDrawerPage(open ? pathname : null)}>
+        <SheetContent
+          side="left"
+          showCloseButton={false}
+          aria-describedby={undefined}
+          className="w-[min(17.5rem,85vw)] gap-0 border-none bg-sidebar p-0 text-sidebar-foreground"
+        >
+          <SheetTitle className="sr-only">{t("admin.nav.label")}</SheetTitle>
+          <AdminSidebar user={user} nav={nav} onSignOut={handleSignOut} onClose={() => setDrawerPage(null)} />
+        </SheetContent>
+      </Sheet>
 
-      {/* Phones and tablets: dark top bar plus a scrolling strip of sections. */}
-      <header className="sticky top-0 z-30 bg-footer text-white lg:hidden">
-        <div className="flex h-14 items-center justify-between gap-2 px-4">
-          <div className="flex min-w-0 items-center gap-2">
-            <Logo variant="light" />
-            {badge}
-          </div>
-          <div className="flex items-center gap-1">
-            <OrderAlertsBell />
-            <LanguageSwitcher compact tone="dark" />
-            <Link
-              href="/"
-              aria-label={t("admin.shell.viewStore")}
-              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-gold/60"
-            >
-              <Store aria-hidden className="size-5" />
-            </Link>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              aria-label={t("account.nav.logout")}
-              className="flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 focus-visible:ring-3 focus-visible:ring-gold/60"
-            >
-              <LogOut aria-hidden className="size-5" />
-            </button>
-          </div>
-        </div>
-        <AdminNav variant="tabs" />
-      </header>
-
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:py-10">{children}</div>
+      <AdminTopBar onOpenMenu={() => setDrawerPage(pathname)} />
+      <main id="main-content" tabIndex={-1} className="outline-none">
+        <div className="mx-auto max-w-[1680px] px-4 py-6 md:px-6">{children}</div>
+      </main>
     </div>
   )
 }

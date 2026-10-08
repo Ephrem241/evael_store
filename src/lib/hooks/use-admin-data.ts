@@ -22,8 +22,9 @@ const loadProducts = () => fetchAdminProducts()
 const loadCategories = () => fetchAdminCategories()
 const loadProfiles = () => fetchProfiles()
 
-export function useAdminProducts(): Remote<Product[]> {
-  return useRemote("all", loadProducts)
+// `enabled: false` loads nothing yet (the admin search waits until it is used).
+export function useAdminProducts(enabled = true): Remote<Product[]> {
+  return useRemote(enabled ? "all" : null, loadProducts)
 }
 
 const loadProduct = (id: string) => fetchAdminProduct(id)
@@ -49,8 +50,8 @@ export function useStoreContactSettings(): Remote<StoreContactSettings> {
   return useRemote("store-settings", loadStoreSettings)
 }
 
-export function useProfiles(): Remote<AdminProfile[]> {
-  return useRemote("all", loadProfiles)
+export function useProfiles(enabled = true): Remote<AdminProfile[]> {
+  return useRemote(enabled ? "all" : null, loadProfiles)
 }
 
 const loadMessages = () => fetchContactMessages()
@@ -66,6 +67,6 @@ export function useContactMessage(id: string): Remote<ContactMessage | null> {
   return useRemote(id, loadMessage)
 }
 
-export function useUnreadMessageCount(): Remote<number> {
-  return useRemote("unread", loadUnreadCount)
+export function useUnreadMessageCount(enabled = true): Remote<number> {
+  return useRemote(enabled ? "unread" : null, loadUnreadCount)
 }

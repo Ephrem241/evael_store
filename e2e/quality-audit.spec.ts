@@ -86,6 +86,12 @@ const ROUTES: Route[] = [
   adminRoute("/admin/messages"),
   adminRoute((d) => `/admin/messages/${d.messageId}`),
   adminRoute("/admin/homepage"),
+  adminRoute("/admin/settings"),
+  // The admin's own 404, inside its frame. It answers 200: the page is already
+  // streaming when notFound() is reached, so Next marks it noindex instead
+  // (node_modules/next/dist/docs, loading.md "Status Codes"). It is behind
+  // sign-in, so no crawler sees it either way.
+  adminRoute("/admin/this-page-does-not-exist"),
 ]
 
 const STATE_DIR = path.join(tmpdir(), "ethio-mart-e2e")

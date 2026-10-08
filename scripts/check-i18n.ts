@@ -33,7 +33,7 @@ const NON_UI_ATTRS = new Set([
   "defaultValue", "accept", "enterKeyHint", "autoCapitalize", "orientation", "fetchPriority",
   "crossOrigin", "referrerPolicy", "cx", "cy", "r", "x", "y", "x1", "x2", "y1", "y2", "points",
   "transform", "slot", "sideOffset", "alignOffset", "data-slot", "data-state", "data-sidebar",
-  "aria-hidden", "aria-live", "aria-current", "aria-expanded", "aria-controls", "aria-haspopup",
+  "aria-hidden", "aria-live", "aria-current", "aria-expanded", "aria-controls", "aria-haspopup", "aria-autocomplete",
   "aria-pressed", "aria-orientation", "aria-labelledby", "aria-describedby", "aria-busy", "aria-atomic",
   "aria-invalid", "aria-checked", "aria-selected", "aria-modal", "aria-disabled", "aria-required",
   "aria-relevant", "aria-sort", "aria-valuenow", "aria-valuemin", "aria-valuemax", "colorScheme",

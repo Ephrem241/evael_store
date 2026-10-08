@@ -8,11 +8,11 @@ import { useT } from "@/lib/i18n/provider"
 import { useOrderAlertsStore } from "@/lib/store/order-alerts"
 
 const buttonClass =
-  "relative flex size-10 items-center justify-center rounded-lg text-white/85 outline-none hover:bg-white/10 hover:text-white focus-visible:ring-3 focus-visible:ring-brand/60"
+  "relative flex size-10 items-center justify-center rounded-lg text-charcoal/80 outline-none transition-colors hover:bg-card hover:text-charcoal focus-visible:ring-2 focus-visible:ring-ring max-lg:size-11"
 
-// The admin header's bell (new orders not opened yet, linking to the orders)
-// and the switch for the new-order sound and desktop alerts. Sits on the dark
-// sidebar / top bar.
+// The admin top bar's bell (new orders not opened yet, linking to the orders;
+// the count sits on it in a red badge) and the switch for the new-order sound
+// and desktop alerts.
 function OrderAlertsBell() {
   const t = useT()
   const count = useOrderAlertsStore((s) => s.unseen.length)
@@ -37,11 +37,11 @@ function OrderAlertsBell() {
         aria-label={count > 0 ? t.plural("admin.orderAlerts.bellLabel", count) : t("admin.orderAlerts.bellLabelNone")}
         className={buttonClass}
       >
-        <Bell aria-hidden className="size-5" />
+        <Bell aria-hidden strokeWidth={1.75} className="size-5" />
         {count > 0 && (
           <span
             aria-hidden
-            className="absolute top-1 right-1 flex min-w-4.5 items-center justify-center rounded-full bg-brand-strong px-1 text-[11px] leading-4.5 font-bold text-white"
+            className="absolute top-1 right-1 flex min-w-4.5 items-center justify-center rounded-full bg-sale px-1 text-[11px] leading-4.5 font-bold text-white ring-2 ring-admin-bg"
           >
             {count > 99 ? "99+" : count}
           </span>
@@ -55,7 +55,11 @@ function OrderAlertsBell() {
         title={soundOn ? t("admin.orderAlerts.soundOn") : t("admin.orderAlerts.soundOff")}
         className={buttonClass}
       >
-        {soundOn ? <Volume2 aria-hidden className="size-5" /> : <VolumeX aria-hidden className="size-5" />}
+        {soundOn ? (
+          <Volume2 aria-hidden strokeWidth={1.75} className="size-5" />
+        ) : (
+          <VolumeX aria-hidden strokeWidth={1.75} className="size-5" />
+        )}
       </button>
     </div>
   )

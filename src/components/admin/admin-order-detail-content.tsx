@@ -78,7 +78,7 @@ function AdminOrderDetailContent({ orderId }: { orderId: string }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <OrderStatus status={order.status} />
+          <OrderStatus status={order.status} tone="admin" />
           <CommitSelect
             value={order.status}
             disabled={isTerminal}

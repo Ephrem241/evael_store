@@ -9,6 +9,32 @@ import { LOCALES, LOCALE_NAMES, LOCALE_PARAM, type Locale } from "@/lib/i18n/con
 import { setLocale } from "@/lib/i18n/actions"
 import { useT } from "@/lib/i18n/provider"
 
+// Switching language: store the choice in the cookie, then show the page again
+// in it. A `?lang=` in the address would override the cookie, so it is
+// dropped; otherwise the page refreshes in place. Shared with the admin's
+// language menu.
+function useLocaleSwitch(): { choose: (locale: Locale) => void; pending: boolean } {
+  const t = useT()
+  const router = useRouter()
+  const [pending, startTransition] = useTransition()
+
+  function choose(locale: Locale) {
+    if (locale === t.locale) return
+    startTransition(async () => {
+      await setLocale(locale)
+      const url = new URL(window.location.href)
+      if (url.searchParams.has(LOCALE_PARAM)) {
+        url.searchParams.delete(LOCALE_PARAM)
+        router.replace(`${url.pathname}${url.search}`)
+      } else {
+        router.refresh()
+      }
+    })
+  }
+
+  return { choose, pending }
+}
+
 // Two-option control. `labels="short"` (EN | አማ) fits the bars; `labels="full"`
 // (English | አማርኛ) is for the footer and the phone menu. Each option is written
 // in its own language and script so it can be found without reading the
@@ -36,25 +62,8 @@ function LanguageSwitcher({
   showIcon?: boolean
 }) {
   const t = useT()
-  const router = useRouter()
-  const [pending, startTransition] = useTransition()
+  const { choose, pending } = useLocaleSwitch()
   const dark = tone === "dark"
-
-  function choose(locale: Locale) {
-    if (locale === t.locale) return
-    startTransition(async () => {
-      await setLocale(locale)
-      // A `?lang=` in the address would override the cookie we just set, so
-      // drop it; otherwise refresh the page in place.
-      const url = new URL(window.location.href)
-      if (url.searchParams.has(LOCALE_PARAM)) {
-        url.searchParams.delete(LOCALE_PARAM)
-        router.replace(`${url.pathname}${url.search}`)
-      } else {
-        router.refresh()
-      }
-    })
-  }
 
   if (compact) {
     const other = LOCALES.find((locale) => locale !== t.locale) ?? t.locale
@@ -160,4 +169,4 @@ function LanguageSwitcher({
   )
 }
 
-export { LanguageSwitcher }
+export { LanguageSwitcher, useLocaleSwitch }

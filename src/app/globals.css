@@ -38,6 +38,11 @@
     --color-warning: var(--evael-warning);
     --color-warning-text: var(--evael-warning-text);
     --color-error: var(--evael-error);
+    --color-info: var(--evael-info);
+    --color-admin-bg: var(--evael-admin-bg);
+    --color-warning-tint: var(--evael-warning-tint);
+    --color-success-tint: var(--evael-success-tint);
+    --color-error-tint: var(--evael-error-tint);
     --radius-card: 0.75rem;
     --radius-image: 0.625rem;
     /* Banners and panels. The desktop hero is full-bleed, with no radius. */
@@ -67,6 +72,7 @@
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar: var(--sidebar);
+    --color-chart-6: var(--chart-6);
     --color-chart-5: var(--chart-5);
     --color-chart-4: var(--chart-4);
     --color-chart-3: var(--chart-3);
@@ -160,6 +166,23 @@
     --evael-error: #B42318;
     --evael-footer: #18181E; /* footer, newsletter card */
 
+    /* The admin area (docs/design/EVAEL_ADMIN_REDESIGN_SPEC.md, section 3).
+       Its page sits on the subtle cream; cards stay white. The dark sidebar's
+       own colours are the shadcn --sidebar-* variables below.
+       Contrast: white text 18.3:1 on --sidebar and 13.4:1 on
+       --sidebar-accent; white at 75% (sub-items, meta) 10.4:1 on --sidebar
+       and 8.1:1 on --sidebar-accent; gold (focus ring, count pills) 7.5:1 on
+       --sidebar, with primary-deepest text on it 6.8:1.
+       info is the purple of the fourth KPI icon (white on it 9.1:1). */
+    --evael-info: #5430A2;
+    --evael-admin-bg: var(--evael-subtle);
+    /* The admin's status pills: each tone at 10% over white, opaque, so a
+       pill keeps its contrast on the cream page and on white cards alike
+       (warning-text 4.95:1, success 4.66:1, error 5.58:1 on its tint). */
+    --evael-warning-tint: #F8F2E9;
+    --evael-success-tint: #E8F2EE;
+    --evael-error-tint: #F8E9E8;
+
     /* Not the store's palette: the Ethiopian flag (trust strip, footer) and
        the messaging apps' own marks (contact buttons). Kept here so every
        colour in the app still lives in this file. */
@@ -195,20 +218,24 @@
     --border: var(--evael-border);
     --input: #8A8F98; /* form-control borders + switch track: 3:1+ (WCAG 1.4.11); --border stays light */
     --ring: var(--evael-primary);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    /* Admin charts: sales line and Shipped (1), orders line and Pending (2),
+       Preparing (3), Delivered (4), Cancelled (5), Confirmed (6). */
+    --chart-1: var(--evael-primary);
+    --chart-2: var(--evael-gold);
+    --chart-3: #E0862E;
+    --chart-4: #2F9E7E;
+    --chart-5: #8A8F98;
+    --chart-6: var(--evael-info);
     --radius: 0.75rem;
-    --sidebar: var(--evael-surface);
-    --sidebar-foreground: var(--evael-text);
-    --sidebar-primary: var(--evael-primary-strong);
-    --sidebar-primary-foreground: #FFFFFF;
-    --sidebar-accent: var(--evael-primary-soft);
-    --sidebar-accent-foreground: var(--evael-text);
-    --sidebar-border: var(--evael-border);
-    --sidebar-ring: var(--evael-primary);
+    /* The admin's dark sidebar. */
+    --sidebar: #2A0A10;
+    --sidebar-foreground: #FFFFFF;
+    --sidebar-primary: var(--evael-gold);
+    --sidebar-primary-foreground: var(--evael-primary-deepest);
+    --sidebar-accent: #5A161E;
+    --sidebar-accent-foreground: #FFFFFF;
+    --sidebar-border: rgb(255 255 255 / 0.10);
+    --sidebar-ring: var(--evael-gold);
 }
 
 .dark {

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 
 import { privateMetadata } from "@/lib/seo/metadata"
 import { getT } from "@/lib/i18n/server"
+import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { AdminProductEditContent } from "@/components/admin/admin-product-edit-content"
 
 // Not for search results: it belongs to one visitor (see privateMetadata).
@@ -20,9 +21,7 @@ export default async function AdminEditProductPage({
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold text-charcoal">{t("admin.products.editTitle")}</h1>
-      </div>
+      <AdminPageHeader title={t("admin.products.editTitle")} />
       <AdminProductEditContent productId={id} />
     </div>
   )

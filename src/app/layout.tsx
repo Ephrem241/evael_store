@@ -146,18 +146,19 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               {t("nav.skipToContent")}
             </a>
             <div className="flex min-h-dvh flex-col">
-              {/* /admin/* is its own app (AdminShell draws its own chrome), so the
-                  shop's bars, footer and content container are left out there. */}
+              {/* /admin/* is its own app (AdminShell draws its own chrome and its
+                  own <main>, after its sidebar and top bar), so the shop's bars,
+                  footer, <main> and content container are left out there. */}
               <StorefrontOnly>
                 <AnnouncementBar />
                 <Header />
                 <MobileHeader />
               </StorefrontOnly>
-              <main id="main-content" tabIndex={-1} className="flex-1 overflow-x-clip outline-none">
-                <StorefrontOnly fallback={children}>
+              <StorefrontOnly fallback={children}>
+                <main id="main-content" tabIndex={-1} className="flex-1 overflow-x-clip outline-none">
                   <Container>{children}</Container>
-                </StorefrontOnly>
-              </main>
+                </main>
+              </StorefrontOnly>
               <StorefrontOnly>
                 <Footer />
               </StorefrontOnly>
