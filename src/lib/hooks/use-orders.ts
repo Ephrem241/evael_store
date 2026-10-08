@@ -17,6 +17,7 @@ export function useMyOrders(userId: string | undefined): Remote<OrderRecord[]> {
   return useRemote(userId ?? null, loadMyOrders)
 }
 
-export function useAllOrders(): Remote<OrderRecord[]> {
-  return useRemote("all", loadAllOrders)
+// `enabled: false` loads nothing yet (the admin search waits until it is used).
+export function useAllOrders(enabled = true): Remote<OrderRecord[]> {
+  return useRemote(enabled ? "all" : null, loadAllOrders)
 }

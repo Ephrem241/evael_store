@@ -10,15 +10,33 @@ export const ORDER_STATUSES: OrderStatus[] = [
   "cancelled",
 ]
 
+// The admin's pills (EVAEL_ADMIN_REDESIGN_SPEC section 3): pending neutral,
+// preparing in the warning tint, shipped and delivered in green, cancelled
+// in red, confirmed in the soft burgundy. Opaque tints with dark text of the
+// same hue, so they pass 4.5:1 on any background the admin puts them on.
+const ADMIN_STATUS_CLASS: Record<OrderStatus, string> = {
+  pending: "border-border bg-subtle text-muted-text",
+  confirmed: "bg-brand-soft text-brand-ink",
+  preparing: "bg-warning-tint text-warning-text",
+  shipped: "bg-success-tint text-success",
+  delivered: "bg-success-tint text-success",
+  cancelled: "bg-error-tint text-error",
+}
+
+export type OrderStatusTone = "storefront" | "admin"
+
+// Storefront (the customer's own orders):
 // pending -> the one state something still needs to happen to (warning);
 // delivered/cancelled -> the two terminal outcomes (success/error);
 // confirmed/preparing/shipped -> in progress normally, nothing needs
 // attention right now (the soft burgundy of the brand).
 export function getOrderStatusMeta(
   status: OrderStatus,
-  t: Translator
+  t: Translator,
+  tone: OrderStatusTone = "storefront"
 ): { label: string; className: string } {
   const label = t(`order.status.${status}`)
+  if (tone === "admin") return { label, className: ADMIN_STATUS_CLASS[status] }
   switch (status) {
     case "pending":
       return { label, className: "bg-warning/10 text-warning-text" }

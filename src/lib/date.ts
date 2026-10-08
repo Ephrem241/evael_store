@@ -13,6 +13,31 @@ export function formatOrderDate(iso: string, locale: Locale): string {
   }).format(new Date(iso))
 }
 
+// The shop is in Ethiopia, so the admin's "today" and its calendar days are
+// days in Addis Ababa, whatever the admin's own computer is set to.
+export const STORE_TIME_ZONE = "Africa/Addis_Ababa"
+
+/** "Thu, Oct 8, 2026": today's date in the admin's top bar. */
+export function formatLongDate(date: Date, locale: Locale): string {
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: STORE_TIME_ZONE,
+  }).format(date)
+}
+
+/** "2026-10-08": the calendar day in Addis Ababa (for `<time dateTime>` and day buckets). */
+export function storeDateKey(date: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: STORE_TIME_ZONE,
+  }).format(date)
+}
+
 export function formatOrderDateTime(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(INTL_LOCALE[locale], {
     year: "numeric",

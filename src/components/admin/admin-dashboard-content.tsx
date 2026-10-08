@@ -88,7 +88,7 @@ function AdminDashboardContent() {
                     </span>
                     <span className="flex items-center gap-2">
                       {formatPrice(o.total, t)}
-                      <OrderStatus status={o.status} />
+                      <OrderStatus status={o.status} tone="admin" />
                     </span>
                   </Link>
                 </li>

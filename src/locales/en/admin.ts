@@ -4,17 +4,44 @@ export const admin = {
   shell: {
     badge: "Admin",
     viewStore: "View store",
+    sidebarLabel: "Admin sidebar",
+    userMenu: "Account menu for {name}",
+    accountSettings: "Account settings",
+    // {language} is the current language's short name ("EN").
+    languageLabel: "Language: {language}",
+    backToDashboard: "Back to dashboard",
   },
   nav: {
     label: "Admin",
     dashboard: "Dashboard",
     products: "Products",
+    allProducts: "All Products",
+    addProduct: "Add Product",
     categories: "Categories",
     orders: "Orders",
     customers: "Customers",
     messages: "Messages",
     homepage: "Homepage",
     settings: "Settings",
+  },
+  search: {
+    label: "Search products, orders and customers",
+    placeholder: "Search products, orders, customers…",
+    open: "Search",
+    close: "Close search",
+    products: "Products",
+    orders: "Orders",
+    customers: "Customers",
+    hint: "Type at least 2 characters.",
+    loading: "Searching…",
+    failed: "Search isn't available right now. Please refresh the page.",
+    // {query} is what the admin typed.
+    noResults: "Nothing matches “{query}”.",
+    resultCount: { one: "{count} result", other: "{count} results" },
+    // {sku} is the product's code, {price} its price.
+    productDetails: "{sku} · {price}",
+    // {customer} is the customer's name, {total} the order total.
+    orderDetails: "{customer} · {total}",
   },
   loadFailed: {
     dashboard: "We couldn't load the dashboard. Please refresh the page.",

@@ -46,19 +46,22 @@ function BrandMark({ inverse = false, className }: { inverse?: boolean; classNam
 // admin): the name turns white, "STORE" and the mark gold (7.2:1 on the
 // footer, 5.0:1 on the phone header's burgundy). On light surfaces the name is
 // the deepest burgundy and "STORE" the dark gold (5.5:1 on cream).
+// It leads to the home page; the admin's leads to its dashboard (`href`).
 function Logo({
   className,
   variant = "default",
+  href = "/",
 }: {
   className?: string
   variant?: "default" | "light"
+  href?: string
 }) {
   const light = variant === "light"
   const [first, ...rest] = BRAND_NAME.split(" ")
 
   return (
     <Link
-      href="/"
+      href={href}
       aria-label={BRAND_NAME}
       className={cn(
         "group inline-flex shrink-0 items-center gap-2 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background max-lg:min-h-11 lg:gap-2.5",

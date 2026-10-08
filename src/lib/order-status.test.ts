@@ -41,6 +41,35 @@ describe("order statuses", () => {
   })
 })
 
+describe("the admin's status colours", () => {
+  it("keeps the same labels", () => {
+    for (const status of ORDER_STATUSES) {
+      expect(getOrderStatusMeta(status, t, "admin").label).toBe(en.order.status[status])
+    }
+  })
+
+  it("shows pending as neutral, preparing as a warning, shipped and delivered green and cancelled red", () => {
+    expect(getOrderStatusMeta("pending", t, "admin").className).toContain("text-muted-text")
+    expect(getOrderStatusMeta("pending", t, "admin").className).not.toMatch(/warning|success|error/)
+    expect(getOrderStatusMeta("confirmed", t, "admin").className).toContain("bg-brand-soft")
+    expect(getOrderStatusMeta("preparing", t, "admin").className).toContain("text-warning-text")
+    expect(getOrderStatusMeta("shipped", t, "admin").className).toContain("text-success")
+    expect(getOrderStatusMeta("delivered", t, "admin").className).toContain("text-success")
+    expect(getOrderStatusMeta("cancelled", t, "admin").className).toContain("text-error")
+  })
+
+  it("uses opaque tints, never a see-through one whose contrast depends on the page behind", () => {
+    for (const status of ORDER_STATUSES) {
+      expect(getOrderStatusMeta(status, t, "admin").className).not.toMatch(/bg-[a-z-]+\/\d+/)
+    }
+  })
+
+  it("leaves the storefront's colours as they were", () => {
+    expect(getOrderStatusMeta("pending", t).className).toBe(getOrderStatusMeta("pending", t, "storefront").className)
+    expect(getOrderStatusMeta("pending", t).className).toContain("text-warning-text")
+  })
+})
+
 describe("order history filter", () => {
   // filter -> the statuses it must include
   const expected: Record<OrderHistoryFilter, OrderStatus[]> = {
