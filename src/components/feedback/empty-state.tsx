@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react"
 import { cn } from "cn"
 
 // Used wherever there is nothing to show yet (empty cart, no results, no
-// orders…): a soft orange icon disc, a bold headline, one line of help, and — when
+// orders…): a soft burgundy icon disc, a display headline, one line of help, and — when
 // there is an obvious next step — a button.
 function EmptyState({
   icon: Icon,

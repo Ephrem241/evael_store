@@ -23,7 +23,7 @@ function PageLink({
     return (
       <span
         aria-disabled="true"
-        className="flex size-10 items-center justify-center rounded-xl text-sm text-muted-text/40"
+        className="flex size-10 items-center justify-center rounded-(--radius-control) text-sm text-muted-text/40"
       >
         {symbol}
       </span>
@@ -34,7 +34,7 @@ function PageLink({
     <Link
       href={buildPageUrl(basePath, rawParams, page)}
       aria-label={label}
-      className="flex size-10 items-center justify-center rounded-xl text-sm text-charcoal hover:bg-subtle"
+      className="flex size-10 items-center justify-center rounded-(--radius-control) text-sm text-charcoal outline-none hover:bg-subtle focus-visible:ring-2 focus-visible:ring-ring"
     >
       {symbol}
     </Link>
@@ -74,8 +74,8 @@ async function Pagination({
           href={buildPageUrl(basePath, rawParams, p)}
           aria-current={p === page ? "page" : undefined}
           className={cn(
-            "flex size-10 items-center justify-center rounded-xl text-sm",
-            p === page ? "bg-primary font-medium text-primary-foreground" : "text-charcoal hover:bg-subtle"
+            "flex size-10 items-center justify-center rounded-(--radius-control) text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            p === page ? "bg-brand-strong font-semibold text-white" : "text-charcoal hover:bg-subtle"
           )}
         >
           {p}

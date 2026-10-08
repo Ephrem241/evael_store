@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { PackageSearch } from "lucide-react"
 
 import { getT } from "@/lib/i18n/server"
@@ -10,6 +11,8 @@ import { SortSelect } from "@/components/catalog/sort-select"
 import { Pagination } from "@/components/catalog/pagination"
 import { LoadMoreProducts } from "@/components/catalog/load-more-products"
 import { ActiveFilters } from "@/components/catalog/active-filters"
+import { FilterChips } from "@/components/catalog/filter-chips"
+import { Button } from "@/components/ui/button"
 import type { FilterValues, RawParams } from "@/components/catalog/listing-url"
 
 // Shared by /shop, /category/[slug], and /search — each page renders its own
@@ -17,10 +20,11 @@ import type { FilterValues, RawParams } from "@/components/catalog/listing-url"
 // one slot API, Rule 6) and fetches its own data, but the filter/sort/grid/
 // pagination chrome below is identical everywhere (Rule 5).
 //
-// Phones and tablets: Filter and Sort sit in a bar pinned under the header
-// while the products scroll; the filters open in a bottom sheet; "Load more"
-// adds the next page below the grid instead of numbered pages. Desktop keeps
-// the sidebar, the sort menu beside the result count, and the page numbers.
+// Phones and tablets: a row of quick filter chips, then Filter and Sort in a
+// bar pinned under the header while the products scroll; the full filters
+// open in a bottom sheet; "Load more" adds the next page below the grid
+// instead of numbered pages. Desktop keeps the sidebar, the sort menu beside
+// the result count, and the page numbers.
 async function ProductListing({
   products,
   total,
@@ -55,10 +59,17 @@ async function ProductListing({
       : t("catalog.results", { start: rangeStart, end: rangeEnd, total })
 
   return (
-    <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-10">
+      <FilterChips
+        filters={filters}
+        facets={facets}
+        showCategory={showCategoryFilter}
+        rawParams={rawParams}
+        basePath={basePath}
+      />
       {/* Full width (it cancels the page's side padding) and 44px controls; the
           sort menu's 16px text keeps iOS from zooming in when it is tapped. */}
-      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex items-center gap-2 border-b border-border bg-card/95 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex items-center gap-2 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
         <FilterDrawer
           filters={filters}
           facets={facets}
@@ -104,6 +115,11 @@ async function ProductListing({
             icon={PackageSearch}
             title={t("catalog.emptyTitle")}
             description={t("catalog.emptyText")}
+            action={
+              <Button asChild>
+                <Link href="/categories">{t("catalog.browseCategories")}</Link>
+              </Button>
+            }
           />
         ) : (
           <div>

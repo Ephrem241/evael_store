@@ -21,6 +21,10 @@ export const catalog = {
     title: "Filters",
     open: "Filter",
     clearAll: "Clear all",
+    // The row of quick filter chips over a listing on phones.
+    quick: "Quick filters",
+    all: "All",
+    inStock: "In stock",
     apply: "Apply",
     category: "Category",
     allCategories: "All categories",
@@ -55,6 +59,7 @@ export const catalog = {
   noResults: "No results",
   emptyTitle: "No products found.",
   emptyText: "Try another search or explore our categories.",
+  browseCategories: "Browse all categories",
   // /deals: every discounted product, grouped.
   dealsPage: {
     featured: "Featured Offers",

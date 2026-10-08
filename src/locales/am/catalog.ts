@@ -21,6 +21,9 @@ export const catalog: Dictionary["catalog"] = {
     title: "ማጣሪያዎች",
     open: "አጣራ",
     clearAll: "ሁሉንም አጽዳ",
+    quick: "ፈጣን ማጣሪያዎች",
+    all: "ሁሉም",
+    inStock: "በክምችት ያሉ",
     apply: "ተግብር",
     category: "ምድብ",
     allCategories: "ሁሉም ምድቦች",
@@ -53,6 +56,7 @@ export const catalog: Dictionary["catalog"] = {
   noResults: "ውጤት የለም",
   emptyTitle: "ምርቶች አልተገኙም።",
   emptyText: "ሌላ ፍለጋ ይሞክሩ ወይም ምድቦቻችንን ይመልከቱ።",
+  browseCategories: "ሁሉንም ምድቦች ያስሱ",
   dealsPage: {
     featured: "ተመራጭ ቅናሾች",
     limited: "በውስን ብዛት",

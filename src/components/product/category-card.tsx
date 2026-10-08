@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ChevronRight, Tag } from "lucide-react"
+import { ArrowRight, ChevronRight, ShoppingBag, Tag } from "lucide-react"
 import { cn } from "cn"
 
 import { nameOf } from "@/lib/i18n/content"
@@ -98,4 +98,27 @@ async function DealsTile({
   )
 }
 
-export { CategoryCard, DealsTile }
+// The Categories page's full-width Deals row: deep burgundy, a gold shopping
+// bag, "Deals" in gold in the display face, "Save More" in white and a gold
+// circle with an arrow on the right. Leads to /deals.
+async function DealsBanner({ className }: { className?: string }) {
+  const t = await getT()
+
+  return (
+    <Link href="/deals" className={cn(tileClass, "flex items-center gap-4 bg-brand-banner px-5 py-4 lg:px-8 lg:py-5", className)}>
+      <ShoppingBag aria-hidden className="size-10 shrink-0 text-gold lg:size-12" strokeWidth={1.5} />
+      <span className="min-w-0 flex-1">
+        <span className="block font-display text-2xl leading-tight font-bold text-gold lg:text-3xl">{t("nav.deals")}</span>
+        <span className="block text-sm text-white/90">{t("home.dealsTile.subtitle")}</span>
+      </span>
+      <span
+        aria-hidden
+        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gold text-brand-deepest transition-transform duration-300 ease-out group-hover:translate-x-0.5"
+      >
+        <ArrowRight className="size-5" />
+      </span>
+    </Link>
+  )
+}
+
+export { CategoryCard, DealsTile, DealsBanner }

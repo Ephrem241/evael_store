@@ -86,7 +86,7 @@ function LoadMoreProducts({
     <div className="lg:hidden">
       {items.length > 0 && (
         // The same columns and gaps as ProductGrid, so the new cards continue it.
-        <div ref={listRef} className="mt-2 grid grid-cols-2 gap-2 sm:mt-3 sm:grid-cols-3 sm:gap-3">
+        <div ref={listRef} className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {items.map((product) => (
             <ProductCard key={product.id} product={product} t={t} />
           ))}

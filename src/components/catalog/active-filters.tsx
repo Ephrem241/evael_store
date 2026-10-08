@@ -1,10 +1,13 @@
 import Link from "next/link"
 import { X } from "lucide-react"
+import { cn } from "cn"
 
 import { pickLocale } from "@/lib/i18n/content"
 import { getT } from "@/lib/i18n/server"
 import { priceBucketLabel, type FilterFacets, type PriceBucketId } from "@/lib/services/catalog"
 import { buildFilterUrl, type FilterValues, type RawParams } from "@/components/catalog/listing-url"
+import { buttonVariants } from "@/components/ui/button"
+import { chipVariants } from "@/components/ui/chip"
 
 // The filters in force, as chips above the products: each one says what it
 // filters and removes just itself (a link to the same listing without it), and
@@ -72,15 +75,15 @@ async function ActiveFilters({
           key={chip.key}
           href={buildFilterUrl(basePath, rawParams, chip.next)}
           aria-label={t("catalog.filters.remove", { label: chip.label })}
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-brand/30 bg-brand-soft pr-2.5 pl-3.5 text-sm font-medium text-charcoal transition-colors outline-none hover:border-brand hover:bg-card focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:h-10"
+          className={cn(chipVariants({ selected: true }), "pr-2.5 pl-3.5")}
         >
           {chip.label}
-          <X aria-hidden className="size-3.5 text-brand-ink" />
+          <X aria-hidden />
         </Link>
       ))}
       <Link
         href={buildFilterUrl(basePath, rawParams, {})}
-        className="inline-flex h-9 items-center rounded-full px-2 text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:h-10"
+        className={cn(buttonVariants({ variant: "ghost-link" }), "px-1 text-sm")}
       >
         {t("catalog.filters.clearAll")}
       </Link>
