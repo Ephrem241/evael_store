@@ -50,6 +50,8 @@
     --shadow-lift: 0 2px 6px rgb(66 6 18 / 0.05), 0 18px 36px -16px rgb(66 6 18 / 0.2);
     /* Cast upwards, by the bars fixed to the bottom of a phone screen. */
     --shadow-up: 0 -4px 16px -8px rgb(66 6 18 / 0.12);
+    /* The deal popup, a dark panel over a dimmed page: a deep shadow in the footer's ink. */
+    --shadow-popup: 0 28px 70px -18px rgb(24 24 30 / 0.6);
     --color-flag-green: var(--flag-green);
     --color-flag-yellow: var(--flag-yellow);
     --color-flag-red: var(--flag-red);
@@ -168,6 +170,11 @@
     --brand-telegram: #26A5E4;
     --brand-whatsapp: #25D366;
     --brand-call: #1F9D55;
+    /* Google's own four colours for its "G" on the sign-in button (its branding rules). */
+    --brand-google-blue: #4285F4;
+    --brand-google-green: #34A853;
+    --brand-google-yellow: #FBBC05;
+    --brand-google-red: #EA4335;
 
     /* semantic tokens consumed by shadcn components */
     --background: var(--evael-background);

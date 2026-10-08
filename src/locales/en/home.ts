@@ -115,7 +115,6 @@ export const home = {
     available: "Available",
     comingSoon: "Coming Soon",
     listLabel: "Payment methods",
-    weAccept: "We accept: {methods}",
   },
   newsletter: {
     // The home page's newsletter card.

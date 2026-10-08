@@ -93,7 +93,6 @@ export const home: Dictionary["home"] = {
     available: "ይገኛል",
     comingSoon: "በቅርቡ",
     listLabel: "የክፍያ አማራጮች",
-    weAccept: "የምንቀበለው፦ {methods}",
   },
   newsletter: {
     cardTitle: "ምርጥ ቅናሾችን ቀድመው ያግኙ።",

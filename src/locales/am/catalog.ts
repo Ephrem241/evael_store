@@ -104,7 +104,6 @@ export const product: Dictionary["product"] = {
     enlarge: "የ{name} ምስል {index} ከ{total} አሳድግ",
     view: "{name} — እይታ {index}",
     thumb: "እይታ {index}",
-    counter: "{index}/{total}",
   },
   description: {
     title: "መግለጫ",

@@ -207,7 +207,7 @@ function DealPopup({
                   }}
                 >
                   <m.div
-                    className="pointer-events-auto relative flex max-h-[75dvh] w-full flex-col overflow-y-auto overscroll-contain rounded-[1.75rem] bg-[linear-gradient(165deg,color-mix(in_srgb,var(--color-footer),var(--color-brand)_14%)_0%,var(--color-footer)_100%)] text-white shadow-[0_28px_70px_-18px_rgb(0_0_0/0.6)] ring-1 ring-gold/25 outline-none sm:max-h-[min(600px,calc(100dvh-2rem))] sm:w-[480px]"
+                    className="pointer-events-auto relative flex max-h-[75dvh] w-full flex-col overflow-y-auto overscroll-contain rounded-[1.75rem] bg-[linear-gradient(165deg,color-mix(in_srgb,var(--color-footer),var(--color-brand)_14%)_0%,var(--color-footer)_100%)] text-white shadow-(--shadow-popup) ring-1 ring-gold/25 outline-none sm:max-h-[min(600px,calc(100dvh-2rem))] sm:w-[480px]"
                     initial={{ opacity: 0, scale: 0.96, y: 16 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97, y: 8, transition: { duration: 0.18, ease: "easeIn" } }}

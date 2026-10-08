@@ -85,6 +85,9 @@ function ProductGallery({
               <button
                 key={`${productId}-${i}`}
                 type="button"
+                // One stop in the tab order: the photo on show (the thumbnails
+                // move between photos), not every slide of the track.
+                tabIndex={i === activeIndex ? 0 : -1}
                 onClick={() => setZoomOpen(true)}
                 className="w-full shrink-0 snap-center cursor-zoom-in transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset max-lg:active:opacity-90"
                 aria-label={t("product.gallery.enlarge", { index: i + 1, total: views.length, name: productName })}

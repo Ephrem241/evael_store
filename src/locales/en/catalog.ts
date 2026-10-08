@@ -112,7 +112,6 @@ export const product = {
     view: "{name} — view {index}",
     thumb: "View {index}",
     // The small "2/5" over the photos on phones (which photo is showing, of how many).
-    counter: "{index}/{total}",
   },
   // The product's description, a section of its own on phones (it can be folded away).
   description: {

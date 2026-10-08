@@ -1,7 +1,6 @@
 // Header, navigation, search, footer, language switcher, page metadata.
 export const nav = {
   home: "Home",
-  shop: "Shop",
   categories: "Categories",
   deals: "Deals",
   orders: "Orders",
