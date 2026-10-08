@@ -14,9 +14,12 @@ the photographer.
 
 | File | Unsplash photo |
 | --- | --- |
-| `hero-living.jpg` | `photo-1631510390389-c1e4fb20ff31` |
 | `deals-kitchen.jpg` | `photo-1628797279405-8cd6ffdbeb6c` |
-| `lifestyle-loft.jpg` | `photo-1617228133035-2347f159e755` |
+
+The redesign photographs — `hero-shopper.jpg`, `hero-couple.jpg`,
+`hero-living-room.jpg`, `savings-banner.jpg`, `addis-skyline.jpg` and
+`newsletter-shopper.jpg` — were supplied by the store with the design brief
+(`docs/design/`) and resized for the web; they are not Unsplash photos.
 
 ## Catalog (`products/` and `categories/` here)
 

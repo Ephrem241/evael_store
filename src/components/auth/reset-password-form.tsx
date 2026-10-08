@@ -51,7 +51,7 @@ function ResetPasswordForm() {
         registration={register("newPassword")}
         error={errors.newPassword?.message}
       />
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {t("auth.reset.update")}
       </Button>
     </form>

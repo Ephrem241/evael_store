@@ -80,7 +80,7 @@ function AdminNav({ variant = "sidebar" }: { variant?: "sidebar" | "tabs" }) {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex items-center gap-2.5 text-sm transition-colors outline-none focus-visible:ring-3 focus-visible:ring-brand/60",
+              "flex items-center gap-2.5 text-sm transition-colors outline-none focus-visible:ring-3 focus-visible:ring-gold/60",
               tabs
                 ? cn(
                     "shrink-0 rounded-full px-3.5 py-2 whitespace-nowrap",
@@ -89,7 +89,7 @@ function AdminNav({ variant = "sidebar" }: { variant?: "sidebar" | "tabs" }) {
                 : cn(
                     "rounded-xl border-l-[3px] px-3 py-2.5",
                     active
-                      ? "border-brand bg-white/10 font-semibold text-white"
+                      ? "border-gold bg-white/10 font-semibold text-white"
                       : "border-transparent text-white/75 hover:bg-white/5 hover:text-white"
                   )
             )}

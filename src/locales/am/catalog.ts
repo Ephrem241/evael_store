@@ -21,6 +21,9 @@ export const catalog: Dictionary["catalog"] = {
     title: "ማጣሪያዎች",
     open: "አጣራ",
     clearAll: "ሁሉንም አጽዳ",
+    quick: "ፈጣን ማጣሪያዎች",
+    all: "ሁሉም",
+    inStock: "በክምችት ያሉ",
     apply: "ተግብር",
     category: "ምድብ",
     allCategories: "ሁሉም ምድቦች",
@@ -53,6 +56,7 @@ export const catalog: Dictionary["catalog"] = {
   noResults: "ውጤት የለም",
   emptyTitle: "ምርቶች አልተገኙም።",
   emptyText: "ሌላ ፍለጋ ይሞክሩ ወይም ምድቦቻችንን ይመልከቱ።",
+  browseCategories: "ሁሉንም ምድቦች ያስሱ",
   dealsPage: {
     featured: "ተመራጭ ቅናሾች",
     limited: "በውስን ብዛት",
@@ -85,6 +89,7 @@ export const product: Dictionary["product"] = {
   addedToCart: "ወደ ጋሪዎ ተጨምሯል።",
   viewCart: "ጋሪን ይመልከቱ",
   rated: "ከ5 {value} ተሰጥቶታል",
+  percentOff: "{percent}% ቅናሽ",
   favorites: {
     add: "ወደ ተወዳጆች ጨምር",
     remove: "ከተወዳጆች አስወግድ",
@@ -99,13 +104,13 @@ export const product: Dictionary["product"] = {
     enlarge: "የ{name} ምስል {index} ከ{total} አሳድግ",
     view: "{name} — እይታ {index}",
     thumb: "እይታ {index}",
-    counter: "{index}/{total}",
   },
   description: {
     title: "መግለጫ",
   },
+  tabsLabel: "የምርት መረጃ",
   details: {
-    title: "ዝርዝሮች",
+    title: "ዝርዝር መግለጫዎች",
     sku: "የምርት ኮድ",
     category: "ምድብ",
     availability: "ተገኝነት",
@@ -114,6 +119,13 @@ export const product: Dictionary["product"] = {
     title: "ማድረስ",
     fees: "የማድረስ ክፍያ በክፍያ ወቅት በአድራሻዎ መሠረት ይሰላል።",
     dispatch: "አብዛኞቹ ትዕዛዞች በጥቂት የሥራ ቀናት ውስጥ ተዘጋጅተው ይላካሉ።",
+  },
+  info: {
+    deliveryTitle: "ማድረስ",
+    deliveryFee: "ዋጋው በክፍያ ጊዜ ይታያል",
+    deliveryFree: "ከ{amount} በላይ ነፃ",
+    codTitle: "ሲደርስ ይክፈሉ",
+    codText: "ይገኛል",
   },
   reviews: {
     title: "ግምገማዎች",

@@ -32,9 +32,11 @@ describe("order statuses", () => {
     expect(getOrderStatusMeta("cancelled", t).className).toContain("text-error")
   })
 
-  it("shows the in-between statuses neutrally", () => {
+  it("shows the in-between statuses in the soft brand tone, never an alert colour", () => {
     for (const status of ["confirmed", "preparing", "shipped"] as const) {
-      expect(getOrderStatusMeta(status, t).className).toContain("bg-secondary")
+      const { className } = getOrderStatusMeta(status, t)
+      expect(className).toContain("bg-brand-soft")
+      expect(className).not.toMatch(/warning|success|error/)
     }
   })
 })

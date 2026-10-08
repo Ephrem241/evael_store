@@ -1,5 +1,6 @@
-// The Evael Store mark: a white shopping bag with an orange "E" on its front,
-// on a rounded orange tile. It is the logo beside the wordmark in the header,
+// The Evael Store mark: a gold shopping bag with a deep burgundy "E" on its
+// front, on a rounded burgundy tile (turned around — a gold tile, burgundy bag
+// — on dark surfaces). It is the logo beside the wordmark in the header,
 // footer and admin (layout/logo.tsx), and the favicon, app icon and share
 // image (icon, apple-icon, opengraph-image) — all drawn from these paths.
 //
@@ -26,14 +27,19 @@ export const BRAND_MARK = {
 } as const
 
 // Hex copies of the palette in globals.css, for the image renderer, which
-// can't read CSS variables. Keep the two in step.
+// can't read CSS variables. Keep the two in step. (One of the two documented
+// places outside globals.css with hex colours; the other is the email
+// templates, for the same reason.)
+// Also used by global-error.tsx, which renders without the app's stylesheet.
 export const BRAND_COLORS = {
-  primary: "#E86A33",
-  primaryStrong: "#C94F20",
-  primarySoft: "#FFF1E8",
-  primaryInk: "#BA4A1C",
-  background: "#FAFAF7",
-  text: "#171717",
-  textSecondary: "#646B78",
+  primary: "#900018",
+  primaryStrong: "#7E061E",
+  primaryInk: "#7E061E",
+  primaryDeepest: "#420612",
+  gold: "#D29C4E",
+  goldInk: "#8A5A12",
+  background: "#FBF6F0",
+  text: "#1A1414", // i18n-ignore: a colour (the text colour), not words
+  textSecondary: "#66605C",
   white: "#FFFFFF",
 } as const

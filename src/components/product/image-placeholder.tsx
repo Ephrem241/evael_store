@@ -31,6 +31,7 @@ function ImagePlaceholder({
   eager,
   aspectClassName = "aspect-square",
   decorative = false,
+  fit = "cover",
   className,
 }: {
   seed: string
@@ -58,9 +59,15 @@ function ImagePlaceholder({
    * item), so it is hidden from assistive technology instead of being read twice.
    */
   decorative?: boolean
+  /**
+   * "contain": the whole photo, 12px clear of the edges, on the plain subtle
+   * well (product cards: packshots are never cropped). "cover" fills the box.
+   */
+  fit?: "cover" | "contain"
   className?: string
 }) {
-  const gradient = GRADIENTS[hashString(seed) % GRADIENTS.length]
+  const contain = fit === "contain"
+  const gradient = contain ? "bg-subtle" : GRADIENTS[hashString(seed) % GRADIENTS.length]
 
   return (
     <div
@@ -75,7 +82,15 @@ function ImagePlaceholder({
       )}
     >
       <Icon aria-hidden className="size-10 text-brand-ink/40" />
-      {imageUrl && <RemoteProductImage src={imageUrl} alt={decorative ? "" : label} sizes={sizes} eager={eager} />}
+      {imageUrl && (
+        <RemoteProductImage
+          src={imageUrl}
+          alt={decorative ? "" : label}
+          sizes={sizes}
+          eager={eager}
+          className={contain ? "object-contain p-3" : undefined}
+        />
+      )}
     </div>
   )
 }

@@ -110,16 +110,20 @@ screen reader.
 
 - **Products, categories, orders, customers** — Admin → the matching page.
 - **Homepage copy** — Admin → Homepage: the hero and the "Special Deals"
-  banner, each in English and Amharic. In the deals headline or subtext, write
-  `{maxDiscount}` and the storefront replaces it with the biggest discount
-  among products actually on sale ("Up to 23% Off"). The banner disappears
+  promotion (the popup a few seconds into a visit), each in English and
+  Amharic. In the deals headline or subtext, write `{maxDiscount}` and the
+  storefront replaces it with the biggest discount among products actually on
+  sale ("Up to 23% Off"). The promotion and the "Big Savings" banner disappear
   while nothing is on sale. In the hero headline, put the punchline on its own
-  last line ("Everything You Love.⏎Better Prices."): the storefront draws that
-  line large, in the brand orange.
-- **Homepage sections** — "Trending Now" lists the products marked *featured*,
-  "Popular Picks" the ones marked *popular* (product form), "Flash Deals" and
-  the Deals page every product whose compare-at price is above its price, and
-  the hero's photo collage uses the first featured products that have photos.
+  last line ("Modern Shopping.⏎Made for Ethiopia."): the storefront draws that
+  line in gold.
+- **Homepage sections** — "Trending Products" lists the products marked
+  *featured*; "Flash Deals" and the Deals page every product whose
+  compare-at price is above its price; "New Arrivals" the newest products.
+  "Shop by Category" shows the categories that have products, with the photo
+  set in Admin → Categories. Products marked *popular* (product form) fill the
+  "Popular picks" of an empty search and the "Popular" sort. The hero
+  cross-fades three store photographs from `public/images/home/`.
 - **Deals countdown** — Admin → Homepage → "Offer ends". While that moment is
   in the future the banner shows a live countdown; leave it empty for none. A
   countdown is never invented.
@@ -150,15 +154,21 @@ screen reader.
   `catalog`, `cart`, `checkout`, `account`, `admin`, …).
   `src/lib/services` — every data access; components never query Supabase
   directly.
-- **Design system** — the Evael palette (warm off-white, white surfaces,
-  charcoal type, the orange brand accent, soft peach for promotions) lives as
-  `--evael-*` tokens in `src/app/globals.css`, exposed as Tailwind colours
-  (`brand`, `brand-strong`, `brand-ink`, `brand-soft`, `subtle`, `sale`, …).
-  The bright orange is for icons, accents and display-size text; white text
-  sits on `brand-strong` and orange text uses `brand-ink`, so everything keeps
-  WCAG AA contrast (the comment there has the numbers). Headings use
-  `font-display` (Inter, bold). Both typefaces are self-hosted in
-  `src/app/fonts`, so nothing needs the network to build.
+- **Design system** — the burgundy and gold palette (warm cream page, white
+  surfaces, charcoal type, burgundy for actions, gold for accents on dark
+  burgundy) lives as `--evael-*` tokens in `src/app/globals.css`, exposed as
+  Tailwind colours (`brand`, `brand-strong`, `brand-ink`, `brand-soft`,
+  `gold`, `gold-ink`, `subtle`, `sale`, …). Every colour in the app comes
+  from that file; the only exceptions are `src/lib/brand-mark.ts` (the icons
+  and share image, drawn where CSS variables don't exist) and
+  `src/lib/email/templates.ts` (inline e-mail styles), which mirror the same
+  values. White text sits on `brand-strong`, small burgundy text uses
+  `brand-ink` and small gold text `gold-ink`, so everything keeps WCAG AA
+  contrast (the comment there has the numbers). Headings use `font-display`
+  (Playfair Display), body text Inter, the hero's flourish Caveat. All
+  typefaces are self-hosted in `src/app/fonts`, so nothing needs the network
+  to build. `/style-guide` (development only) shows the tokens, type scale and
+  primitives; the design brief and mockups are in `docs/design/`.
 - **Images** — the homepage photography is in `public/images/home/`; product
   and category photos are in Supabase Storage. Photo sources and licences:
   `scripts/seed-images/CREDITS.md`.
@@ -175,11 +185,12 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0024` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0025` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
-   advisors' report (see [Security](#security)); `0024` is the redesigned
-   homepage's hero copy.
+   advisors' report (see [Security](#security)); `0024` and `0025` are the
+   redesigned homepage's hero copy (each changes it only while the previous
+   wording is still there).
 2. **Seed** (from your computer, uses the service-role key): `npm run seed:catalog`,
    `npm run seed:admin` (prints the admin password once — **log in and change
    it**), `npm run seed:images`.

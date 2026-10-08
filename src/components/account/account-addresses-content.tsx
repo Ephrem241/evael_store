@@ -2,7 +2,7 @@
 
 import { CardListSkeleton } from "@/components/feedback/skeletons"
 import { useState } from "react"
-import { MapPinOff, Pencil, Trash2 } from "lucide-react"
+import { MapPin, MapPinOff, Pencil, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { useT } from "@/lib/i18n/provider"
@@ -114,7 +114,9 @@ function AccountAddressesContent() {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={openAdd}>{t("account.addresses.add")}</Button>
+        <Button onClick={openAdd} className="max-sm:w-full">
+          {t("account.addresses.add")}
+        </Button>
       </div>
 
       {addresses.length === 0 ? (
@@ -127,11 +129,21 @@ function AccountAddressesContent() {
       ) : (
         <div className="space-y-3">
           {addresses.map((a) => (
-            <div key={a.id} className="space-y-2 rounded-card border border-border bg-card p-4">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="text-sm">
-                  <p className="font-medium text-charcoal">
-                    {a.full_name} {a.is_default && <Badge className="ml-2 align-middle">{t("account.addresses.default")}</Badge>}
+            <div
+              key={a.id}
+              className="space-y-3 rounded-card border border-border bg-surface p-4 shadow-soft sm:p-5"
+            >
+              <div className="flex items-start gap-3">
+                <span
+                  aria-hidden
+                  className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-ink"
+                >
+                  <MapPin className="size-5" strokeWidth={1.5} />
+                </span>
+                <div className="min-w-0 flex-1 text-sm">
+                  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold text-charcoal">
+                    {a.full_name}
+                    {a.is_default && <Badge variant="soft">{t("account.addresses.default")}</Badge>}
                   </p>
                   <p className="text-muted-text">{a.phone}</p>
                   <p className="text-muted-text">
@@ -139,17 +151,29 @@ function AccountAddressesContent() {
                   </p>
                   {a.notes && <p className="text-muted-text">{t("account.addresses.notes", { notes: a.notes })}</p>}
                 </div>
-                <div className="flex gap-1">
-                  <Button variant="ghost" size="icon-sm" aria-label={t("account.addresses.edit")} onClick={() => openEdit(a.id)}>
-                    <Pencil className="size-4" />
+                <div className="flex shrink-0 gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={t("account.addresses.edit")}
+                    onClick={() => openEdit(a.id)}
+                    className="relative size-8 text-muted-text after:absolute after:-inset-1.5 hover:text-brand-ink"
+                  >
+                    <Pencil aria-hidden className="size-4" />
                   </Button>
-                  <Button variant="ghost" size="icon-sm" aria-label={t("account.addresses.delete")} onClick={() => handleRemove(a.id)}>
-                    <Trash2 className="size-4" />
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label={t("account.addresses.delete")}
+                    onClick={() => handleRemove(a.id)}
+                    className="relative size-8 text-muted-text after:absolute after:-inset-1.5 hover:text-brand-ink"
+                  >
+                    <Trash2 aria-hidden className="size-4" />
                   </Button>
                 </div>
               </div>
               {!a.is_default && (
-                <Button variant="outline" size="sm" onClick={() => handleSetDefault(a.id)}>
+                <Button variant="outline" size="sm" onClick={() => handleSetDefault(a.id)} className="ml-[52px]">
                   {t("account.addresses.setDefault")}
                 </Button>
               )}

@@ -7,14 +7,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 
 import { useRequireAuth } from "@/lib/hooks/use-require-auth"
+import { useT } from "@/lib/i18n/provider"
 import { useCartStore } from "@/lib/store/cart"
 import { placeOrder } from "@/lib/services/checkout"
 import { checkoutSchema, type CheckoutValues } from "@/components/checkout/checkout-schema"
 import { CheckoutDeliverySection } from "@/components/checkout/checkout-delivery-section"
 import { CheckoutPaymentSection } from "@/components/checkout/checkout-payment-section"
 import { CheckoutReviewSection } from "@/components/checkout/checkout-review-section"
+import { CheckoutSteps } from "@/components/checkout/checkout-step"
 
 function CheckoutContent() {
+  const t = useT()
   const { user, ready } = useRequireAuth("/login?redirect=/checkout")
   const router = useRouter()
   const items = useCartStore((s) => s.items)
@@ -70,13 +73,17 @@ function CheckoutContent() {
         method="post"
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start"
+        className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8"
       >
         <div className="space-y-6">
+          <CheckoutSteps
+            label={t("checkout.steps.label")}
+            steps={[t("checkout.steps.delivery"), t("checkout.steps.payment"), t("checkout.steps.review")]}
+          />
           <CheckoutDeliverySection />
           <CheckoutPaymentSection />
         </div>
-        <div className="lg:sticky lg:top-32">
+        <div className="lg:sticky lg:top-36">
           <CheckoutReviewSection submitError={submitError} isSubmitting={isSubmitting} />
         </div>
       </form>

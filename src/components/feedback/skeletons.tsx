@@ -115,7 +115,7 @@ function OrderDetailSkeleton() {
         <Skeleton className="h-7 w-64 max-w-full" />
         <Skeleton className="h-4 w-40" />
       </div>
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="space-y-6">
           <Card className="space-y-3">
             <Skeleton className="h-5 w-24" />
@@ -152,11 +152,11 @@ function OrderDetailSkeleton() {
 function CartSkeleton() {
   return (
     <LoadingRegion>
-      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-        <div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
+        <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex gap-4 border-b border-border py-4 last:border-b-0">
-              <Skeleton className="size-20 shrink-0 rounded-image sm:size-24" />
+            <div key={i} className="flex gap-3 rounded-card border border-border bg-surface p-3 sm:gap-4 sm:p-4">
+              <Skeleton className="size-[72px] shrink-0 rounded-image sm:size-24" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-48 max-w-full" />
                 <Skeleton className="h-4 w-24" />
@@ -180,8 +180,9 @@ function CartSkeleton() {
 function CheckoutSkeleton() {
   return (
     <LoadingRegion>
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="space-y-6">
+          <Skeleton className="h-12 w-full max-w-md" />
           <Card className="space-y-4">
             <Skeleton className="h-5 w-40" />
             {Array.from({ length: 4 }).map((_, i) => (

@@ -4,8 +4,9 @@ import { cn } from "cn"
 // A labelled native <select> with its validation message; wired the same way
 // as FormField (aria-describedby + a live region for the message).
 //
-// Below `lg` it matches the text fields: 44px tall with 16px text (iOS zooms
-// in on any field whose text is smaller). The desktop size is unchanged.
+// It matches the text fields: 44px tall on the white field colour with the
+// control radius, and 16px text below `lg` (iOS zooms in on any field whose
+// text is smaller).
 function FormSelectField({
   id,
   label,
@@ -36,7 +37,7 @@ function FormSelectField({
         aria-required={required || undefined}
         aria-describedby={error ? errorId : undefined}
         className={cn(
-          "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 max-lg:h-11 max-lg:rounded-xl max-lg:text-base"
+          "h-11 w-full rounded-(--radius-control) border border-input bg-card px-3 text-sm text-charcoal transition-colors outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 max-lg:text-base"
         )}
         {...registration}
       >

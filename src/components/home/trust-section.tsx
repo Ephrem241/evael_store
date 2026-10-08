@@ -1,40 +1,53 @@
-import { Banknote, Headset, ShieldCheck, Truck } from "lucide-react"
+import { Banknote, ShieldCheck, Truck } from "lucide-react"
 
 import { getT } from "@/lib/i18n/server"
 import type { MessageKey } from "@/lib/i18n/translator"
+import { Container } from "@/components/layout/container"
+import { EthiopiaFlag } from "@/components/layout/ethiopia-flag"
 
-// The compact strip right under the hero: four plain statements, worded
-// without promises the shop can't keep (no "guaranteed", no delivery times —
-// the same rule as the announcement bar). Cash on Delivery is how checkout
-// really takes payment (services/payment.ts).
-const items: { icon: typeof ShieldCheck; title: MessageKey; description: MessageKey }[] = [
+// The strip right under the hero: four plain statements, worded without
+// promises the shop can't keep (no "guaranteed", no delivery times — the same
+// rule as the announcement bar). Cash on Delivery is how checkout really takes
+// payment (services/payment.ts).
+const items: { icon: typeof ShieldCheck | "flag"; title: MessageKey; description: MessageKey }[] = [
   { icon: Truck, title: "home.trust.fastTitle", description: "home.trust.fastText" },
-  { icon: Banknote, title: "home.trust.codTitle", description: "home.trust.codText" },
   { icon: ShieldCheck, title: "home.trust.secureTitle", description: "home.trust.secureText" },
-  { icon: Headset, title: "home.trust.supportTitle", description: "home.trust.supportText" },
+  { icon: Banknote, title: "home.trust.codTitle", description: "home.trust.codText" },
+  { icon: "flag", title: "home.trust.localTitle", description: "home.trust.localText" },
 ]
 
+// A full-width subtle band with four equal cells divided by hairlines. Desktop:
+// the icon beside a 13px title and a 12px line. Phones: the icon over the
+// title (two lines at most), the line left out.
 async function TrustSection() {
   const t = await getT()
 
   return (
-    <section aria-label={t("home.trustLabel")}>
-      <ul className="grid grid-cols-4 gap-px overflow-hidden rounded-card border border-border bg-border shadow-soft">
-        {items.map((item) => (
-          <li
-            key={item.title}
-            className="flex flex-col items-center gap-2 bg-card px-1.5 py-3.5 text-center lg:flex-row lg:gap-4 lg:px-5 lg:py-5 lg:text-left"
-          >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand lg:size-11">
-              <item.icon aria-hidden className="size-5 lg:size-[22px]" strokeWidth={1.75} />
-            </span>
-            <div className="min-w-0">
-              <p className="text-[11px] leading-tight font-semibold text-charcoal sm:text-[13px] lg:text-sm">{t(item.title)}</p>
-              <p className="hidden text-[13px] leading-snug text-muted-text lg:block">{t(item.description)}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <section aria-label={t("home.trustLabel")} className="relative left-1/2 w-screen -translate-x-1/2 bg-subtle">
+      <Container>
+        <ul className="grid grid-cols-4 divide-x divide-border">
+          {items.map((item) => (
+            <li
+              key={item.title}
+              className="flex flex-col items-center gap-1.5 px-1 py-3.5 text-center lg:flex-row lg:justify-center lg:gap-3.5 lg:px-4 lg:py-5 lg:text-left"
+            >
+              {item.icon === "flag" ? (
+                <span className="flex size-6 items-center justify-center lg:size-7">
+                  <EthiopiaFlag className="h-3 w-6 lg:h-3.5 lg:w-7" />
+                </span>
+              ) : (
+                <item.icon aria-hidden className="size-6 shrink-0 text-brand lg:size-7" strokeWidth={1.5} />
+              )}
+              <div className="min-w-0">
+                <p className="line-clamp-2 text-[11px] leading-tight font-semibold text-charcoal lg:text-[13px]">
+                  {t(item.title)}
+                </p>
+                <p className="mt-0.5 text-xs text-muted-text max-lg:hidden">{t(item.description)}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Container>
     </section>
   )
 }

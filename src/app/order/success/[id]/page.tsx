@@ -18,7 +18,7 @@ export default async function OrderSuccessPage({
   const { id } = await params
 
   return (
-    <div className="py-8">
+    <div className="py-6 lg:py-8">
       <OrderSuccessContent orderId={id} />
     </div>
   )

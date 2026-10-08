@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { BadgePercent, Flame, SlidersHorizontal, Star, Timer } from "lucide-react"
+import { BadgePercent, SlidersHorizontal } from "lucide-react"
 
 import { getT } from "@/lib/i18n/server"
 import { pageMetadata } from "@/lib/seo/metadata"
 import { isOnSale, type ProductWithCategory } from "@/lib/services/catalog"
 import { getFeaturedProducts, getFlashDeals } from "@/lib/services/catalog-queries"
-import { PageHeader } from "@/components/layout/page-header"
+import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 import { ProductGrid } from "@/components/product/product-grid"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { SectionHeading } from "@/components/home/section-heading"
@@ -45,16 +45,17 @@ export default async function DealsPage() {
   limited.forEach((p) => taken.add(p.id))
   const rest = deals.filter((p) => !taken.has(p.id))
 
-  const groups: { id: string; title: string; icon: typeof Flame; products: ProductWithCategory[] }[] = [
-    { id: "featured-offers", title: t("catalog.dealsPage.featured"), icon: Star, products: featuredOffers },
-    { id: "limited-stock", title: t("catalog.dealsPage.limited"), icon: Timer, products: limited },
-    { id: "on-sale", title: t("catalog.dealsPage.onSale"), icon: Flame, products: rest },
+  const groups: { id: string; title: string; products: ProductWithCategory[] }[] = [
+    { id: "featured-offers", title: t("catalog.dealsPage.featured"), products: featuredOffers },
+    { id: "limited-stock", title: t("catalog.dealsPage.limited"), products: limited },
+    { id: "on-sale", title: t("catalog.dealsPage.onSale"), products: rest },
   ]
 
   return (
     <div className="space-y-10 py-6 lg:space-y-14 lg:py-8">
       <PageHeader
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("nav.deals") }]}
+        mobileActions={<SearchAndCartActions />}
         title={t("nav.deals")}
         description={t("home.flashSubtitle")}
         aside={
@@ -94,7 +95,6 @@ export default async function DealsPage() {
               <SectionHeading
                 id={`${group.id}-heading`}
                 title={group.title}
-                icon={<group.icon aria-hidden className="size-6 shrink-0 text-brand" />}
               />
               <ProductGrid products={group.products} eagerCount={i === 0 ? 4 : 0} />
             </section>

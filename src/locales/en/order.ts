@@ -24,11 +24,12 @@ export const order = {
   notFoundShort: "We couldn't find this order. It may belong to a different account.",
   viewOrders: "View your orders",
   back: "Back to orders",
+  details: "Order details",
   title: "Order #{number}",
   placed: "Placed {date}",
   success: {
     title: "Order placed successfully.",
-    eta: "Most orders are delivered within 2–5 business days, depending on your city.",
+    next: "We deliver across Ethiopia. You can follow your order from your account, and you pay in cash when it arrives.",
     track: "Track order",
     continue: "Continue shopping",
   },

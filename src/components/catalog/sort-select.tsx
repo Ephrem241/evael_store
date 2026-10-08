@@ -30,7 +30,7 @@ function SortSelect({
       onCommit={(next) => router.push(buildSortUrl(basePath, rawParams, next))}
       aria-label={t("catalog.sort.label")}
       className={cn(
-        "h-10 rounded-xl border border-input bg-card px-3 text-sm text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+        "h-10 rounded-(--radius-control) border border-input bg-card px-3 text-sm text-charcoal outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/35",
         className
       )}
     >

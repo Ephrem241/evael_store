@@ -23,7 +23,7 @@ const SHORTCUTS: { href: string; label: MessageKey; icon: typeof Package }[] = [
 
 // The top of /account: a greeting, the latest orders (their real status and
 // total, each a link to the order) and one-tap shortcuts to the other parts
-// of the account. The profile form follows below it on the same page.
+// of the account. (The profile is edited under Settings.)
 function AccountOverview({ user }: { user: AuthUser }) {
   const t = useT()
   const { data: orders, loading } = useMyOrders(user.id)
@@ -33,18 +33,18 @@ function AccountOverview({ user }: { user: AuthUser }) {
   return (
     <div className="space-y-6">
       <section className="rounded-card border border-brand/15 bg-brand-soft px-5 py-5 sm:px-6">
-        <p className="text-xl font-bold tracking-tight text-charcoal">{t("account.overview.greeting", { name: firstName })}</p>
+        <p className="font-display text-2xl font-bold text-brand-deepest">{t("account.overview.greeting", { name: firstName })}</p>
         <p className="mt-1 text-sm text-charcoal/75">{t("account.overview.intro")}</p>
       </section>
 
-      <section aria-labelledby="recent-orders-heading" className="rounded-card border border-border bg-card shadow-soft">
+      <section aria-labelledby="recent-orders-heading" className="rounded-card border border-border bg-surface shadow-soft">
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
-          <h2 id="recent-orders-heading" className="text-lg font-bold tracking-tight text-charcoal">
+          <h2 id="recent-orders-heading" className="font-display text-xl font-bold text-charcoal">
             {t("account.overview.recentOrders")}
           </h2>
           <Link
             href="/account/orders"
-            className="inline-flex items-center gap-1 rounded-md text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11"
+            className="inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring max-lg:min-h-11"
           >
             {t("account.overview.allOrders")}
             <ArrowRight aria-hidden className="size-4" />
@@ -60,7 +60,7 @@ function AccountOverview({ user }: { user: AuthUser }) {
             <p className="text-sm text-muted-text">{t("account.orders.emptyText")}</p>
             <Link
               href="/shop"
-              className="text-sm font-semibold text-brand-ink underline-offset-4 hover:underline"
+              className="rounded-sm text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
             >
               {t("account.orders.startShopping")}
             </Link>
@@ -71,7 +71,7 @@ function AccountOverview({ user }: { user: AuthUser }) {
               <li key={order.id}>
                 <Link
                   href={`/orders/${order.id}`}
-                  className="flex items-center gap-3 px-5 py-3.5 transition-colors outline-none hover:bg-subtle/60 focus-visible:bg-subtle"
+                  className="flex items-center gap-3 px-5 py-3.5 transition-colors outline-none hover:bg-subtle/60 focus-visible:bg-subtle focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
                 >
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-subtle text-brand">
                     <Package aria-hidden className="size-5" strokeWidth={1.75} />
@@ -83,7 +83,7 @@ function AccountOverview({ user }: { user: AuthUser }) {
                     <span className="block text-xs text-muted-text">{formatOrderDate(order.created_at, t.locale)}</span>
                   </span>
                   <span className="flex flex-col items-end gap-1">
-                    <span className="text-sm font-semibold text-charcoal">{formatPrice(order.total, t)}</span>
+                    <span className="text-sm font-bold text-charcoal tabular-nums">{formatPrice(order.total, t)}</span>
                     <OrderStatus status={order.status} />
                   </span>
                   <ChevronRight aria-hidden className="size-4 shrink-0 text-muted-text max-sm:hidden" />
@@ -101,7 +101,7 @@ function AccountOverview({ user }: { user: AuthUser }) {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="flex h-full flex-col items-start gap-3 rounded-card border border-border bg-card p-4 text-sm font-semibold text-charcoal shadow-soft transition-[border-color,box-shadow] outline-none hover:border-brand/40 hover:shadow-lift focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="flex h-full flex-col items-start gap-3 rounded-card border border-border bg-surface p-4 text-sm font-semibold text-charcoal shadow-soft transition-[border-color,box-shadow] outline-none hover:border-brand/40 hover:shadow-lift focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span className="flex size-10 items-center justify-center rounded-full bg-brand-soft text-brand">
                   <item.icon aria-hidden className="size-5" strokeWidth={1.75} />

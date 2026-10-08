@@ -207,7 +207,7 @@ function DealPopup({
                   }}
                 >
                   <m.div
-                    className="pointer-events-auto relative flex max-h-[75dvh] w-full flex-col overflow-y-auto overscroll-contain rounded-[1.75rem] bg-[linear-gradient(165deg,color-mix(in_srgb,var(--color-footer),var(--color-brand)_14%)_0%,var(--color-footer)_100%)] text-white shadow-[0_28px_70px_-18px_rgb(0_0_0/0.6)] ring-1 ring-brand/25 outline-none sm:max-h-[min(600px,calc(100dvh-2rem))] sm:w-[480px]"
+                    className="pointer-events-auto relative flex max-h-[75dvh] w-full flex-col overflow-y-auto overscroll-contain rounded-[1.75rem] bg-[linear-gradient(165deg,color-mix(in_srgb,var(--color-footer),var(--color-brand)_14%)_0%,var(--color-footer)_100%)] text-white shadow-(--shadow-popup) ring-1 ring-gold/25 outline-none sm:max-h-[min(600px,calc(100dvh-2rem))] sm:w-[480px]"
                     initial={{ opacity: 0, scale: 0.96, y: 16 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97, y: 8, transition: { duration: 0.18, ease: "easeIn" } }}
@@ -217,7 +217,7 @@ function DealPopup({
                     <DialogPrimitive.Close asChild>
                       <button
                         type="button"
-                        className="absolute top-5 right-5 z-10 flex size-11 items-center justify-center rounded-full bg-charcoal/85 text-white ring-1 ring-white/20 backdrop-blur-sm transition-[background-color,scale] outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-brand active:scale-95"
+                        className="absolute top-5 right-5 z-10 flex size-11 items-center justify-center rounded-full bg-charcoal/85 text-white ring-1 ring-white/20 backdrop-blur-sm transition-[background-color,scale] outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-gold active:scale-95"
                       >
                         <XIcon aria-hidden className="size-5" />
                         <span className="sr-only">{t("common.close")}</span>
@@ -237,8 +237,8 @@ function DealPopup({
                         className="pointer-events-none absolute inset-0 bg-linear-to-t from-charcoal/75 via-charcoal/10 to-transparent"
                       />
                       {active && (
-                        <p className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-charcoal/85 px-3 py-1 text-xs font-medium text-white ring-1 ring-brand/40">
-                          <Timer aria-hidden className="size-3.5 text-brand" />
+                        <p className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-charcoal/85 px-3 py-1 text-xs font-medium text-white ring-1 ring-gold/40">
+                          <Timer aria-hidden className="size-3.5 text-gold" />
                           {t("home.deals.limitedTime")}
                         </p>
                       )}
@@ -246,7 +246,7 @@ function DealPopup({
 
                     <div className="px-6 pt-5 pb-6 sm:px-7 sm:pb-5">
                       {active && (
-                        <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-brand uppercase">{eyebrow}</p>
+                        <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{eyebrow}</p>
                       )}
                       <DialogPrimitive.Title className="font-display text-[1.75rem] leading-[1.1] font-bold tracking-tight sm:text-4xl">
                         {active ? headline : t("home.deals.ended")}
@@ -264,12 +264,12 @@ function DealPopup({
                             {clock.map((part) => (
                               <div
                                 key={part.label}
-                                className="flex flex-1 flex-col items-center rounded-xl bg-white/[0.07] py-2.5 ring-1 ring-brand/30 ring-inset"
+                                className="flex flex-1 flex-col items-center rounded-xl bg-white/[0.07] py-2.5 ring-1 ring-gold/30 ring-inset"
                               >
                                 <span className="text-2xl leading-none font-semibold tabular-nums sm:text-[1.75rem]">
                                   {String(part.value).padStart(2, "0")}
                                 </span>
-                                <span className="mt-1.5 text-[11px] leading-none text-brand">{part.label}</span>
+                                <span className="mt-1.5 text-[11px] leading-none text-gold">{part.label}</span>
                               </div>
                             ))}
                           </div>
@@ -282,7 +282,7 @@ function DealPopup({
                             <Button
                               size="lg"
                               asChild
-                              className="w-full focus-visible:border-brand focus-visible:ring-brand/60"
+                              className="w-full focus-visible:border-gold focus-visible:ring-gold/60"
                             >
                               <Link href={ctaHref} onClick={() => setOpen(false)}>
                                 {ctaLabel}
@@ -293,7 +293,7 @@ function DealPopup({
                               <Button
                                 size="lg"
                                 variant="ghost"
-                                className="w-full text-white hover:bg-white/10 hover:text-white focus-visible:border-brand focus-visible:ring-brand/60 active:bg-white/15"
+                                className="w-full text-white hover:bg-white/10 hover:text-white focus-visible:border-gold focus-visible:ring-gold/60 active:bg-white/15"
                               >
                                 {t("home.dealPopup.notNow")}
                               </Button>
@@ -303,7 +303,7 @@ function DealPopup({
                           <DialogPrimitive.Close asChild>
                             <Button
                               size="lg"
-                              className="w-full focus-visible:border-brand focus-visible:ring-brand/60"
+                              className="w-full focus-visible:border-gold focus-visible:ring-gold/60"
                             >
                               {t("common.close")}
                             </Button>
@@ -335,7 +335,7 @@ function DealPopup({
               setOpen(true)
             }}
             className={cn(
-              "fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-30 flex h-11 items-center gap-1.5 rounded-full bg-brand-strong pr-4 pl-3.5 text-sm font-semibold text-white shadow-lift ring-1 ring-brand/50 transition-colors outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-brand active:bg-brand-deep lg:right-6 lg:bottom-6",
+              "fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-30 flex h-11 items-center gap-1.5 rounded-full bg-brand-strong pr-4 pl-3.5 text-sm font-semibold text-white shadow-lift ring-1 ring-gold/50 transition-colors outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-gold active:bg-brand-deep lg:right-6 lg:bottom-6",
               open && "pointer-events-none"
             )}
             initial={{ opacity: 0, y: 12, scale: 0.9 }}

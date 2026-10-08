@@ -16,17 +16,19 @@ export interface EmailContext {
   shopEmail: string
 }
 
-// The storefront palette (globals.css), as hex for email clients. White text
-// sits on the strong orange (4.5:1), as on the site's buttons.
+// The storefront palette (globals.css), as hex for email clients, which can't
+// read CSS variables (one of the two documented places outside globals.css
+// with hex colours; the other is lib/brand-mark.ts). White text on the dark
+// burgundy band is 12.3:1, on the burgundy button 10.9:1.
 const COLORS = {
-  page: "#FAFAF7",
+  page: "#FBF6F0",
   card: "#FFFFFF",
-  band: "#C94F20",
+  band: "#6C0C1E",
   bandText: "#FFFFFF",
-  text: "#171717",
-  muted: "#646B78",
-  line: "#E8E6E1",
-  button: "#C94F20",
+  text: "#1A1414", // i18n-ignore: a colour (the text colour), not words
+  muted: "#66605C",
+  line: "#EBE2D8",
+  button: "#7E061E",
 }
 
 const translators: Record<Locale, Translator> = {

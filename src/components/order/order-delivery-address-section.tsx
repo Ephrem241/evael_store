@@ -8,9 +8,9 @@ function OrderDeliveryAddressSection({ address }: { address: OrderDeliveryAddres
   const t = useT()
 
   return (
-    <section className="space-y-2 rounded-card border border-border bg-card p-5 text-sm">
-      <h2 className="font-medium text-charcoal">{t("order.address.title")}</h2>
-      <p className="text-charcoal">
+    <section className="space-y-2 rounded-card border border-border bg-surface p-5 shadow-soft sm:p-6 text-sm">
+      <h2 className="font-display text-lg font-bold text-charcoal">{t("order.address.title")}</h2>
+      <p className="leading-relaxed text-charcoal">
         {address.full_name}, {address.phone}
         <br />
         {address.address}, {address.woreda}, {address.sub_city}, {cityLabel(address.city, t)}

@@ -35,7 +35,11 @@ export default function GlobalError({ error, retry }: { error: Error & { digest?
       >
         <title>{MESSAGE.en.title}</title>
         <main style={{ maxWidth: 480, padding: 24, textAlign: "center" }}>
-          <h1 style={{ fontSize: 24, lineHeight: 1.3, margin: "0 0 12px" }}>{MESSAGE.en.title}</h1>
+          {/* The gold tick over a heading in a serif (the display font is not loaded here). */}
+          <div aria-hidden style={{ width: 40, height: 2, borderRadius: 2, background: BRAND_COLORS.gold, margin: "0 auto 20px" }} />
+          <h1 style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 28, lineHeight: 1.25, margin: "0 0 12px" }}>
+            {MESSAGE.en.title}
+          </h1>
           <p lang="am" style={{ fontSize: 18, lineHeight: 1.5, margin: "0 0 28px" }}>
             {MESSAGE.am.title}
           </p>
@@ -46,7 +50,7 @@ export default function GlobalError({ error, retry }: { error: Error & { digest?
               background: BRAND_COLORS.primaryStrong,
               color: BRAND_COLORS.white,
               border: 0,
-              borderRadius: 999,
+              borderRadius: 8,
               padding: "12px 28px",
               fontSize: 16,
               fontWeight: 600,

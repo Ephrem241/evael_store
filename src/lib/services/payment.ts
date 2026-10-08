@@ -60,3 +60,27 @@ export const paymentProviders: PaymentProvider[] = [
 export function getPaymentProvider(id: string): PaymentProvider | undefined {
   return paymentProviders.find((p) => p.id === id)
 }
+
+// Every way of paying the shop mentions — the home page's "Pay your way", the
+// cart's "We accept" — from this one list, so no two places can disagree.
+// Only Cash on Delivery is a real provider today (it follows the provider's
+// own `enabled`); the Ethiopian banks and wallet are shown as coming soon
+// until checkout can take them (then they get a provider above and turn
+// available here). Bank and wallet names are proper nouns, the same in both
+// languages; no logos are shown until their owners allow it.
+export interface PaymentMethod {
+  id: string
+  kind: "cash" | "wallet" | "bank"
+  available: boolean
+  /** A dictionary key (translated), or a proper noun shown as is. */
+  label: { key: MessageKey } | { name: string }
+}
+
+export const paymentMethods: PaymentMethod[] = [
+  { id: "cod", kind: "cash", available: cashOnDeliveryProvider.enabled, label: { key: "home.payments.cod" } },
+  { id: "telebirr", kind: "wallet", available: false, label: { name: "telebirr" } },
+  { id: "cbe", kind: "bank", available: false, label: { name: "CBE" } },
+  { id: "awash", kind: "bank", available: false, label: { name: "Awash Bank" } },
+  { id: "dashen", kind: "bank", available: false, label: { name: "Dashen Bank" } },
+  { id: "abyssinia", kind: "bank", available: false, label: { name: "Bank of Abyssinia" } },
+]

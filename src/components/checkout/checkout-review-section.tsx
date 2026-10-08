@@ -74,7 +74,7 @@ function CheckoutReviewSection({
       action={
         <Link
           href="/cart"
-          className="rounded-md text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
+          className="rounded-sm text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
         >
           {t("checkout.review.editCart")}
         </Link>
@@ -87,7 +87,7 @@ function CheckoutReviewSection({
       </div>
 
       {insufficientStock.length > 0 && (
-        <p className="flex items-start gap-2 rounded-lg bg-warning/10 p-3 text-sm text-warning-text">
+        <p className="flex items-start gap-2 rounded-(--radius-control) bg-warning/10 p-3 text-sm text-warning-text">
           <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
           {t("checkout.review.insufficientStock", {
             names: insufficientStock.map(({ product }) => nameOf(product, t.locale)).join(", "),
@@ -95,7 +95,7 @@ function CheckoutReviewSection({
         </p>
       )}
       {unavailableLines.length > 0 && (
-        <p className="flex items-start gap-2 rounded-lg bg-warning/10 p-3 text-sm text-warning-text">
+        <p className="flex items-start gap-2 rounded-(--radius-control) bg-warning/10 p-3 text-sm text-warning-text">
           <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
           {t("checkout.review.unavailable")}
         </p>

@@ -7,22 +7,33 @@ export const cart = {
   startShopping: "Start shopping",
   continueShopping: "Continue shopping",
   // "Save for later": the item moves from the cart to the wishlist.
-  moveToWishlist: "Move to wishlist",
   moveItemToWishlist: "Move {name} to your wishlist",
   movedToWishlist: "Moved to your wishlist.",
   viewWishlist: "View wishlist",
   unavailable: "This item is no longer available.",
   remove: "Remove",
   removeItem: "Remove {name} from cart",
+  // The toast after a remove; Undo puts the item back. {name} is the product's name.
+  removed: "{name} was removed from your cart.",
+  undo: "Undo",
+  // The trash button over the cart, and the question it asks first.
+  clear: "Clear cart",
+  clearTitle: "Clear your cart?",
+  clearText: "Every item will be removed from your cart.",
+  cleared: "Your cart is empty now.",
+  // Under the checkout button: how an order can be paid.
+  weAccept: "We Accept",
   summary: {
     title: "Order summary",
     subtotal: "Subtotal",
+    // {count} is how many items (quantities added up).
+    subtotalItems: { one: "Subtotal ({count} item)", other: "Subtotal ({count} items)" },
     saving: "You're saving",
-    delivery: "Delivery",
+    delivery: "Delivery fee",
     calculatedAtCheckout: "Calculated at checkout",
     total: "Total",
     deliveryAdded: "Delivery is added at checkout.",
-    continue: "Continue to checkout",
+    continue: "Proceed to Checkout",
     free: "Free",
     // {amount} is an already-formatted price. "Over" means strictly above it.
     freeDeliveryOffer: "Free delivery on orders over {amount}.",
@@ -36,6 +47,7 @@ export const cart = {
 export const checkout = {
   title: "Checkout",
   subtitle: "Review your delivery and payment details.",
+  steps: { label: "Checkout steps", delivery: "Delivery", payment: "Payment", review: "Review" },
   delivery: {
     title: "Delivery information",
     fullName: "Full name",

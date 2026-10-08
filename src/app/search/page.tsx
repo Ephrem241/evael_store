@@ -8,6 +8,9 @@ import { getT } from "@/lib/i18n/server"
 import { ProductListing } from "@/components/catalog/product-listing"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { PageHeader } from "@/components/layout/page-header"
+import { CartButton } from "@/components/layout/cart-button"
+import { SearchBar } from "@/components/navigation/search-bar"
+import { SectionHeading } from "@/components/home/section-heading"
 import { ProductGrid } from "@/components/product/product-grid"
 import { CategoryChip } from "@/components/product/category-chip"
 import { Button } from "@/components/ui/button"
@@ -40,7 +43,12 @@ export default async function SearchPage({
   if (!q) {
     return (
       <div className="space-y-8 py-6 lg:py-8">
-        <PageHeader breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]} title={t("catalog.searchTitle")} />
+        <PageHeader
+          breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: t("catalog.searchTitle") }]}
+          title={t("catalog.searchTitle")}
+          mobileActions={<CartButton />}
+        />
+        <SearchBar className="lg:hidden" />
         <EmptyState
           icon={Search}
           title={t("catalog.searchEmptyTitle")}
@@ -66,7 +74,8 @@ export default async function SearchPage({
     const [categories, popular] = await Promise.all([getCategories(), getPopularProducts(8)])
     return (
       <div className="space-y-10 py-6 lg:py-8">
-        <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
+        <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} mobileActions={<CartButton />} />
+        <SearchBar defaultQuery={q} className="lg:hidden" />
         <EmptyState
           icon={SearchX}
           title={t("catalog.searchNoMatchTitle")}
@@ -79,9 +88,7 @@ export default async function SearchPage({
         />
         {categories.length > 0 && (
           <section aria-labelledby="search-categories-heading" className="space-y-4">
-            <h2 id="search-categories-heading" className="text-xl font-bold tracking-tight text-charcoal">
-              {t("catalog.searchBrowseCategories")}
-            </h2>
+            <SectionHeading id="search-categories-heading" title={t("catalog.searchBrowseCategories")} />
             <div className="flex flex-wrap gap-4">
               {categories.map((category) => (
                 <CategoryChip key={category.id} category={category} t={t} />
@@ -91,9 +98,7 @@ export default async function SearchPage({
         )}
         {popular.length > 0 && (
           <section aria-labelledby="search-popular-heading" className="space-y-4">
-            <h2 id="search-popular-heading" className="text-xl font-bold tracking-tight text-charcoal">
-              {t("home.popularTitle")}
-            </h2>
+            <SectionHeading id="search-popular-heading" title={t("home.popularTitle")} />
             <ProductGrid products={popular} />
           </section>
         )}
@@ -103,7 +108,8 @@ export default async function SearchPage({
 
   return (
     <div className="space-y-8 py-6 lg:py-8">
-      <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} />
+      <PageHeader breadcrumb={breadcrumb} title={t("catalog.searchResultsFor", { query: q })} mobileActions={<CartButton />} />
+      <SearchBar defaultQuery={q} className="lg:hidden" />
       <ProductListing
         products={result.products}
         total={result.total}

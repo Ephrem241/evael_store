@@ -20,14 +20,25 @@ function CheckoutOrderItem({ line, product }: ResolvedCartLine) {
 
   return (
     <div className="flex items-center gap-3 border-b border-border py-3 last:border-b-0">
-      <Link href={`/product/${product.slug}`} className="w-14 shrink-0">
-        <ImagePlaceholder seed={product.id} icon={Icon} label={name} imageUrl={product.image_url} sizes="56px" />
+      <Link
+        href={`/product/${product.slug}`}
+        className="size-14 shrink-0 overflow-hidden rounded-image bg-subtle outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <ImagePlaceholder
+          seed={product.id}
+          icon={Icon}
+          label={name}
+          imageUrl={product.image_url}
+          sizes="56px"
+          aspectClassName="size-full"
+          className="rounded-none"
+        />
       </Link>
-      <div className="flex-1">
-        <p className="text-sm font-medium text-charcoal">{name}</p>
+      <div className="min-w-0 flex-1">
+        <p className="line-clamp-2 text-sm font-medium text-charcoal">{name}</p>
         <p className="text-xs text-muted-text">{t("checkout.review.qty", { count: line.quantity })}</p>
       </div>
-      <Price amount={product.price * line.quantity} t={t} />
+      <Price amount={product.price * line.quantity} t={t} className="text-sm" />
     </div>
   )
 }

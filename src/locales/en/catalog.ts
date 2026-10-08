@@ -21,6 +21,10 @@ export const catalog = {
     title: "Filters",
     open: "Filter",
     clearAll: "Clear all",
+    // The row of quick filter chips over a listing on phones.
+    quick: "Quick filters",
+    all: "All",
+    inStock: "In stock",
     apply: "Apply",
     category: "Category",
     allCategories: "All categories",
@@ -55,6 +59,7 @@ export const catalog = {
   noResults: "No results",
   emptyTitle: "No products found.",
   emptyText: "Try another search or explore our categories.",
+  browseCategories: "Browse all categories",
   // /deals: every discounted product, grouped.
   dealsPage: {
     featured: "Featured Offers",
@@ -90,6 +95,8 @@ export const product = {
   addedToCart: "Added to your cart.",
   viewCart: "View cart",
   rated: "Rated {value} out of 5",
+  // The red sale pill on the product page and in the cart. {percent} is a whole number.
+  percentOff: "{percent}% OFF",
   favorites: {
     add: "Add to favorites",
     remove: "Remove from favorites",
@@ -105,14 +112,15 @@ export const product = {
     view: "{name} — view {index}",
     thumb: "View {index}",
     // The small "2/5" over the photos on phones (which photo is showing, of how many).
-    counter: "{index}/{total}",
   },
   // The product's description, a section of its own on phones (it can be folded away).
   description: {
     title: "Description",
   },
+  // The product page's tabs: Description, Specifications, Reviews.
+  tabsLabel: "Product information",
   details: {
-    title: "Details",
+    title: "Specifications",
     sku: "SKU",
     category: "Category",
     availability: "Availability",
@@ -121,6 +129,14 @@ export const product = {
     title: "Delivery",
     fees: "Delivery fees are calculated at checkout based on your delivery address.",
     dispatch: "Most orders are prepared and dispatched within a few business days.",
+  },
+  // The two small facts under the buy buttons. {amount} is a formatted price.
+  info: {
+    deliveryTitle: "Delivery",
+    deliveryFee: "Fee shown at checkout",
+    deliveryFree: "Free over {amount}",
+    codTitle: "Cash on Delivery",
+    codText: "Available",
   },
   reviews: {
     title: "Reviews",

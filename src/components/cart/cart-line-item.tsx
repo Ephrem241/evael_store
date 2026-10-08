@@ -19,10 +19,20 @@ import { DiscountBadge } from "@/components/product/discount-badge"
 import { QuantitySelector } from "@/components/product/quantity-selector"
 import { Button } from "@/components/ui/button"
 
+// Phones: each small button is 32px with an invisible ::after reaching 44px.
+const smallButton = "relative size-8 text-muted-text after:absolute after:-inset-1.5 hover:text-brand-ink"
+
+// One cart line as a white card: the photo on the left (72px on phones,
+// 96px from `sm`); the name, category and prices; the red "% OFF" pill in the
+// top-right corner with the heart under it ("Save for later": the item moves
+// to the wishlist and leaves the cart); and the quantity stepper with the
+// line's total and the remove button along the bottom. Removing says so in a
+// toast whose Undo puts the item back.
 function CartLineItem({ line, product }: { line: CartLine; product: ProductWithCategory }) {
   const t = useT()
   const setQuantity = useCartStore((s) => s.setQuantity)
   const removeItem = useCartStore((s) => s.removeItem)
+  const addItem = useCartStore((s) => s.addItem)
   const router = useRouter()
   const isFavorited = useFavoritesStore((s) => s.ids.includes(line.productId))
   const toggleFavorite = useFavoritesStore((s) => s.toggle)
@@ -31,8 +41,6 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
   const lineSubtotal = product.price * line.quantity
   const name = nameOf(product, t.locale)
 
-  // "Save for later": the item goes to the wishlist (the shopper's saved
-  // products, kept with their account) and leaves the cart.
   function moveToWishlist() {
     if (!isFavorited) toggleFavorite(product.id)
     removeItem(product.id)
@@ -41,68 +49,83 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
     })
   }
 
-  // Phones: a compact row — an 80px photo, the name in at most two lines, and
-  // tighter spacing; from `sm` up the photo is 112px as before.
+  function remove() {
+    const quantity = line.quantity
+    removeItem(product.id)
+    toast(t("cart.removed", { name }), {
+      action: { label: t("cart.undo"), onClick: () => addItem(product.id, quantity) },
+    })
+  }
+
   return (
-    <div className="flex gap-4 rounded-card border border-border bg-card p-3 shadow-soft max-lg:gap-3 sm:p-4">
+    <article className="flex gap-3 rounded-card border border-border bg-surface p-3 shadow-soft sm:gap-4 sm:p-4">
       <Link
         href={`/product/${product.slug}`}
         tabIndex={-1}
         aria-hidden
-        className="w-20 shrink-0 self-start overflow-hidden rounded-xl bg-subtle sm:w-28"
+        className="size-[72px] shrink-0 self-start overflow-hidden rounded-image bg-subtle sm:size-24"
       >
-        <ImagePlaceholder seed={product.id} icon={Icon} label={name} decorative imageUrl={product.image_url} sizes="112px" />
+        <ImagePlaceholder
+          seed={product.id}
+          icon={Icon}
+          label={name}
+          decorative
+          imageUrl={product.image_url}
+          sizes="96px"
+          aspectClassName="size-full"
+          className="rounded-none"
+        />
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2">
-        <div className="flex items-start justify-between gap-3">
-          <div>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
             <Link
               href={`/product/${product.slug}`}
-              className="font-medium text-charcoal hover:text-brand-ink max-lg:line-clamp-2 max-lg:text-[15px]"
+              className="line-clamp-2 rounded-sm text-sm font-medium text-charcoal outline-none hover:text-brand-ink focus-visible:ring-2 focus-visible:ring-ring sm:text-[15px]"
             >
               {name}
             </Link>
             <p className="text-xs text-muted-text">{categoryNameOf(product, t.locale)}</p>
           </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            className="size-11 lg:size-8"
-            onClick={() => removeItem(product.id)}
-            aria-label={t("cart.removeItem", { name })}
-          >
-            <Trash2 />
-          </Button>
+          <div className="flex shrink-0 flex-col items-end gap-1">
+            <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} variant="sale" />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={moveToWishlist}
+              aria-label={t("cart.moveItemToWishlist", { name })}
+              className={smallButton}
+            >
+              <Heart aria-hidden className="size-4" />
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Price amount={product.price} t={t} />
+        <div className="flex flex-wrap items-baseline gap-x-2">
+          <Price amount={product.price} t={t} className="text-[0.9375rem] lg:text-base" />
           {hasDiscount && <Price amount={product.compare_at_price!} t={t} variant="compare" />}
-          <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} />
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <QuantitySelector
-            value={line.quantity}
-            onChange={(q) => setQuantity(product.id, q)}
-            max={product.stock}
-          />
-          <Price amount={lineSubtotal} t={t} className="text-charcoal" />
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1.5">
+          <QuantitySelector value={line.quantity} onChange={(q) => setQuantity(product.id, q)} max={product.stock} />
+          <div className="flex items-center gap-1.5">
+            <Price amount={lineSubtotal} t={t} className="text-sm text-charcoal" />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={remove}
+              aria-label={t("cart.removeItem", { name })}
+              className={smallButton}
+            >
+              <Trash2 aria-hidden className="size-4" />
+            </Button>
+          </div>
         </div>
-
-        <button
-          type="button"
-          onClick={moveToWishlist}
-          aria-label={t("cart.moveItemToWishlist", { name })}
-          className="inline-flex w-fit items-center gap-1.5 rounded-md text-sm font-medium text-muted-text transition-colors outline-none hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11"
-        >
-          <Heart aria-hidden className="size-4" />
-          {t("cart.moveToWishlist")}
-        </button>
       </div>
-    </div>
+    </article>
   )
 }
 

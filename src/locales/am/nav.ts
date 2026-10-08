@@ -2,7 +2,6 @@ import type { Dictionary } from "@/locales/en"
 
 export const nav: Dictionary["nav"] = {
   home: "መነሻ",
-  shop: "ሱቅ",
   categories: "ምድቦች",
   deals: "ቅናሾች",
   orders: "ትዕዛዞች",
@@ -17,19 +16,21 @@ export const nav: Dictionary["nav"] = {
   breadcrumb: "የገጽ መንገድ",
   language: "ቋንቋ",
   wishlist: "የምኞት ዝርዝር",
+  back: "ተመለስ",
+  menu: "ምናሌ",
+  openMenu: "ምናሌውን ክፈት",
+  tagline: "ዘመናዊ ግብይት። ለኢትዮጵያ የተሰራ።",
   shopAll: "ሁሉንም ይግዙ",
   skipToContent: "ወደ ዋናው ይዘት ዝለል",
   announcementsLabel: "የሱቅ ማስታወቂያዎች",
   announcement: {
     freeDelivery: "ከ{amount} በላይ ለሆኑ ትዕዛዞች ነፃ ማድረስ",
-    welcome: "ወደ {brand} እንኳን በደህና መጡ — የእርስዎ ታማኝ የመስመር ላይ ገበያ",
-    easyReturns: "ቀላል ተመላሽ",
-    securePayments: "ደህንነቱ የተጠበቀ ክፍያ",
+    delivery: "አሁን ይግዙ — በመላው ኢትዮጵያ እናደርሳለን።",
   },
 }
 
 export const search: Dictionary["search"] = {
-  placeholder: "ምርቶችን እና ምድቦችን ይፈልጉ...",
+  placeholder: "ምርቶችን፣ የንግድ ምልክቶችን እና ሌሎችንም ይፈልጉ…",
   label: "ምርቶችን ፈልግ",
   submit: "ፈልግ",
   recent: "የቅርብ ጊዜ ፍለጋዎች",
@@ -44,9 +45,7 @@ export const search: Dictionary["search"] = {
 }
 
 export const footer: Dictionary["footer"] = {
-  tagline: "በኢትዮጵያ ጥራት ያላቸው ምርቶችን የሚያገኙበት ታማኝ መድረሻዎ።",
   shop: "ሱቅ",
-  allCategories: "ሁሉም ምድቦች",
   customerService: "የደንበኞች አገልግሎት",
   contact: "ያግኙን",
   delivery: "የማድረስ መረጃ",
@@ -58,7 +57,9 @@ export const footer: Dictionary["footer"] = {
   terms: "ውሎችና ሁኔታዎች",
   language: "ቋንቋ",
   rights: "© {year} {brand}። መብቱ በሕግ የተጠበቀ ነው።",
-  reachUs: "ያግኙን",
+  subscribe: "ይመዝገቡ",
+  subscribeText: "የቅርብ ጊዜ ዜናዎችን እና ልዩ ቅናሾችን ያግኙ።",
+  madeFor: "ለኢትዮጵያ የተሰራ",
 }
 
 export const meta: Dictionary["meta"] = {

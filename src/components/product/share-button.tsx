@@ -8,7 +8,8 @@ import { useT } from "@/lib/i18n/provider"
 import { Button } from "@/components/ui/button"
 
 // Shares the product page: the phone's own share sheet where there is one
-// (most phones), otherwise the link is copied and a toast says so.
+// (most phones), otherwise the link is copied and a toast says so. A round
+// white button, floating over the product's photo beside the heart.
 function ShareButton({ title, className }: { title: string; className?: string }) {
   const t = useT()
 
@@ -33,11 +34,10 @@ function ShareButton({ title, className }: { title: string; className?: string }
   return (
     <Button
       type="button"
-      variant="outline"
-      size="icon"
+      variant="icon-circle"
       onClick={share}
       aria-label={t("product.share.label")}
-      className={cn("size-12 shrink-0 rounded-full max-lg:size-12", className)}
+      className={cn("shrink-0", className)}
     >
       <Share2 className="size-[18px]" />
     </Button>

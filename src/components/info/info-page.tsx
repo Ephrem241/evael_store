@@ -11,11 +11,12 @@ import { PageHeader } from "@/components/layout/page-header"
 export const LEGAL_LAST_UPDATED = "2026-09-24"
 
 const linkClass =
-  "rounded font-medium text-brand-ink underline underline-offset-4 outline-none transition-colors hover:text-brand-deep focus-visible:ring-2 focus-visible:ring-brand/40"
+  "rounded-sm font-semibold text-brand-ink underline underline-offset-4 outline-none transition-colors hover:text-brand-deep focus-visible:ring-2 focus-visible:ring-ring"
 
 // Frame for the footer's information pages (contact, delivery, returns, FAQ,
 // about, privacy, terms): a breadcrumb and title band, then one narrow column
-// of readable sections. These are reading pages — no cards-in-cards, no motion.
+// of readable sections (680px, the body in the sans face, headings in the
+// display face). These are reading pages — no cards-in-cards, no motion.
 async function InfoPage({
   title,
   description,
@@ -30,13 +31,13 @@ async function InfoPage({
   const t = await getT()
 
   return (
-    <div className="space-y-8 py-6 lg:py-8">
+    <div className="space-y-6 py-6 lg:space-y-10 lg:py-8">
       <PageHeader
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: title }]}
         title={title}
         description={description}
       />
-      <div className="mx-auto max-w-3xl space-y-10 pb-4">
+      <div className="mx-auto max-w-[680px] space-y-10 pb-4">
         {updated && (
           <p className="text-sm text-muted-text">
             {t("info.common.lastUpdated", { date: formatOrderDate(`${updated}T12:00:00Z`, t.locale) })}
@@ -62,7 +63,7 @@ function InfoSection({
 }) {
   return (
     <section className="space-y-3">
-      <h2 className="font-display text-xl font-bold tracking-tight text-charcoal sm:text-2xl">{title}</h2>
+      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">{title}</h2>
       <div className="space-y-3 leading-relaxed text-charcoal/80">{children}</div>
       {link && <InfoLink href={link.href}>{link.label}</InfoLink>}
     </section>
@@ -90,9 +91,9 @@ async function InfoHelp({ title, text, showFaq = true }: { title: string; text: 
   const t = await getT()
 
   return (
-    <aside className="space-y-3 rounded-card bg-brand-soft/70 p-5 sm:p-6">
-      <h2 className="font-display text-lg font-bold tracking-tight text-charcoal">{title}</h2>
-      <p className="text-charcoal/70">{text}</p>
+    <aside className="space-y-3 rounded-card border border-brand/10 bg-brand-soft p-5 sm:p-6">
+      <h2 className="font-display text-xl font-bold text-charcoal">{title}</h2>
+      <p className="text-charcoal/75">{text}</p>
       <div className="flex flex-wrap gap-x-6 gap-y-2">
         <InfoLink href="/contact">{t("info.common.contactLink")}</InfoLink>
         {showFaq && <InfoLink href="/faq">{t("info.common.faqLink")}</InfoLink>}

@@ -43,21 +43,21 @@ export interface HomepageSettings {
 // project — 0005 seeds both), so the storefront can't render blank.
 //
 // A newline in the headline is a deliberate line break (the hero shows it, and
-// draws the last line in the brand orange).
+// draws the last line in gold). Matches migration 0025.
 // `{maxDiscount}` in the promo texts is replaced with the biggest discount
 // among the products actually on sale (see fillDealTokens), so the banner can
 // never promise a bigger discount than exists.
 export const DEFAULT_HOMEPAGE_SETTINGS: HomepageSettings = {
-  heroHeadline: "Everything You Love.\nBetter Prices.",
-  heroHeadlineAm: "የሚወዱትን ሁሉ።\nበተሻለ ዋጋ።",
+  heroHeadline: "Modern Shopping.\nMade for Ethiopia.",
+  heroHeadlineAm: "ዘመናዊ ግብይት።\nለኢትዮጵያ የተሰራ።",
   heroSubtext: "Discover fashion, electronics, beauty, home essentials and more — all in one place.",
   heroSubtextAm: "ፋሽን፣ ኤሌክትሮኒክስ፣ የውበት ምርቶች፣ የቤት ቁሳቁሶች እና ሌሎችንም — ሁሉንም በአንድ ቦታ ያግኙ።",
-  heroCtaLabel: "Shop Deals",
-  heroCtaLabelAm: "ቅናሾችን ይግዙ",
-  heroCtaHref: "/deals",
-  heroSecondaryCtaLabel: "Explore Categories",
-  heroSecondaryCtaLabelAm: "ምድቦችን ያስሱ",
-  heroSecondaryCtaHref: "/categories",
+  heroCtaLabel: "Shop Now",
+  heroCtaLabelAm: "አሁን ይግዙ",
+  heroCtaHref: "/shop",
+  heroSecondaryCtaLabel: "Explore Deals",
+  heroSecondaryCtaLabelAm: "ቅናሾችን ያስሱ",
+  heroSecondaryCtaHref: "/deals",
   promoEyebrow: "Today's Special Deals",
   promoEyebrowAm: "የዛሬ ልዩ ቅናሾች",
   promoHeadline: "Up to {maxDiscount}% Off",

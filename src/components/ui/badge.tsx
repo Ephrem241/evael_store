@@ -18,11 +18,16 @@ const badgeVariants = cva(
         ghost:
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-brand-ink underline-offset-4 hover:underline",
-        // Storefront badges (the mockup's palette row).
-        sale: "rounded-md bg-sale font-bold text-white",
-        new: "rounded-md bg-success font-semibold text-white",
-        soft: "rounded-md bg-brand-soft font-semibold text-brand-ink",
-        limited: "rounded-md bg-brand-strong font-semibold text-white",
+        // Storefront pills. `discount` is the "-23%" on a product photo,
+        // `sale` the red "23% OFF" beside a price (product page, cart).
+        discount: "h-5 bg-brand-strong px-2 text-[11px] font-semibold text-white",
+        sale: "h-5 bg-sale px-2 text-[11px] font-bold text-white",
+        new: "bg-success font-semibold text-white",
+        soft: "bg-brand-soft font-semibold text-brand-ink",
+        limited: "bg-brand-strong font-semibold text-white",
+        // An order's status: the tone comes from lib/order-status (success,
+        // warning, error, or burgundy while it is on its way).
+        status: "h-6 gap-1.5 px-2.5 font-semibold",
       },
     },
     defaultVariants: {

@@ -35,17 +35,17 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "#FFFFFF",
+          "--normal-bg": "var(--evael-surface)",
           "--normal-text": "var(--color-charcoal)",
           "--normal-border": "var(--border)",
-          "--border-radius": "14px",
+          "--border-radius": "var(--radius-card)",
           "--width": "min(380px, calc(100vw - 32px))",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
           toast: "cn-toast shadow-lift",
-          actionButton: "!bg-brand-strong !text-white !rounded-lg",
+          actionButton: "!bg-brand-strong !text-white !rounded-(--radius-control)",
         },
       }}
       {...props}

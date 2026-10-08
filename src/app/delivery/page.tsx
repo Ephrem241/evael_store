@@ -32,7 +32,7 @@ export default async function DeliveryPage() {
 
       <InfoSection title={t("info.delivery.feesTitle")}>
         {fees.length > 0 && (
-          <div className="overflow-hidden rounded-card border border-border bg-white">
+          <div className="overflow-hidden rounded-card border border-border bg-surface shadow-soft">
             <table className="w-full text-start">
               <caption className="sr-only">{t("info.delivery.feesCaption")}</caption>
               <thead className="bg-brand-soft/70 text-sm text-muted-text">

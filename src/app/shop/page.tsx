@@ -5,7 +5,7 @@ import { listingSeo, pageMetadata, withPageNumber } from "@/lib/seo/metadata"
 import { getProducts, getFilterFacets } from "@/lib/services/catalog-queries"
 import { getT } from "@/lib/i18n/server"
 import { ProductListing } from "@/components/catalog/product-listing"
-import { PageHeader } from "@/components/layout/page-header"
+import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
@@ -50,6 +50,7 @@ export default async function ShopPage({
   return (
     <div className="space-y-8 py-6 lg:py-8">
       <PageHeader
+        mobileActions={<SearchAndCartActions />}
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: title }]}
         title={title}
         description={deals ? t("home.flashSubtitle") : t("catalog.shopSubtitle")}
