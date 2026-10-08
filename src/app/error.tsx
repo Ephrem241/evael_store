@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect } from "react"
+import Link from "next/link"
 import { AlertTriangle, RotateCcw } from "lucide-react"
 
 import { useT } from "@/lib/i18n/provider"
-import { EmptyState } from "@/components/feedback/empty-state"
+import { StatusPage } from "@/components/feedback/status-page"
 import { Button } from "@/components/ui/button"
 
 // Catches an unexpected error while rendering a page, inside the normal
@@ -22,19 +23,21 @@ export default function RouteError({ error, retry }: { error: Error; retry: () =
   }, [error])
 
   return (
-    <div className="py-16">
-      <EmptyState
-        titleAs="h1"
-        icon={AlertTriangle}
-        title={t("common.errorTitle")}
-        description={t("common.errorText")}
-        action={
+    <StatusPage
+      icon={AlertTriangle}
+      title={t("common.errorTitle")}
+      description={t("common.errorText")}
+      actions={
+        <>
           <Button size="lg" onClick={retry}>
             <RotateCcw aria-hidden />
             {t("common.retry")}
           </Button>
-        }
-      />
-    </div>
+          <Button asChild variant="ghost-link" className="text-sm font-semibold">
+            <Link href="/">{t("common.backHome")}</Link>
+          </Button>
+        </>
+      }
+    />
   )
 }

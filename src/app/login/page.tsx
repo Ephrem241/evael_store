@@ -35,13 +35,13 @@ export default async function LoginPage({
             {t("auth.login.noAccount")}{" "}
             <Link
               href={`/register?redirect=${encodeURIComponent(redirectTo)}`}
-              className="text-brand-ink underline underline-offset-4 hover:decoration-2"
+              className="rounded-sm font-semibold text-brand-ink underline underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-ring"
             >
               {t("auth.login.create")}
             </Link>
           </p>
           <p>
-            <Link href="/forgot-password" className="text-brand-ink underline underline-offset-4 hover:decoration-2">
+            <Link href="/forgot-password" className="rounded-sm font-semibold text-brand-ink underline underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-ring">
               {t("auth.login.forgot")}
             </Link>
           </p>
@@ -50,7 +50,7 @@ export default async function LoginPage({
     >
       <div className="space-y-4">
         {params.error === "oauth" && (
-          <p className="rounded-lg bg-warning/10 p-3 text-sm text-warning-text">
+          <p className="rounded-(--radius-control) bg-warning/10 p-3 text-sm text-warning-text">
             {t("auth.login.oauthFailed")}
           </p>
         )}

@@ -70,7 +70,7 @@ function RegisterForm({ redirectTo }: { redirectTo: string }) {
         registration={register("password")}
         error={errors.password?.message}
       />
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {t("auth.register.submit")}
       </Button>
     </form>

@@ -72,7 +72,7 @@ export default async function ContactPage() {
   return (
     <InfoPage title={t("info.contact.title")} description={t("info.contact.subtitle")}>
       {hasDetails ? (
-        <dl className="space-y-6 rounded-card border border-border bg-white p-5 sm:p-7">
+        <dl className="space-y-6 rounded-card border border-border bg-surface p-5 shadow-soft sm:p-7">
           {(contact.telegram || contact.whatsapp || contact.phone) && (
             <div className="space-y-3">
               <dt className="text-sm text-muted-text">{t("info.contact.channelsTitle")}</dt>

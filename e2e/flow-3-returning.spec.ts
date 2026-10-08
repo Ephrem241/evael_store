@@ -14,6 +14,12 @@ test.describe("Flow 3: a returning customer", () => {
       await signIn(page, shopper)
       await expect(page).toHaveURL(/\/account$/)
       await expect(page.locator("main")).toContainText(shopper.fullName)
+      await expect(page.locator("main")).toContainText(shopper.email)
+    })
+
+    await test.step("the profile row opens Settings, where the profile form holds their details", async () => {
+      await page.locator("main").getByRole("link", { name: shopper.fullName }).click()
+      await expect(page).toHaveURL(/\/account\/settings$/)
       await expect(page.locator("main").getByLabel(en.auth.fields.email, { exact: true })).toHaveValue(shopper.email)
     })
 

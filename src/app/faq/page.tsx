@@ -39,7 +39,7 @@ export default async function FaqPage() {
 
   return (
     <InfoPage title={t("info.faq.title")} description={t("info.faq.subtitle")}>
-      <div className="divide-y divide-border overflow-hidden rounded-card border border-border bg-white">
+      <div className="divide-y divide-border overflow-hidden rounded-card border border-border bg-surface shadow-soft">
         {questions.map((item) => (
           <details key={item.question} className="group">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-4 font-medium text-charcoal outline-none marker:hidden hover:bg-subtle/50 focus-visible:bg-subtle/50 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-inset sm:px-5 [&::-webkit-details-marker]:hidden">

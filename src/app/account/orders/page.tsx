@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 
 import { privateMetadata } from "@/lib/seo/metadata"
 import { getT } from "@/lib/i18n/server"
+import { PageHeader } from "@/components/layout/page-header"
 import { AccountOrdersContent } from "@/components/account/account-orders-content"
 
 // Not for search results: it belongs to one visitor (see privateMetadata).
@@ -15,10 +16,12 @@ export default async function Page() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-charcoal sm:text-3xl">{t("account.orders.title")}</h1>
-        <p className="text-muted-text">{t("account.orders.subtitle")}</p>
-      </div>
+      <PageHeader
+        variant="plain"
+        title={t("account.orders.title")}
+        description={t("account.orders.subtitle")}
+        backHref="/account"
+      />
       <AccountOrdersContent />
     </div>
   )

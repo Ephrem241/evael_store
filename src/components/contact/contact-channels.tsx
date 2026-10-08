@@ -31,7 +31,7 @@ function channelsOf(contact: Pick<StoreContact, "telegram" | "whatsapp" | "phone
 const styles = {
   // On the white contact card: the logo and the channel's name.
   light:
-    "inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-white py-1.5 pr-4 pl-1.5 text-sm font-medium text-charcoal transition-colors outline-none hover:border-brand hover:text-brand-ink focus-visible:ring-3 focus-visible:ring-ring/50",
+    "inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-4 pl-1.5 text-sm font-medium text-charcoal transition-colors outline-none hover:border-brand hover:text-brand-ink focus-visible:ring-2 focus-visible:ring-ring",
   // In the dark footer: the logo alone (a full 44px tap target on phones,
   // a little smaller on desktop).
   dark: "inline-flex size-11 lg:size-9 items-center justify-center rounded-full transition-transform outline-none hover:scale-110 focus-visible:ring-3 focus-visible:ring-gold/60",

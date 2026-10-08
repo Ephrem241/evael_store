@@ -47,7 +47,7 @@ function ForgotPasswordForm({ linkExpired = false }: { linkExpired?: boolean }) 
   return (
     <form method="post" onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
       {linkExpired && (
-        <p className="rounded-lg bg-warning/10 p-3 text-sm text-warning-text">
+        <p className="rounded-(--radius-control) bg-warning/10 p-3 text-sm text-warning-text">
           {t("auth.forgot.expired")}
         </p>
       )}
@@ -60,7 +60,7 @@ function ForgotPasswordForm({ linkExpired = false }: { linkExpired?: boolean }) 
         registration={register("email")}
         error={errors.email?.message}
       />
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {t("auth.forgot.send")}
       </Button>
     </form>

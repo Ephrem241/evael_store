@@ -69,7 +69,7 @@ function LoginForm({ redirectTo }: { redirectTo: string }) {
           {errors.root.message}
         </p>
       )}
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {t("auth.login.submit")}
       </Button>
     </form>

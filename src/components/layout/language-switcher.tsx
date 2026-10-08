@@ -26,11 +26,14 @@ function LanguageSwitcher({
   labels = "short",
   tone = "light",
   compact = false,
+  showIcon = true,
 }: {
   className?: string
   labels?: "short" | "full"
   tone?: "light" | "dark" | "bar"
   compact?: boolean
+  /** The light and dark pills start with a small globe; leave it out where the row already has one (the account menu). */
+  showIcon?: boolean
 }) {
   const t = useT()
   const router = useRouter()
@@ -125,7 +128,7 @@ function LanguageSwitcher({
         className
       )}
     >
-      <Globe aria-hidden className={cn("mx-1.5 size-3.5", dark ? "text-white/60" : "text-muted-text")} />
+      {showIcon && <Globe aria-hidden className={cn("mx-1.5 size-3.5", dark ? "text-white/60" : "text-muted-text")} />}
       {LOCALES.map((locale) => {
         const active = locale === t.locale
         return (

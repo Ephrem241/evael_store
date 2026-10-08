@@ -1,7 +1,10 @@
 import type { ReactNode } from "react"
 
-// The frame every sign-in/sign-up/reset page sits in: a serif title and a white
-// card for the form (the site header above already carries the wordmark).
+import { BrandMark } from "@/components/layout/logo"
+
+// The frame every sign-in/sign-up/reset page sits in: the bag mark, the title
+// in the display face and a white card for the form (the site header above
+// already carries the full logo).
 function AuthCard({
   title,
   description,
@@ -14,12 +17,13 @@ function AuthCard({
   footer?: ReactNode
 }) {
   return (
-    <div className="mx-auto w-full max-w-md space-y-7 py-10 sm:py-14">
-      <div className="space-y-2 text-center">
-        <h1 className="font-display text-3xl font-bold tracking-tight text-charcoal">{title}</h1>
-        {description && <p className="text-sm text-muted-text">{description}</p>}
+    <div className="mx-auto w-full max-w-md space-y-6 py-8 sm:py-12">
+      <div className="space-y-3 text-center">
+        <BrandMark className="mx-auto size-12" />
+        <h1 className="font-display text-3xl font-bold text-charcoal">{title}</h1>
+        {description && <p className="text-sm leading-relaxed text-muted-text">{description}</p>}
       </div>
-      <div className="rounded-card border border-border/70 bg-card p-6 shadow-soft sm:p-8">{children}</div>
+      <div className="rounded-card border border-border bg-surface p-6 shadow-soft sm:p-8">{children}</div>
       {footer && <div className="space-y-1 text-center text-sm text-muted-text">{footer}</div>}
     </div>
   )

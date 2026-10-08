@@ -15,7 +15,8 @@ export default async function Page() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-bold tracking-tight text-charcoal sm:text-3xl">
+      {/* Phones: the menu above is this screen, so the heading is only read out. */}
+      <h1 className="font-display text-3xl font-bold text-charcoal max-lg:sr-only lg:text-4xl">
         {t("account.overview.title")}
       </h1>
       <AccountProfileContent />

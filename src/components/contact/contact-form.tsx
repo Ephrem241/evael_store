@@ -50,11 +50,11 @@ function ContactForm() {
 
   if (sentTo !== null) {
     return (
-      <div className="space-y-4 rounded-card border border-border bg-white p-5 sm:p-7" role="status">
+      <div className="space-y-4 rounded-card border border-border bg-surface p-5 shadow-soft sm:p-7" role="status">
         <h2
           ref={confirmationRef}
           tabIndex={-1}
-          className="flex items-center gap-2 text-lg font-semibold text-charcoal outline-none"
+          className="flex items-center gap-2 font-display text-xl font-bold text-charcoal outline-none"
         >
           <CheckCircle2 aria-hidden className="size-5 text-success" />
           {t("contactForm.sentTitle")}
@@ -75,9 +75,9 @@ function ContactForm() {
   }
 
   return (
-    <section aria-labelledby="contact-form-title" className="space-y-4 rounded-card border border-border bg-white p-5 sm:p-7">
+    <section aria-labelledby="contact-form-title" className="space-y-4 rounded-card border border-border bg-surface p-5 shadow-soft sm:p-7">
       <div className="space-y-1">
-        <h2 id="contact-form-title" className="text-lg font-semibold text-charcoal">
+        <h2 id="contact-form-title" className="font-display text-xl font-bold text-charcoal">
           {t("contactForm.title")}
         </h2>
         <p className="text-sm text-muted-text">{t("contactForm.intro")}</p>

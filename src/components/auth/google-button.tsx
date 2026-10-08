@@ -47,7 +47,7 @@ function GoogleButton({ redirectTo, label }: { redirectTo: string; label?: strin
   }
 
   return (
-    <Button type="button" variant="outline" className="w-full gap-2" disabled={starting} onClick={handleClick}>
+    <Button type="button" variant="outline" size="lg" className="w-full gap-2 bg-surface" disabled={starting} onClick={handleClick}>
       <GoogleMark />
       {starting ? t("auth.google.redirecting") : (label ?? t("auth.google.continue"))}
     </Button>
