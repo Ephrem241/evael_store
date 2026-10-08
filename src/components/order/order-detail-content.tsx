@@ -48,14 +48,18 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
 
   return (
     <div className="space-y-6">
+      {/* Phones go back from the page bar's arrow; desktop has this link. */}
       <div className="space-y-3">
-        <Link href="/account/orders" className="inline-flex items-center gap-1 text-sm text-muted-text hover:text-charcoal">
+        <Link
+          href="/account/orders"
+          className="inline-flex items-center gap-1 rounded-sm text-sm font-semibold text-brand-ink outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring max-lg:hidden"
+        >
           <ChevronLeft aria-hidden className="size-4" />
           {t("order.back")}
         </Link>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h1 className="text-xl font-semibold text-charcoal">{t("order.title", { number: order.order_number })}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-1">
+            <h1 className="font-display text-2xl font-bold text-charcoal lg:text-3xl">{t("order.title", { number: order.order_number })}</h1>
             <p className="text-sm text-muted-text">
               {t("order.placed", { date: formatOrderDateTime(order.created_at, t.locale) })}
             </p>
@@ -64,7 +68,7 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="space-y-6">
           <OrderItemsSection items={order.items} />
           <OrderDeliveryAddressSection address={order.delivery_address} />

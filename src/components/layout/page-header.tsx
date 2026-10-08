@@ -23,6 +23,9 @@ import { Button } from "@/components/ui/button"
 //   soft panel that can carry a picture on the right (`aside`); `variant="plain"`
 //   (cart, checkout) is just the text — those pages are tasks, not browsing.
 //
+//   `barOnly`: just the phone bar, its title a plain line rather than the
+//   <h1> — for a page whose own content carries the heading (an order).
+//
 // The bar overlaps the page's own 1.5rem top padding (every page that uses it
 // starts with py-6 on phones), so it sits flush under the status bar.
 async function PageHeader({
@@ -34,6 +37,7 @@ async function PageHeader({
   backHref = "/",
   mobileActions,
   mobileAlign = "start",
+  barOnly = false,
   className,
 }: {
   breadcrumb?: { label: string; href?: string }[]
@@ -46,15 +50,18 @@ async function PageHeader({
   /** The bar's buttons on the right (phones and tablets only). */
   mobileActions?: ReactNode
   mobileAlign?: "start" | "center"
+  barOnly?: boolean
   className?: string
 }) {
-  const band = variant === "band"
+  const band = variant === "band" && !barOnly
+  const Title = barOnly ? "p" : "h1"
 
   return (
     <header
       data-page-bar
       className={cn(
         "max-lg:sticky max-lg:top-0 max-lg:z-30 max-lg:-mx-4 max-lg:-mt-6 max-lg:mb-3! max-lg:flex max-lg:h-14 max-lg:items-center max-lg:gap-1 max-lg:border-b max-lg:border-border max-lg:bg-background max-lg:px-2 sm:max-lg:-mx-6 sm:max-lg:px-4",
+        barOnly && "lg:hidden",
         band && "lg:flex lg:items-center lg:justify-between lg:gap-10 lg:rounded-hero lg:border lg:border-brand/10 lg:bg-brand-soft/60 lg:px-10 lg:py-9",
         className
       )}
@@ -66,9 +73,9 @@ async function PageHeader({
             <Breadcrumb items={breadcrumb} />
           </div>
         )}
-        <h1 className="text-charcoal max-lg:truncate max-lg:text-lg max-lg:leading-tight max-lg:font-semibold lg:font-display lg:text-4xl lg:leading-tight lg:font-bold">
+        <Title className="text-charcoal max-lg:truncate max-lg:text-lg max-lg:leading-tight max-lg:font-semibold lg:font-display lg:text-4xl lg:leading-tight lg:font-bold">
           {title}
-        </h1>
+        </Title>
         {description && <p className="max-w-xl text-charcoal/75 max-lg:hidden lg:text-lg">{description}</p>}
       </div>
       {mobileActions ? (

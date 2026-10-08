@@ -13,7 +13,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
 // pending -> the one state something still needs to happen to (warning);
 // delivered/cancelled -> the two terminal outcomes (success/error);
 // confirmed/preparing/shipped -> in progress normally, nothing needs
-// attention right now (neutral secondary tone).
+// attention right now (the soft burgundy of the brand).
 export function getOrderStatusMeta(
   status: OrderStatus,
   t: Translator
@@ -27,7 +27,7 @@ export function getOrderStatusMeta(
     case "cancelled":
       return { label, className: "bg-error/10 text-error" }
     default:
-      return { label, className: "bg-secondary text-secondary-foreground" }
+      return { label, className: "bg-brand-soft text-brand-ink" }
   }
 }
 

@@ -24,8 +24,8 @@ function OrderItemsSection({ items }: { items: OrderItemRecord[] }) {
   const productsById = new Map(products.map((p) => [p.id, p]))
 
   return (
-    <section className="space-y-3 rounded-card border border-border bg-card p-5">
-      <h2 className="font-medium text-charcoal">{t("order.items.title")}</h2>
+    <section className="space-y-3 rounded-card border border-border bg-surface p-5 shadow-soft sm:p-6">
+      <h2 className="font-display text-lg font-bold text-charcoal">{t("order.items.title")}</h2>
       <div>
         {items.map((item) => {
           const product = item.product_id ? productsById.get(item.product_id) : undefined
@@ -36,31 +36,42 @@ function OrderItemsSection({ items }: { items: OrderItemRecord[] }) {
           return (
             <div key={item.id} className="flex items-center gap-3 border-b border-border py-3 last:border-b-0">
               {product ? (
-                <Link href={`/product/${product.slug}`} className="w-14 shrink-0">
+                <Link
+                  href={`/product/${product.slug}`}
+                  tabIndex={-1}
+                  aria-hidden
+                  className="size-14 shrink-0 overflow-hidden rounded-image bg-subtle"
+                >
                   <ImagePlaceholder
                     seed={product.id}
                     icon={getCategoryIcon(product.categorySlug)}
                     label={name}
+                    decorative
                     imageUrl={product.image_url}
                     sizes="56px"
+                    aspectClassName="size-full"
+                    className="rounded-none"
                   />
                 </Link>
               ) : (
-                <div className="size-14 shrink-0 rounded-image bg-subtle/40" />
+                <div className="size-14 shrink-0 rounded-image bg-subtle" />
               )}
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 {product ? (
-                  <Link href={`/product/${product.slug}`} className="text-sm font-medium text-charcoal hover:underline">
+                  <Link
+                    href={`/product/${product.slug}`}
+                    className="line-clamp-2 rounded-sm text-sm font-medium text-charcoal outline-none hover:text-brand-ink focus-visible:ring-2 focus-visible:ring-ring"
+                  >
                     {name}
                   </Link>
                 ) : (
-                  <p className="text-sm font-medium text-charcoal">{name}</p>
+                  <p className="line-clamp-2 text-sm font-medium text-charcoal">{name}</p>
                 )}
                 <p className="text-xs text-muted-text">
                   {t("order.items.qtyLine", { quantity: item.quantity, price: formatPrice(item.unit_price, t) })}
                 </p>
               </div>
-              <Price amount={item.total} t={t} />
+              <Price amount={item.total} t={t} className="text-sm" />
             </div>
           )
         })}

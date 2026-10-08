@@ -6,7 +6,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Package, ShoppingBag } from "lucide-react"
 
-import { formatPrice } from "@/lib/currency"
 import { useT } from "@/lib/i18n/provider"
 import { useCartStore } from "@/lib/store/cart"
 import { useIsAdmin } from "@/lib/store/auth"
@@ -15,8 +14,13 @@ import { resolveCartLines, computeCartTotals } from "@/lib/cart-math"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { Button } from "@/components/ui/button"
 import { CartLineItem } from "@/components/cart/cart-line-item"
+import { ClearCartButton } from "@/components/cart/clear-cart-button"
 import { OrderSummary } from "@/components/cart/order-summary"
 
+// The cart: the item cards, then the summary (on desktop the items take the
+// left two thirds and the summary card stays in view on the right). Phones
+// clear the cart from the trash in the page bar; desktop from the small
+// "Clear cart" under the items, across from "Continue shopping".
 function CartContents() {
   const t = useT()
   const items = useCartStore((s) => s.items)
@@ -60,9 +64,10 @@ function CartContents() {
 
   const { resolvedLines, unavailableLines } = resolveCartLines(items, products)
   const { subtotal, savings: totalSavings } = computeCartTotals(resolvedLines)
+  const itemCount = resolvedLines.reduce((count, { line }) => count + line.quantity, 0)
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="space-y-3">
         {resolvedLines.map(({ line, product }) => (
           <CartLineItem key={product.id} line={line} product={product} />
@@ -70,7 +75,7 @@ function CartContents() {
         {unavailableLines.map((line) => (
           <div
             key={line.productId}
-            className="flex items-center gap-4 rounded-card border border-dashed border-border bg-card p-4 text-sm text-muted-text"
+            className="flex items-center gap-4 rounded-card border border-dashed border-border bg-surface p-4 text-sm text-muted-text"
           >
             <Package aria-hidden className="size-8 shrink-0" />
             <p className="flex-1">{t("cart.unavailable")}</p>
@@ -79,44 +84,27 @@ function CartContents() {
             </Button>
           </div>
         ))}
-        <Link
-          href="/shop"
-          className="inline-flex items-center gap-1.5 rounded-md pt-2 text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:min-h-11"
-        >
-          <ArrowLeft aria-hidden className="size-4" />
-          {t("cart.continueShopping")}
-        </Link>
+        <div className="flex items-center justify-between gap-4 pt-2">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-brand-ink underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring max-lg:min-h-11"
+          >
+            <ArrowLeft aria-hidden className="size-4" />
+            {t("cart.continueShopping")}
+          </Link>
+          <ClearCartButton variant="text" className="max-lg:hidden" />
+        </div>
       </div>
 
       <div className="lg:sticky lg:top-36">
         <OrderSummary
           subtotal={subtotal}
           totalSavings={totalSavings}
+          itemCount={itemCount}
           canCheckout={resolvedLines.length > 0}
-          ctaDesktopOnly
+          showPaymentMethods
+          flatOnMobile
         />
-      </div>
-
-      {/* Phones and tablets: the total and the checkout button stay at the
-          bottom of the screen, just above the bottom navigation (4rem, its
-          1px top border and the home-indicator inset), while the
-          cart scrolls. Sticky rather than fixed, so it comes to rest after the
-          summary at the end of the cart instead of covering the footer. (The
-          summary's own button is hidden there, see ctaDesktopOnly.) */}
-      <div className="sticky bottom-[calc(4rem+1px+env(safe-area-inset-bottom))] z-20 -mx-4 flex items-center gap-4 border-t border-border bg-card/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
-        <div className="shrink-0">
-          <p className="text-xs text-muted-text">{t("cart.summary.total")}</p>
-          <p className="text-lg leading-tight font-bold text-charcoal tabular-nums">{formatPrice(subtotal, t)}</p>
-        </div>
-        {resolvedLines.length > 0 ? (
-          <Button asChild size="lg" className="min-w-0 flex-1">
-            <Link href="/checkout">{t("cart.summary.continue")}</Link>
-          </Button>
-        ) : (
-          <Button size="lg" className="min-w-0 flex-1" disabled>
-            {t("cart.summary.continue")}
-          </Button>
-        )}
       </div>
     </div>
   )

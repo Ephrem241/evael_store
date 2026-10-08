@@ -15,7 +15,7 @@ export default async function CheckoutPage() {
   const t = await getT()
 
   return (
-    <div className="space-y-8 py-6 lg:py-8">
+    <div className="space-y-6 py-6 lg:space-y-8 lg:py-8">
       <PageHeader backHref="/cart" variant="plain" title={t("checkout.title")} description={t("checkout.subtitle")} />
       <CheckoutContent />
     </div>

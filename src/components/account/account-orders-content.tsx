@@ -3,7 +3,7 @@
 import { CardListSkeleton } from "@/components/feedback/skeletons"
 import { useState } from "react"
 import Link from "next/link"
-import { PackageX, SearchX } from "lucide-react"
+import { ChevronRight, Package, PackageX, Search, SearchX } from "lucide-react"
 
 import { nameOf } from "@/lib/i18n/content"
 import { useT } from "@/lib/i18n/provider"
@@ -15,10 +15,16 @@ import { formatOrderDate } from "@/lib/date"
 import { formatPrice } from "@/lib/currency"
 import { OrderStatus } from "@/components/order/order-status"
 import { EmptyState } from "@/components/feedback/empty-state"
+import { getCategoryIcon } from "@/components/product/category-icons"
+import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { cn } from "cn"
+import { Chip } from "@/components/ui/chip"
 
+// The order history: a search by order number and the status chips, then
+// one white card per order (like the cart's item cards): the first item's
+// photo, the order number, date and what was in it, the total and the status
+// pill. The whole card opens the order.
 function AccountOrdersContent() {
   const t = useT()
   const { user, ready } = useRequireAuth("/login?redirect=/account/orders")
@@ -89,28 +95,20 @@ function AccountOrdersContent() {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder={t("account.orders.searchPlaceholder")}
-          className="sm:max-w-xs"
-        />
-        <div className="flex flex-wrap gap-2">
+        <div className="relative sm:w-full sm:max-w-xs">
+          <Search aria-hidden className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-text" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("account.orders.searchPlaceholder")}
+            className="bg-surface pl-9"
+          />
+        </div>
+        <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
           {ORDER_HISTORY_FILTERS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setStatusFilter(f)}
-              aria-pressed={statusFilter === f}
-              className={cn(
-                "rounded-full border px-3 py-1 text-sm transition-colors",
-                statusFilter === f
-                  ? "border-brand bg-brand-strong text-white"
-                  : "border-border text-charcoal hover:bg-subtle/30"
-              )}
-            >
+            <Chip key={f} type="button" selected={statusFilter === f} aria-pressed={statusFilter === f} onClick={() => setStatusFilter(f)}>
               {t(`order.historyFilter.${f}`)}
-            </button>
+            </Chip>
           ))}
         </div>
       </div>
@@ -128,23 +126,48 @@ function AccountOrdersContent() {
         />
       ) : (
         <div className="space-y-3">
-          {filtered.map((order) => (
-            <Link
-              key={order.id}
-              href={`/orders/${order.id}`}
-              className="flex flex-col gap-2 rounded-card border border-border bg-card p-4 transition-colors hover:bg-subtle/20 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div>
-                <p className="font-medium text-charcoal">{t("account.orders.orderNumber", { number: order.order_number })}</p>
-                <p className="text-sm text-muted-text">{formatOrderDate(order.created_at, t.locale)}</p>
-                <p className="text-sm text-muted-text">{itemsSummary(order.items)}</p>
-              </div>
-              <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
-                <span className="font-medium text-charcoal">{formatPrice(order.total, t)}</span>
-                <OrderStatus status={order.status} />
-              </div>
-            </Link>
-          ))}
+          {filtered.map((order) => {
+            const first = order.items[0]
+            const product = first?.product_id ? productsById.get(first.product_id) : undefined
+            return (
+              <Link
+                key={order.id}
+                href={`/orders/${order.id}`}
+                className="flex items-center gap-3 rounded-card border border-border bg-surface p-3 shadow-soft transition-colors outline-none hover:border-brand/30 focus-visible:ring-2 focus-visible:ring-ring sm:gap-4 sm:p-4"
+              >
+                <div className="size-16 shrink-0 self-start overflow-hidden rounded-image bg-subtle sm:size-[72px]">
+                  {product ? (
+                    <ImagePlaceholder
+                      seed={product.id}
+                      icon={getCategoryIcon(product.categorySlug)}
+                      label={lineName(first)}
+                      decorative
+                      imageUrl={product.image_url}
+                      sizes="72px"
+                      aspectClassName="size-full"
+                      className="rounded-none"
+                    />
+                  ) : (
+                    <div className="flex size-full items-center justify-center">
+                      <Package aria-hidden className="size-6 text-muted-text" />
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1 space-y-0.5">
+                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                    <p className="font-semibold text-charcoal">
+                      {t("account.orders.orderNumber", { number: order.order_number })}
+                    </p>
+                    <OrderStatus status={order.status} />
+                  </div>
+                  <p className="text-xs text-muted-text">{formatOrderDate(order.created_at, t.locale)}</p>
+                  <p className="truncate text-sm text-muted-text">{itemsSummary(order.items)}</p>
+                  <p className="pt-0.5 text-sm font-bold text-charcoal tabular-nums">{formatPrice(order.total, t)}</p>
+                </div>
+                <ChevronRight aria-hidden className="size-5 shrink-0 text-muted-text" />
+              </Link>
+            )
+          })}
         </div>
       )}
     </div>

@@ -25,6 +25,9 @@ const badgeVariants = cva(
         new: "bg-success font-semibold text-white",
         soft: "bg-brand-soft font-semibold text-brand-ink",
         limited: "bg-brand-strong font-semibold text-white",
+        // An order's status: the tone comes from lib/order-status (success,
+        // warning, error, or burgundy while it is on its way).
+        status: "h-6 gap-1.5 px-2.5 font-semibold",
       },
     },
     defaultVariants: {
