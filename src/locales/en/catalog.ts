@@ -118,8 +118,10 @@ export const product = {
   description: {
     title: "Description",
   },
+  // The product page's tabs: Description, Specifications, Reviews.
+  tabsLabel: "Product information",
   details: {
-    title: "Details",
+    title: "Specifications",
     sku: "SKU",
     category: "Category",
     availability: "Availability",
@@ -128,6 +130,14 @@ export const product = {
     title: "Delivery",
     fees: "Delivery fees are calculated at checkout based on your delivery address.",
     dispatch: "Most orders are prepared and dispatched within a few business days.",
+  },
+  // The two small facts under the buy buttons. {amount} is a formatted price.
+  info: {
+    deliveryTitle: "Delivery",
+    deliveryFee: "Fee shown at checkout",
+    deliveryFree: "Free over {amount}",
+    codTitle: "Cash on Delivery",
+    codText: "Available",
   },
   reviews: {
     title: "Reviews",

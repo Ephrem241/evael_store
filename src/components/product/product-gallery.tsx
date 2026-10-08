@@ -1,13 +1,16 @@
 "use client"
 
 import { useCallback, useRef, useState } from "react"
-import { ZoomIn } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { getCategoryIcon } from "@/components/product/category-icons"
 import { SoldOutStamp } from "@/components/product/sold-out-stamp"
+import { FavoriteButton } from "@/components/product/favorite-button"
+import { ShareButton } from "@/components/product/share-button"
+import { BackButton } from "@/components/navigation/back-button"
+import { CartButton } from "@/components/layout/cart-button"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 
 // Takes categorySlug (a plain string) rather than the resolved icon
@@ -17,20 +20,25 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 // category-icons.ts is plain, un-"use client" data safely importable from
 // either side.
 //
-// One view per REAL photo of the product: a product with a single photo shows
-// just that (no thumbnails, no counter), a product with several gets a
-// swipeable track with a "2/5" counter on phones and tablets and clickable
-// thumbnails on desktop. A product with no photo yet shows the single gradient
-// placeholder. Nothing is invented — the extra "views" this gallery used to
-// synthesize would sit beside a real photograph as empty tiles.
+// One view per REAL photo of the product (nothing invented): a single photo
+// shows just that, several get a swipeable track and thumbnails (48px under
+// the photo on phones, a column of 64px on its left on desktop; the current
+// one has a burgundy border). A product with no photo yet shows the single
+// gradient placeholder. The photo sits whole on the subtle well, and a tap
+// enlarges it.
 //
-// On phones (below `sm`) the photos run edge to edge, as in a shopping app.
+// Phones and tablets: the photo starts at the very top of the page (there is
+// no header bar or bottom nav here — data-hide-brand-header), with round white
+// buttons over it: back on the left; the heart, share and the cart (with its
+// count) on the right. Desktop keeps the heart and share; the breadcrumb leads
+// back and the header has the cart.
 function ProductGallery({
   productId,
   productName,
   categorySlug,
   imageUrls,
   soldOut = false,
+  backHref,
 }: {
   productId: string
   productName: string
@@ -40,6 +48,8 @@ function ProductGallery({
   imageUrls: string[]
   // Marked sold out by the admin (stock 0): a SOLD OUT stamp sits over the photo.
   soldOut?: boolean
+  /** Where the back button leads when there is no shop page to go back to. */
+  backHref: string
 }) {
   const t = useT()
   const Icon = getCategoryIcon(categorySlug)
@@ -63,56 +73,56 @@ function ProductGallery({
   }, [])
 
   return (
-    <div className="space-y-3">
-      <div className="relative overflow-hidden rounded-card border border-border/70 bg-card shadow-soft max-sm:-mx-4 max-sm:rounded-none max-sm:border-0 max-sm:shadow-none">
-        <div
-          ref={trackRef}
-          onScroll={handleScroll}
-          className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {views.map((url, i) => (
-            <button
-              key={`${productId}-${i}`}
-              type="button"
-              onClick={() => setZoomOpen(true)}
-              className="w-full shrink-0 snap-center cursor-zoom-in transition-opacity outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-inset max-lg:active:opacity-90"
-              aria-label={t("product.gallery.enlarge", { index: i + 1, total: views.length, name: productName })}
-            >
-              <ImagePlaceholder
-                seed={`${productId}-${i}`}
-                icon={Icon}
-                label={t("product.gallery.view", { name: productName, index: i + 1 })}
-                imageUrl={url}
-                // The photo the product page opens with: half the width on desktop,
-                // full width on a phone. It is the largest thing on screen (LCP).
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                eager={i === 0}
-                className="rounded-none"
-              />
-            </button>
-          ))}
-        </div>
-        {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} size="lg" />}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute right-3 bottom-3 flex size-10 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-soft"
-        >
-          <ZoomIn className="size-[18px]" />
-        </span>
-        {many && (
-          // Decorative: each slide's own button already says "image i of N".
-          // The dark pill keeps the white numbers readable over any photo.
-          <span
-            aria-hidden
-            className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-charcoal/75 px-2.5 py-1 text-xs font-semibold text-white tabular-nums lg:hidden"
+    <div className="lg:grid lg:grid-cols-[4rem_minmax(0,1fr)] lg:items-start lg:gap-3">
+      <div className="relative lg:order-2">
+        <div className="relative overflow-hidden bg-subtle max-sm:-mx-4 max-lg:-mt-4 sm:mx-auto sm:max-w-md sm:rounded-card sm:border sm:border-border lg:max-w-none">
+          <div
+            ref={trackRef}
+            onScroll={handleScroll}
+            className="flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {t("product.gallery.counter", { index: activeIndex + 1, total: views.length })}
-          </span>
-        )}
+            {views.map((url, i) => (
+              <button
+                key={`${productId}-${i}`}
+                type="button"
+                onClick={() => setZoomOpen(true)}
+                className="w-full shrink-0 snap-center cursor-zoom-in transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset max-lg:active:opacity-90"
+                aria-label={t("product.gallery.enlarge", { index: i + 1, total: views.length, name: productName })}
+              >
+                <ImagePlaceholder
+                  seed={`${productId}-${i}`}
+                  icon={Icon}
+                  label={t("product.gallery.view", { name: productName, index: i + 1 })}
+                  imageUrl={url}
+                  // The photo the product page opens with: half the width on desktop,
+                  // full width on a phone. It is the largest thing on screen (LCP).
+                  sizes="(min-width: 1024px) 50vw, (min-width: 640px) 448px, 100vw"
+                  eager={i === 0}
+                  fit="contain"
+                  className="rounded-none"
+                />
+              </button>
+            ))}
+          </div>
+          {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} size="lg" />}
+        </div>
+
+        {/* The buttons over the photo. The marker hides the burgundy phone header. */}
+        <div
+          data-hide-brand-header
+          className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between p-3 max-lg:-mt-4 max-lg:pt-[max(0.75rem,calc(env(safe-area-inset-top)+0.5rem))] max-sm:-mx-4 sm:mx-auto sm:max-w-md lg:max-w-none"
+        >
+          <BackButton fallbackHref={backHref} variant="circle" className="pointer-events-auto lg:invisible" />
+          <div className="pointer-events-auto flex gap-2 lg:flex-col">
+            <FavoriteButton productId={productId} />
+            <ShareButton title={productName} />
+            <CartButton variant="circle" className="lg:hidden" />
+          </div>
+        </div>
       </div>
 
       {many && (
-        <div className="hidden gap-2 lg:flex">
+        <div className="no-scrollbar mt-3 flex gap-2 overflow-x-auto sm:mx-auto sm:max-w-md lg:order-1 lg:mt-0 lg:max-w-none lg:flex-col lg:overflow-visible">
           {views.map((url, i) => (
             <button
               key={`${productId}-thumb-${i}`}
@@ -120,8 +130,8 @@ function ProductGallery({
               aria-current={i === activeIndex}
               onClick={() => scrollToIndex(i)}
               className={cn(
-                "w-20 shrink-0 overflow-hidden rounded-xl ring-2 ring-offset-2 ring-offset-background transition",
-                i === activeIndex ? "ring-brand" : "ring-transparent hover:ring-border"
+                "size-12 shrink-0 overflow-hidden rounded-(--radius-control) border-2 bg-subtle transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:size-16",
+                i === activeIndex ? "border-brand" : "border-transparent hover:border-border"
               )}
             >
               <ImagePlaceholder
@@ -129,7 +139,8 @@ function ProductGallery({
                 icon={Icon}
                 label={t("product.gallery.thumb", { index: i + 1 })}
                 imageUrl={url}
-                sizes="80px"
+                sizes="64px"
+                className="rounded-none"
               />
             </button>
           ))}
@@ -141,13 +152,14 @@ function ProductGallery({
         <DialogContent className="sm:max-w-lg" aria-describedby={undefined}>
           {/* Names the dialog for screen readers; the picture is the visible content. */}
           <DialogTitle className="sr-only">{productName}</DialogTitle>
-          <div className="relative overflow-hidden rounded-image">
+          <div className="relative overflow-hidden rounded-image bg-subtle">
             <ImagePlaceholder
               seed={`${productId}-${activeIndex}`}
               icon={Icon}
               label={productName}
               imageUrl={views[activeIndex] ?? null}
               sizes="(min-width: 640px) 512px, calc(100vw - 2rem)"
+              fit="contain"
             />
             {soldOut && <SoldOutStamp label={t("product.stock.soldOut")} size="lg" />}
           </div>

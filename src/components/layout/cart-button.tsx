@@ -18,15 +18,17 @@ import { Button } from "@/components/ui/button"
 // cost either. Deliberately deferred, not overlooked.
 //
 // `variant="stacked"` is the desktop header's icon-over-label link; the
-// default is the icon button used on phones. `tone="dark"` is for the burgundy
-// phone header: a white icon and a gold badge with deep burgundy figures.
+// default is the icon button used on phones; "circle" is the round white
+// button floating over the product page's photo (that page has no header bar
+// or bottom nav on phones). `tone="dark"` is for the burgundy phone header: a
+// white icon and a gold badge with deep burgundy figures.
 function CartButton({
   className,
   variant = "icon",
   tone = "light",
 }: {
   className?: string
-  variant?: "icon" | "stacked"
+  variant?: "icon" | "stacked" | "circle"
   tone?: "light" | "dark"
 }) {
   const t = useT()
@@ -70,6 +72,19 @@ function CartButton({
           {t("nav.cart")}
         </span>
       </Link>
+    )
+  }
+
+  if (variant === "circle") {
+    return (
+      <Button variant="icon-circle" asChild className={className}>
+        <Link href="/cart" aria-label={label}>
+          <span className="relative">
+            <ShoppingCart aria-hidden className="size-[18px]" strokeWidth={1.75} />
+            {badge}
+          </span>
+        </Link>
+      </Button>
     )
   }
 

@@ -272,10 +272,15 @@
 }
 
 /* Phones and tablets: an inner page draws its own plain bar (PageHeader,
-   data-page-bar), which takes the burgundy brand header's place. Pure CSS, so
-   the server sends the right header and nothing swaps after loading. */
-:root:has([data-page-bar]) [data-brand-header] {
+   data-page-bar), which takes the burgundy brand header's place; the product
+   page has no bar at all (its back button floats over the photo,
+   data-hide-brand-header), so nothing is pinned to the top there. Pure CSS,
+   so the server sends the right header and nothing swaps after loading. */
+:root:has([data-page-bar], [data-hide-brand-header]) [data-brand-header] {
   display: none;
+}
+:root:has([data-hide-brand-header]) {
+  --mobile-header-height: 0px;
 }
 
 /* The language switcher's "አማ" / "አማርኛ" label is Ethiopic text on every page,

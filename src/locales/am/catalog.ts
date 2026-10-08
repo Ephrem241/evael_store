@@ -109,8 +109,9 @@ export const product: Dictionary["product"] = {
   description: {
     title: "መግለጫ",
   },
+  tabsLabel: "የምርት መረጃ",
   details: {
-    title: "ዝርዝሮች",
+    title: "ዝርዝር መግለጫዎች",
     sku: "የምርት ኮድ",
     category: "ምድብ",
     availability: "ተገኝነት",
@@ -119,6 +120,13 @@ export const product: Dictionary["product"] = {
     title: "ማድረስ",
     fees: "የማድረስ ክፍያ በክፍያ ወቅት በአድራሻዎ መሠረት ይሰላል።",
     dispatch: "አብዛኞቹ ትዕዛዞች በጥቂት የሥራ ቀናት ውስጥ ተዘጋጅተው ይላካሉ።",
+  },
+  info: {
+    deliveryTitle: "ማድረስ",
+    deliveryFee: "ዋጋው በክፍያ ጊዜ ይታያል",
+    deliveryFree: "ከ{amount} በላይ ነፃ",
+    codTitle: "ሲደርስ ይክፈሉ",
+    codText: "ይገኛል",
   },
   reviews: {
     title: "ግምገማዎች",

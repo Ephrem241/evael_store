@@ -48,12 +48,27 @@ function NavigationHistory() {
 // works before JavaScript, and from a page opened directly); once the shopper
 // has come here from another page of the shop it goes back instead, so the
 // previous page — its scroll position, its filters — is where they land.
-function BackButton({ fallbackHref = "/", className }: { fallbackHref?: string; className?: string }) {
+// `variant="circle"`: the round white button that floats over a photo (the
+// product page's gallery).
+function BackButton({
+  fallbackHref = "/",
+  variant = "ghost",
+  className,
+}: {
+  fallbackHref?: string
+  variant?: "ghost" | "circle"
+  className?: string
+}) {
   const t = useT()
   const router = useRouter()
 
   return (
-    <Button variant="ghost" size="icon-lg" asChild className={cn("-ml-2 shrink-0 text-charcoal", className)}>
+    <Button
+      variant={variant === "circle" ? "icon-circle" : "ghost"}
+      size="icon-lg"
+      asChild
+      className={cn(variant === "ghost" && "-ml-2 text-charcoal", "shrink-0", className)}
+    >
       <Link
         href={fallbackHref}
         aria-label={t("nav.back")}
@@ -64,7 +79,7 @@ function BackButton({ fallbackHref = "/", className }: { fallbackHref?: string; 
           }
         }}
       >
-        <ArrowLeft aria-hidden className="size-[22px]" strokeWidth={1.75} />
+        <ArrowLeft aria-hidden className={variant === "circle" ? "size-[18px]" : "size-[22px]"} strokeWidth={1.75} />
       </Link>
     </Button>
   )
