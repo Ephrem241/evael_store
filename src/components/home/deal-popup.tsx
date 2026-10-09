@@ -319,9 +319,12 @@ function DealPopup({
         </AnimatePresence>
       </DialogPrimitive.Root>
 
-      {/* Reopens the popup once it has been seen, while the deal lasts. Phones:
-          above the bottom navigation; it stays mounted (faded out) while the
-          popup is open so focus can come back to it. */}
+      {/* Reopens the popup once it has been seen, while the deal lasts. Bottom
+          left, since the assistant button holds the bottom right; on phones,
+          above the bottom navigation, level with that button. mb-0 undoes the
+          gap the homepage's `space-y-*` gives its children, which would lift it.
+          It stays mounted (faded out) while the popup is open so focus can come
+          back to it. */}
       <AnimatePresence>
         {seen && active && (
           <m.button
@@ -335,7 +338,7 @@ function DealPopup({
               setOpen(true)
             }}
             className={cn(
-              "fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-30 flex h-11 items-center gap-1.5 rounded-full bg-brand-strong pr-4 pl-3.5 text-sm font-semibold text-white shadow-lift ring-1 ring-gold/50 transition-colors outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-gold active:bg-brand-deep lg:right-6 lg:bottom-6",
+              "fixed bottom-[calc(5.625rem+env(safe-area-inset-bottom))] left-[max(1rem,env(safe-area-inset-left))] z-30 mb-0 flex h-11 items-center gap-1.5 rounded-full bg-brand-strong pr-4 pl-3.5 text-sm font-semibold text-white shadow-lift ring-1 ring-gold/50 transition-colors outline-none hover:bg-brand-deep focus-visible:ring-3 focus-visible:ring-gold active:bg-brand-deep lg:bottom-6 lg:left-6",
               open && "pointer-events-none"
             )}
             initial={{ opacity: 0, y: 12, scale: 0.9 }}

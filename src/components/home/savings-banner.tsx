@@ -6,10 +6,11 @@ import { getT } from "@/lib/i18n/server"
 import { Button } from "@/components/ui/button"
 import { Reveal } from "@/components/motion/reveal"
 
-// "BIG SAVINGS. EVERY DAY.": a deep burgundy band, the photograph (a shopper
-// with bags, a city beyond) filling its right side, a thin gold curve across
-// it. The words sit on the solid burgundy (white 14.6:1, gold 6.0:1), never
-// on the picture. Phones: the words on the burgundy, the photograph under them.
+// "BIG SAVINGS. EVERY DAY.": the photograph (a burgundy panel on its left, a
+// shopper with bags and a city beyond on its right) covers the whole card, a
+// thin gold curve across it. The words sit on burgundy, never on the busy
+// part of the picture: on desktop the photo's own panel, blended into the
+// band by a fade; on phones a fade rising from the bottom, the shopper above.
 //
 // The figure is the biggest discount really on sale right now (`percent`),
 // so the banner can never promise more than exists; the page leaves the
@@ -21,20 +22,20 @@ async function SavingsBanner({ percent }: { percent: number }) {
     <Reveal>
       <section
         aria-labelledby="savings-heading"
-        className="relative isolate overflow-hidden rounded-hero bg-brand-banner text-white lg:min-h-[200px]"
+        className="relative isolate flex min-h-[340px] flex-col justify-end overflow-hidden rounded-hero bg-brand-banner text-white sm:min-h-[320px] lg:min-h-[260px] lg:justify-center"
       >
-        <div className="relative h-44 sm:h-56 lg:absolute lg:inset-y-0 lg:right-0 lg:-z-10 lg:h-auto lg:w-[72%]">
+        <div className="absolute inset-0 -z-10">
           <Image
             src="/images/home/savings-banner.jpg"
             alt=""
             fill
-            sizes="(min-width: 1024px) 900px, 100vw"
-            className="object-cover object-[80%_45%] lg:object-[100%_45%]"
+            sizes="(min-width: 1280px) 1232px, 100vw"
+            className="object-cover object-[78%_20%] sm:object-[100%_25%] lg:object-[100%_30%]"
           />
-          {/* The photograph fades into the burgundy, behind the words. */}
+          {/* Burgundy behind the words, so they never sit on the busy photo. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-linear-to-t from-brand-banner to-transparent to-40% lg:bg-linear-to-r lg:from-brand-banner lg:from-5% lg:via-brand-banner/60 lg:via-25% lg:to-transparent lg:to-50%"
+            className="pointer-events-none absolute inset-0 bg-linear-to-t from-brand-banner from-30% via-brand-banner/80 via-50% to-transparent to-75% lg:bg-linear-to-r lg:from-brand-banner lg:from-35% lg:via-brand-banner/75 lg:via-48% lg:to-transparent lg:to-68%"
           />
         </div>
         <svg
@@ -45,7 +46,7 @@ async function SavingsBanner({ percent }: { percent: number }) {
         >
           <path d="M0 190 C 180 170, 330 110, 600 10" fill="none" className="stroke-gold/70" strokeWidth="1.5" />
         </svg>
-        <div className="relative space-y-3 px-5 pt-1 pb-6 lg:max-w-[46%] lg:space-y-2.5 lg:px-10 lg:py-8">
+        <div className="relative space-y-3 px-5 pt-28 pb-6 lg:max-w-[46%] lg:space-y-2.5 lg:px-10 lg:py-8">
           <h2 id="savings-heading" className="type-banner text-white">
             {t("home.savings.title")}
           </h2>
