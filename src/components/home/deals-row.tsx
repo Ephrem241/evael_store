@@ -1,8 +1,10 @@
 import Link from "next/link"
 import { ArrowRight, ChevronRight, Sparkles, Zap } from "lucide-react"
 
-import { formatPrice } from "@/lib/currency"
+import { formatNumber, formatPrice } from "@/lib/currency"
+import { categoryNameOf } from "@/lib/i18n/content"
 import { getT } from "@/lib/i18n/server"
+import type { Translator } from "@/lib/i18n/translator"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductCard } from "@/components/product/product-card"
 import { RemoteProductImage } from "@/components/product/remote-product-image"
@@ -16,6 +18,21 @@ import { ProductRail } from "@/components/home/product-rail"
 const ITEM_WIDTH = "w-[44%] sm:w-[31%] lg:w-[calc((100%-3rem)/4.3)]"
 const CARD_SIZES = "(min-width: 1024px) 200px, (min-width: 640px) 31vw, 44vw"
 const RAIL_ID = "deals-rail"
+
+// A phone deal card's price: the figure big, the currency word small beside
+// it (on whichever side the language puts it), so a five-digit price still
+// fits two to a card on a 360px screen.
+function DealPrice({ amount, t }: { amount: number; t: Translator }) {
+  const figure = formatNumber(amount)
+  const [before, after] = formatPrice(amount, t).split(figure)
+  return (
+    <p className="mt-1.5 truncate leading-tight font-extrabold text-sale tabular-nums">
+      {before && <span className="text-[10px]">{before}</span>}
+      <span className="text-[13px]">{figure}</span>
+      {after && <span className="text-[10px]">{after}</span>}
+    </p>
+  )
+}
 
 // The homepage's Flash Deals:
 // Phones: side-by-side "Super Deals" and "Brand Deals" cards matching the eCommerce layout.
@@ -32,35 +49,35 @@ async function DealsRow({
 
   return (
     <Reveal>
-      {/* Phones: Dual Deals Section side-by-side matching reference screenshot */}
+      {/* Phones: two white cards side by side, as in shopping apps — "Super
+          Deals" (the first two flash products, each with its saving) and
+          "Brand Deals" (the next two, each tagged with its category and its
+          old price struck through). Each title leads to the full list. */}
       <div className="grid grid-cols-2 gap-2.5 sm:hidden">
-        {/* Card 1: Super Deals */}
-        <div className="flex flex-col rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
+        <div className="flex flex-col rounded-xl bg-surface p-2 shadow-xs">
           <Link href="/deals" className="group flex items-center justify-between pb-2">
-            <span className="flex items-center gap-1 text-xs font-bold text-charcoal group-hover:text-brand-ink">
+            <span className="flex items-center gap-1 text-[13px] font-extrabold text-charcoal italic group-hover:text-brand-ink">
               <Zap aria-hidden className="size-3.5 fill-sale text-sale" />
               {t("home.superDeals")}
             </span>
-            <ChevronRight aria-hidden className="size-3.5 text-muted-text group-hover:text-charcoal" />
+            <ChevronRight aria-hidden className="size-4 text-charcoal" />
           </Link>
-          <div className="grid grid-cols-2 gap-2 mt-auto">
+          <div className="mt-auto grid grid-cols-2 gap-1.5">
             {products.slice(0, 2).map((p) => {
               const discount = p.compare_at_price ? Math.round(((p.compare_at_price - p.price) / p.compare_at_price) * 100) : null
               return (
-                <Link key={p.id} href={`/product/${p.slug}`} className="group flex flex-col">
-                  <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-subtle">
+                <Link key={p.id} href={`/product/${p.slug}`} className="group flex min-w-0 flex-col">
+                  <div className="relative aspect-square w-full overflow-hidden rounded-md bg-subtle">
                     {p.image_url ? (
-                      <RemoteProductImage src={p.image_url} alt="" sizes="80px" />
+                      <RemoteProductImage src={p.image_url} alt="" sizes="22vw" />
                     ) : (
                       <div className="flex size-full items-center justify-center bg-brand-soft/40 text-[11px] font-bold text-brand-ink">
                         {p.name_en.slice(0, 2)}
                       </div>
                     )}
                   </div>
-                  <p className="mt-1.5 truncate text-[11px] font-bold text-brand-ink">
-                    {formatPrice(p.price, t)}
-                  </p>
-                  <p className="text-[9px] font-semibold text-sale">
+                  <DealPrice amount={p.price} t={t} />
+                  <p className="truncate text-[10px] font-semibold text-sale">
                     {discount ? t("home.dealPopup.badge", { percent: discount }) : t("home.flashTitle")}
                   </p>
                 </Link>
@@ -69,34 +86,33 @@ async function DealsRow({
           </div>
         </div>
 
-        {/* Card 2: Brand Deals */}
-        <div className="flex flex-col rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
+        <div className="flex flex-col rounded-xl bg-surface p-2 shadow-xs">
           <Link href="/shop" className="group flex items-center justify-between pb-2">
-            <span className="flex items-center gap-1 text-xs font-bold text-charcoal group-hover:text-brand-ink">
-              <Sparkles aria-hidden className="size-3.5 text-gold" />
+            <span className="flex items-center gap-1 text-[13px] font-extrabold text-charcoal italic group-hover:text-brand-ink">
+              <Sparkles aria-hidden className="size-3.5 fill-gold text-gold" />
               {t("home.brandDeals")}
             </span>
-            <ChevronRight aria-hidden className="size-3.5 text-muted-text group-hover:text-charcoal" />
+            <ChevronRight aria-hidden className="size-4 text-charcoal" />
           </Link>
-          <div className="grid grid-cols-2 gap-2 mt-auto">
+          <div className="mt-auto grid grid-cols-2 gap-1.5">
             {products.slice(2, 4).concat(products.slice(0, 2)).slice(0, 2).map((p) => (
-              <Link key={p.id} href={`/product/${p.slug}`} className="group flex flex-col">
-                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-subtle">
-                  <span className="absolute top-1 left-1 z-10 rounded bg-charcoal/80 px-1 py-0.5 text-[8px] font-semibold text-white">
-                    {p.categorySlug.toUpperCase()}
-                  </span>
+              <Link key={p.id} href={`/product/${p.slug}`} className="group flex min-w-0 flex-col">
+                <div className="relative aspect-square w-full overflow-hidden rounded-md bg-subtle">
                   {p.image_url ? (
-                    <RemoteProductImage src={p.image_url} alt="" sizes="80px" />
+                    <RemoteProductImage src={p.image_url} alt="" sizes="22vw" />
                   ) : (
                     <div className="flex size-full items-center justify-center bg-brand-soft/40 text-[11px] font-bold text-brand-ink">
                       {p.name_en.slice(0, 2)}
                     </div>
                   )}
+                  {p.categoryName && (
+                    <span className="absolute top-0 left-0 max-w-full truncate rounded-br-md bg-charcoal px-1 py-0.5 text-[9px] leading-tight font-semibold text-white">
+                      {categoryNameOf(p, t.locale)}
+                    </span>
+                  )}
                 </div>
-                <p className="mt-1.5 truncate text-[11px] font-bold text-brand-ink">
-                  {formatPrice(p.price, t)}
-                </p>
-                <p className="text-[9px] text-muted-text line-through">
+                <DealPrice amount={p.price} t={t} />
+                <p className="truncate text-[10px] text-muted-text line-through">
                   {p.compare_at_price ? formatPrice(p.compare_at_price, t) : ""}
                 </p>
               </Link>

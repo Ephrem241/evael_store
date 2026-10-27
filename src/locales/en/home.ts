@@ -11,8 +11,6 @@ export const home = {
     showPhoto: "Show photo {index} of {total}",
     pause: "Pause the photos",
     play: "Play the photos",
-    upToPrefix: "UP TO",
-    offSuffix: "OFF",
   },
   categoriesTitle: "Shop by Category",
   viewAll: "View All",

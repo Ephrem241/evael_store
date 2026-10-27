@@ -20,38 +20,42 @@ async function SavingsBanner({ percent }: { percent: number }) {
 
   return (
     <Reveal>
-      {/* Phones: horizontal coupon voucher banner matching reference screenshot */}
+      {/* Phones: a voucher strip, as in shopping apps — a red envelope with
+          the real figure in it, the offer, and a black "OPEN NOW" button,
+          with a small "Promotion" tag in the corner. */}
       <section
         aria-labelledby="savings-heading-mobile"
-        className="relative flex items-center justify-between gap-2.5 rounded-xl border border-gold/40 bg-surface p-3 shadow-xs sm:hidden"
+        className="relative flex items-center gap-3 overflow-hidden rounded-xl bg-linear-to-r from-brand-soft to-gold/20 py-3 pr-3 pl-3.5 sm:hidden"
       >
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          {/* Envelope voucher icon with ??? badge */}
-          <div className="relative flex size-11 shrink-0 items-center justify-center rounded-lg border border-gold/50 bg-amber-50/80 shadow-xs">
-            <span className="font-display text-xs font-black tracking-wider text-brand-strong">???</span>
-            <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-sale text-[8px] font-bold text-white">
-              %
-            </span>
-          </div>
-          <div className="min-w-0 flex-1">
-            <h2 id="savings-heading-mobile" className="truncate font-display text-xs font-bold text-charcoal">
-              {t("home.savings.title")}
-            </h2>
-            <p className="truncate text-xs font-bold text-brand-ink">
-              {t("home.savings.upTo", { percent })}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col items-end gap-0.5 shrink-0">
-          <Button asChild size="sm" className="h-7.5 rounded-sm bg-charcoal px-3 text-[11px] font-bold uppercase text-white hover:bg-brand-deep active:scale-95">
-            <Link href="/deals">
-              {t("home.openNow")}
-            </Link>
-          </Button>
-          <span className="text-[8px] text-muted-text/70 uppercase">
-            {t("home.promotion")}
+        <span
+          aria-hidden
+          className="relative flex h-10 w-13 shrink-0 items-end justify-center overflow-hidden rounded-md bg-sale pb-1 shadow-xs"
+        >
+          {/* The envelope's flap. */}
+          <span className="absolute inset-x-0 top-0 h-4 rounded-b-[50%] bg-white/20" />
+          <span className="relative rounded-sm bg-white px-1 text-xs leading-tight font-black text-sale tabular-nums">
+            {percent}%
           </span>
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2
+            id="savings-heading-mobile"
+            className="truncate text-[13px] leading-tight font-extrabold tracking-wide text-charcoal uppercase"
+          >
+            {t("home.savings.upTo", { percent })}
+          </h2>
+          <p className="mt-0.5 truncate text-[11px] text-muted-text">{t("home.savings.title")}</p>
         </div>
+        <Button
+          asChild
+          size="sm"
+          className="h-8 shrink-0 rounded-sm bg-charcoal px-3 text-[11px] font-bold text-white uppercase hover:bg-brand-deep"
+        >
+          <Link href="/deals">{t("home.openNow")}</Link>
+        </Button>
+        <span className="absolute right-0 bottom-0 rounded-tl-md bg-muted-text px-1 text-[8px] leading-[1.4] text-white">
+          {t("home.promotion")}
+        </span>
       </section>
 
       {/* Desktop / Tablets: original photographic banner */}

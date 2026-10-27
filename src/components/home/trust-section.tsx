@@ -16,36 +16,30 @@ const items: { icon: typeof ShieldCheck | "flag"; title: MessageKey; description
   { icon: "flag", title: "home.trust.localTitle", description: "home.trust.localText" },
 ]
 
-// A full-width subtle band with four equal cells divided by hairlines. Desktop:
-// the icon beside a 13px title and a 12px line. Phones: 2x2 quadrant with 144px
-// per cell so text doesn't squash, switching to 4 columns from `sm`.
+// The two shown on phones: the most concrete, a delivery and a way to pay.
+const phoneItems = [items[0], items[2]]
+
+// Desktop: a full-width subtle band with four equal cells divided by
+// hairlines, the icon beside a 13px title and a 12px line. Phones: one soft
+// burgundy card on the home page's white sheet, split in two by a hairline,
+// each half a burgundy title with its icon over a grey line.
 async function TrustSection() {
   const t = await getT()
 
   return (
-    <section aria-label={t("home.trustLabel")} className="relative left-1/2 w-screen -translate-x-1/2 bg-subtle">
+    <section aria-label={t("home.trustLabel")} className="relative left-1/2 w-screen -translate-x-1/2 lg:bg-subtle">
       <Container>
-        {/* Phones: two side-by-side perk cards matching reference screenshot */}
-        <div className="grid grid-cols-2 gap-2.5 py-3 lg:hidden">
-          <div className="flex items-center gap-2 rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand-ink">
-              <Truck aria-hidden className="size-4.5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-bold text-charcoal">{t("home.trust.fastTitle")}</p>
-              <p className="truncate text-[10px] text-muted-text">{t("home.trust.fastText")}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
-            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand-ink">
-              <ShieldCheck aria-hidden className="size-4.5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-bold text-charcoal">{t("home.trust.localTitle")}</p>
-              <p className="truncate text-[10px] text-muted-text">{t("home.trust.localText")}</p>
-            </div>
-          </div>
-        </div>
+        <ul className="grid grid-cols-2 divide-x divide-brand/15 rounded-xl bg-brand-soft py-2.5 lg:hidden">
+          {phoneItems.map((item) => (
+            <li key={item.title} className="min-w-0 px-3">
+              <p className="flex items-center gap-1.5 text-[13px] leading-tight font-bold text-brand-ink">
+                {item.icon !== "flag" && <item.icon aria-hidden className="size-4 shrink-0" strokeWidth={2} />}
+                <span className="truncate">{t(item.title)}</span>
+              </p>
+              <p className="mt-0.5 truncate text-[11px] text-muted-text">{t(item.description)}</p>
+            </li>
+          ))}
+        </ul>
 
         {/* Desktop: 4-column full-width subtle band */}
         <ul className="hidden divide-x divide-border lg:grid lg:grid-cols-4">

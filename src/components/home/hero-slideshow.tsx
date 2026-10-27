@@ -21,11 +21,18 @@ export interface HeroPhoto {
 // every 6 seconds. The words and buttons never change — only the picture —
 // so the photos are decorative (empty alt).
 //
+// Desktop: full-bleed, at least 480px tall, right under the header. Phones and
+// tablets: a rounded card inset on a band of the header's burgundy, so the
+// header seems to carry on behind it. The card (2.15:1) is wider than the
+// photos, so each is seen across its whole width — the cream wall on the left
+// for the words, the subject on the right — and only trimmed top and bottom.
+//
 // Stops while the pointer is over the hero or focus is inside it, for good
 // once the shopper presses pause (WCAG 2.2.2), and never starts for anyone
 // whose system asks for reduced motion. On touch screens a swipe moves to the
-// next or previous photo. The dots (bottom left, under the text) jump to a
-// photo; only the first photo is loaded eagerly.
+// next or previous photo. The dots (bottom left under the text on desktop,
+// bottom centre on phones) jump to a photo; only the first photo is loaded
+// eagerly.
 function HeroSlideshow({
   photos,
   labelledBy,
@@ -84,70 +91,73 @@ function HeroSlideshow({
         if (!many || start == null || end == null || Math.abs(end - start) < SWIPE_PX) return
         go(end < start ? 1 : -1)
       }}
-      className="relative isolate left-1/2 flex min-h-[300px] w-screen -translate-x-1/2 items-center overflow-hidden bg-background lg:min-h-[480px]"
+      // The band's sides match Container's, so the card lines up with the page.
+      className="relative left-1/2 w-screen -translate-x-1/2 bg-brand-deep pt-1 pr-[max(1rem,env(safe-area-inset-right))] pb-4 pl-[max(1rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] lg:bg-background lg:p-0"
     >
-      {photos.map((photo, i) => (
-        <Image
-          key={photo.src}
-          src={photo.src}
-          alt=""
-          fill
-          sizes="100vw"
-          preload={i === 0}
-          loading={i === 0 ? undefined : "lazy"}
-          style={{ objectPosition: photo.position }}
-          className={cn(
-            "-z-20 object-cover transition-opacity duration-500 ease-in-out",
-            i === index ? "opacity-100" : "opacity-0"
-          )}
+      <div className="relative isolate flex aspect-[2.15/1] items-center overflow-hidden rounded-xl bg-background lg:aspect-auto lg:min-h-[480px] lg:rounded-none">
+        {photos.map((photo, i) => (
+          <Image
+            key={photo.src}
+            src={photo.src}
+            alt=""
+            fill
+            sizes="100vw"
+            preload={i === 0}
+            loading={i === 0 ? undefined : "lazy"}
+            style={{ objectPosition: photo.position }}
+            className={cn(
+              "-z-20 object-cover transition-opacity duration-500 ease-in-out",
+              i === index ? "opacity-100" : "opacity-0"
+            )}
+          />
+        ))}
+        {/* The cream rises from the left, so the words always sit on the page colour. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-r from-background/90 from-25% via-background/50 via-45% to-transparent to-58% lg:from-background lg:via-background/70 lg:via-40% lg:to-60%"
         />
-      ))}
-      {/* The cream rises from the left, so the words always sit on the page colour. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-r from-background from-30% via-background/80 via-50% to-transparent to-75% lg:from-25% lg:via-background/70 lg:via-40% lg:to-60%"
-      />
-      <p
-        aria-hidden
-        className="pointer-events-none absolute top-10 right-[7%] hidden -rotate-6 font-script text-[2rem] leading-tight font-semibold text-brand-deep lg:block"
-      >
-        {flourish}
-      </p>
+        <p
+          aria-hidden
+          className="pointer-events-none absolute top-10 right-[7%] hidden -rotate-6 font-script text-[2rem] leading-tight font-semibold text-brand-deep lg:block"
+        >
+          {flourish}
+        </p>
 
-      <Container className="py-8 lg:py-14">{children}</Container>
+        <Container className="py-3 lg:py-14">{children}</Container>
 
-      {many && (
-        <Container className="absolute inset-x-0 bottom-2.5 flex items-center justify-center gap-1.5 lg:bottom-6 lg:justify-start lg:gap-1">
-          {photos.map((photo, i) => (
-            <button
-              key={photo.src}
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-label={t("home.hero.showPhoto", { index: i + 1, total: photos.length })}
-              aria-current={i === index ? "true" : undefined}
-              className="group flex size-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <span
-                aria-hidden
-                className={cn(
-                  "block h-2 rounded-full transition-[width,background-color] duration-300",
-                  i === index ? "w-5 bg-brand" : "w-2 bg-charcoal/25 group-hover:bg-charcoal/45"
-                )}
-              />
-            </button>
-          ))}
-          {!reducedMotion && (
-            <button
-              type="button"
-              onClick={() => setStopped((value) => !value)}
-              aria-label={stopped ? t("home.hero.play") : t("home.hero.pause")}
-              className="ml-1 flex size-6 items-center justify-center rounded-full text-charcoal/60 outline-none hover:text-charcoal focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {stopped ? <Play aria-hidden className="size-3" /> : <Pause aria-hidden className="size-3" />}
-            </button>
-          )}
-        </Container>
-      )}
+        {many && (
+          <Container className="absolute inset-x-0 bottom-0.5 flex items-center justify-center gap-0.5 lg:bottom-6 lg:justify-start lg:gap-1">
+            {photos.map((photo, i) => (
+              <button
+                key={photo.src}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={t("home.hero.showPhoto", { index: i + 1, total: photos.length })}
+                aria-current={i === index ? "true" : undefined}
+                className="group flex size-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "block h-1.5 rounded-full transition-[width,background-color] duration-300 lg:h-2",
+                    i === index ? "w-4 bg-brand lg:w-5" : "w-1.5 bg-charcoal/25 group-hover:bg-charcoal/45 lg:w-2"
+                  )}
+                />
+              </button>
+            ))}
+            {!reducedMotion && (
+              <button
+                type="button"
+                onClick={() => setStopped((value) => !value)}
+                aria-label={stopped ? t("home.hero.play") : t("home.hero.pause")}
+                className="flex size-6 items-center justify-center rounded-full text-charcoal/60 outline-none hover:text-charcoal focus-visible:ring-2 focus-visible:ring-ring lg:ml-1"
+              >
+                {stopped ? <Play aria-hidden className="size-3" /> : <Pause aria-hidden className="size-3" />}
+              </button>
+            )}
+          </Container>
+        )}
+      </div>
     </section>
   )
 }

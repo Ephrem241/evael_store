@@ -37,10 +37,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // The homepage, top to bottom as in the mockup: the hero (full-bleed, right
-// under the header) with the trust strip against it, Shop by Category,
-// Trending Products, the Big Savings banner, Flash Deals, New Arrivals, "Built
+// under the header) with the trust strip against it, Shop by Category, the
+// Big Savings banner, Flash Deals, Trending Products, New Arrivals, "Built
 // for Ethiopian Shoppers", Pay Your Way, and "Why Shop With Evael?" with the
-// newsletter card (the footer follows from the layout). Everything is read
+// newsletter card (the footer follows from the layout). Phones follow a
+// shopping-app layout: the hero is a card on the header's burgundy, then a
+// white sheet with two perks and a sideways-scrolling category grid, the
+// savings strip, and the Super Deals / Brand Deals pair. Everything is read
 // from the database — the copy, the categories, the products, the size of the
 // deal and whether it has a real end date. Sections with nothing to show
 // (no discounts, no flash products, no stocked categories) are left out.
@@ -87,13 +90,22 @@ export default async function Home() {
         />
       )}
 
-      {/* The hero and the trust strip are one block, with no gap between. */}
+      {/* The hero and the trust strip are one block, with no gap between.
+          Phones: the perks and the category grid sit on one white sheet whose
+          rounded top rises over the hero's burgundy band. The sheet is its own
+          full-bleed layer, so what is on it keeps the page's width. */}
       <div>
-        <Hero settings={settings} />
-        <TrustSection />
+        <Hero settings={settings} dealPercent={deals.count > 0 ? deals.maxDiscountPercent : null} />
+        {/* A gap, not space-y: space-y would give the absolute sheet a margin too, shortening it. */}
+        <div className="relative isolate flex flex-col gap-4 max-lg:-mt-3 max-lg:pt-3 max-lg:pb-4 lg:gap-12">
+          <div
+            aria-hidden
+            className="absolute inset-y-0 left-1/2 -z-10 w-screen -translate-x-1/2 rounded-t-2xl bg-surface lg:hidden"
+          />
+          <TrustSection />
+          <CategorySection categories={categories} />
+        </div>
       </div>
-
-      <CategorySection categories={categories} />
       {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
       <DealsRow products={flashDeals} countdown={dealDeadline} />
       <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />
