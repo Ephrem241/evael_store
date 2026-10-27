@@ -33,11 +33,30 @@ async function Hero({ settings }: { settings: HomepageSettings }) {
 
   return (
     <HeroSlideshow photos={PHOTOS} labelledBy="hero-heading" flourish={t("home.hero.flourish")}>
-      {/* Phones: the words keep to the left 60%, clear of the subject; the
-          buttons may run on under the photo, on their own fills. */}
-      <div className="animate-fade-up lg:max-w-[38rem]">
-        <p className="mb-3 type-eyebrow text-gold-ink max-lg:hidden">{t("home.hero.eyebrow")}</p>
-        <h1 id="hero-heading" className="font-display font-bold tracking-[-0.02em] max-lg:max-w-[60%] sm:max-lg:max-w-sm">
+      {/* Mobile: centered promo card matching the reference screenshot */}
+      <div className="animate-fade-up flex flex-col items-center text-center lg:hidden">
+        <span aria-hidden className="mb-1 text-gold text-lg">✦</span>
+        <h1 id="hero-heading" className="space-y-1">
+          <span className="block text-xs font-bold uppercase tracking-widest text-charcoal/80">
+            {lines[0] ?? settings.heroCtaLabel}
+          </span>
+          <span className="flex items-baseline justify-center gap-1.5 font-display font-black text-charcoal">
+            <span className="text-xs uppercase font-extrabold tracking-tight">{t("home.hero.upToPrefix")}</span>
+            <span className="text-3xl sm:text-4xl leading-none font-black text-charcoal">50%</span>
+            <span className="text-xs uppercase font-extrabold tracking-tight">{t("home.hero.offSuffix")}</span>
+          </span>
+        </h1>
+        <Button asChild size="sm" className="mt-2.5 h-8.5 rounded-full bg-charcoal px-5 text-xs font-bold uppercase tracking-wider text-white shadow-sm hover:bg-brand-deep active:scale-95">
+          <Link href={settings.heroCtaHref}>
+            {settings.heroCtaLabel}
+          </Link>
+        </Button>
+      </div>
+
+      {/* Desktop: original full-bleed layout */}
+      <div className="animate-fade-up hidden lg:block lg:max-w-[38rem]">
+        <p className="mb-3 type-eyebrow text-gold-ink">{t("home.hero.eyebrow")}</p>
+        <p className="font-display font-bold tracking-[-0.02em]">
           {lines.map((line, i) => {
             const last = i === lines.length - 1
             const lead = !last
@@ -46,9 +65,7 @@ async function Hero({ settings }: { settings: HomepageSettings }) {
                 key={i}
                 className={cn(
                   "block",
-                  lead
-                    ? "text-charcoal max-lg:mb-1.5 max-lg:font-sans max-lg:text-[11px] max-lg:font-semibold max-lg:tracking-[0.18em] max-lg:uppercase lg:text-[3.75rem] lg:leading-[1.05]"
-                    : "text-[2.25rem] leading-[1.1] lg:text-[3.75rem] lg:leading-[1.05]",
+                  lead ? "text-[3.75rem] leading-[1.05]" : "text-[3.75rem] leading-[1.05]",
                   last && (lines.length > 1 ? "text-gold-display" : "text-charcoal")
                 )}
               >
@@ -56,16 +73,16 @@ async function Hero({ settings }: { settings: HomepageSettings }) {
               </span>
             )
           })}
-        </h1>
-        <p className="mt-3 text-sm leading-[1.55] text-charcoal/85 max-lg:max-w-[58%] sm:max-lg:max-w-sm lg:mt-5 lg:max-w-md lg:text-base">{settings.heroSubtext}</p>
-        <div className="mt-5 flex flex-wrap gap-2.5 lg:mt-8 lg:gap-3">
-          <Button variant="hero" asChild className="max-lg:px-4 max-lg:text-[13px]">
+        </p>
+        <p className="mt-5 text-base leading-[1.55] text-charcoal/85 max-w-md">{settings.heroSubtext}</p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button variant="hero" asChild>
             <Link href={settings.heroCtaHref}>
               {settings.heroCtaLabel}
               <ArrowRight aria-hidden />
             </Link>
           </Button>
-          <Button variant="outline-gold" asChild className="bg-background/90 max-lg:px-4 max-lg:text-[13px]">
+          <Button variant="outline-gold" asChild className="bg-background/90">
             <Link href={settings.heroSecondaryCtaHref}>{settings.heroSecondaryCtaLabel}</Link>
           </Button>
         </div>

@@ -94,9 +94,9 @@ export default async function Home() {
       </div>
 
       <CategorySection categories={categories} />
-      <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />
       {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
       <DealsRow products={flashDeals} countdown={dealDeadline} />
+      <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />
       <NewArrivals products={newArrivals} />
       <LocalFeatures />
       <PaymentMethods />

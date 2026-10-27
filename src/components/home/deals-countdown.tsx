@@ -89,16 +89,16 @@ function DealsCountdown({
       role="timer"
       aria-live="off"
       aria-label={t("home.deals.timeLeftValue", { time: spoken })}
-      className="flex items-start gap-1.5"
+      className="flex flex-wrap items-start gap-1 sm:gap-1.5"
     >
       {parts.map((part, i) => (
-        <div key={part.unit} aria-hidden className="flex items-start gap-1.5">
-          {i > 0 && <span className="pt-3.5 text-lg font-bold text-white/60">:</span>}
+        <div key={part.unit} aria-hidden className="flex items-start gap-1 sm:gap-1.5">
+          {i > 0 && <span className="pt-2 text-base font-bold text-white/60 sm:pt-3.5 sm:text-lg">:</span>}
           <div className="flex flex-col items-center gap-1">
-            <span className="flex size-14 items-center justify-center rounded-lg bg-white/10 text-[22px] font-bold text-white tabular-nums">
+            <span className="flex size-11 items-center justify-center rounded-lg bg-white/10 text-base font-bold text-white tabular-nums sm:size-14 sm:text-[22px]">
               {String(part.value).padStart(2, "0")}
             </span>
-            <span className="text-[11px] text-white/80">{part.unit}</span>
+            <span className="text-[10px] text-white/80 sm:text-[11px]">{part.unit}</span>
           </div>
         </div>
       ))}

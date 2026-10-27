@@ -60,7 +60,7 @@ async function PageHeader({
     <header
       data-page-bar
       className={cn(
-        "max-lg:sticky max-lg:top-0 max-lg:z-30 max-lg:-mx-4 max-lg:-mt-6 max-lg:mb-3! max-lg:flex max-lg:h-14 max-lg:items-center max-lg:gap-1 max-lg:border-b max-lg:border-border max-lg:bg-background max-lg:px-2 sm:max-lg:-mx-6 sm:max-lg:px-4",
+        "max-lg:sticky max-lg:top-0 max-lg:z-30 max-lg:-mx-4 max-lg:-mt-6 max-lg:mb-3! max-lg:flex max-lg:h-[calc(3.5rem+env(safe-area-inset-top,0px))] max-lg:pt-[env(safe-area-inset-top,0px)] max-lg:items-center max-lg:gap-1 max-lg:border-b max-lg:border-border max-lg:bg-background max-lg:px-2 sm:max-lg:-mx-6 sm:max-lg:px-4",
         barOnly && "lg:hidden",
         band && "lg:flex lg:items-center lg:justify-between lg:gap-10 lg:rounded-hero lg:border lg:border-brand/10 lg:bg-brand-soft/60 lg:px-10 lg:py-9",
         className

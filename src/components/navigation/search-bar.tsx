@@ -32,7 +32,7 @@ function SearchBar({
 }: {
   className?: string
   placeholder?: string
-  variant?: "joined" | "field"
+  variant?: "joined" | "field" | "pill"
   tone?: "light" | "dark"
   /** For a <label htmlFor> elsewhere (the phone header's search icon). */
   inputId?: string
@@ -165,9 +165,9 @@ function SearchBar({
         // smaller (that doesn't trigger the zoom), so the whole hint fits.
         className={cn(
           "bg-card placeholder:text-muted-text",
-          variant === "joined"
-            ? "h-10 rounded-r-none pr-3 pl-3.5 max-lg:h-10"
-            : cn("h-11 rounded-[10px] pr-4 pl-11 placeholder:text-sm max-lg:h-11", tone === "dark" && "border-transparent")
+          variant === "joined" && "h-10 rounded-r-none pr-3 pl-3.5 max-lg:h-10",
+          variant === "field" && cn("h-11 rounded-[10px] pr-4 pl-11 placeholder:text-sm max-lg:h-11", tone === "dark" && "border-transparent"),
+          variant === "pill" && "h-9 w-full rounded-full border-transparent bg-white pr-9 pl-3.5 text-xs text-charcoal shadow-xs placeholder:text-xs placeholder:text-muted-text max-lg:h-9"
         )}
       />
       {variant === "joined" ? (
@@ -178,6 +178,15 @@ function SearchBar({
           aria-label={t("search.submit")}
         >
           <Search className="size-[18px]" />
+        </Button>
+      ) : variant === "pill" ? (
+        <Button
+          type="submit"
+          size="icon"
+          className="absolute top-1 right-1 size-7 rounded-full bg-brand-strong text-white hover:bg-brand-deep max-lg:size-7"
+          aria-label={t("search.submit")}
+        >
+          <Search className="size-3.5" />
         </Button>
       ) : (
         <Search aria-hidden className="pointer-events-none absolute left-3.5 size-[18px] text-muted-text" />
@@ -202,7 +211,7 @@ function SearchBar({
               closeSuggestions()
             }
           }}
-          className="absolute top-full left-0 z-40 mt-2 w-full animate-in overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-lift duration-150 fade-in slide-in-from-top-1">
+          className="absolute top-full left-0 z-40 mt-2 max-h-[min(26rem,calc(100vh-12rem))] w-full animate-in overflow-y-auto overscroll-contain rounded-2xl border border-border bg-popover text-popover-foreground shadow-lift duration-150 fade-in slide-in-from-top-1">
           {showRecent && (
             <div role="group" aria-labelledby={`${uid}-recent`} className="border-b border-border p-2 last:border-b-0">
               <div className="flex items-center justify-between px-2 py-1">

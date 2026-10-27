@@ -4,10 +4,11 @@ import { useState } from "react"
 import Image from "next/image"
 import { cn } from "cn"
 
-// Only files in this project's public Storage buckets can go through the image
-// optimizer (see next.config.ts); anything else — e.g. an old image URL typed
-// in by hand — is shown as-is rather than crashing the page.
-const OPTIMIZABLE_PREFIX = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/`
+// Remote product and category photos live in Supabase Storage (public buckets).
+// They are pre-downscaled to max 1600px and converted to WebP on upload (storage.ts).
+// Serving them with `unoptimized` allows browsers to load them directly from Supabase's
+// public CDN, avoiding Next.js's 7-second server-side optimizer fetch timeout on
+// high-latency networks.
 
 // A tiny, isolated client leaf so ImagePlaceholder itself can stay
 // directive-free (it's called directly from Server Components today, e.g.
@@ -48,7 +49,7 @@ function RemoteProductImage({
       alt={alt}
       fill
       sizes={sizes}
-      unoptimized={!src.startsWith(OPTIMIZABLE_PREFIX)}
+      unoptimized
       loading={eager ? "eager" : "lazy"}
       fetchPriority={eager ? "high" : "auto"}
       onError={() => setFailed(true)}

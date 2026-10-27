@@ -84,7 +84,7 @@ function AdminTopBar({ onOpenMenu }: { onOpenMenu: () => void }) {
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b border-border bg-admin-bg">
+    <header className="sticky top-0 z-20 border-b border-border bg-admin-bg pt-[env(safe-area-inset-top,0px)]">
       <div className="relative flex h-16 items-center gap-2 px-3 md:gap-4 md:px-6">
         <button type="button" onClick={onOpenMenu} aria-label={t("nav.openMenu")} className={cn(iconButton, "md:hidden")}>
           <Menu aria-hidden strokeWidth={1.75} className="size-6" />

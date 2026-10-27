@@ -20,9 +20,44 @@ async function SavingsBanner({ percent }: { percent: number }) {
 
   return (
     <Reveal>
+      {/* Phones: horizontal coupon voucher banner matching reference screenshot */}
+      <section
+        aria-labelledby="savings-heading-mobile"
+        className="relative flex items-center justify-between gap-2.5 rounded-xl border border-gold/40 bg-surface p-3 shadow-xs sm:hidden"
+      >
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          {/* Envelope voucher icon with ??? badge */}
+          <div className="relative flex size-11 shrink-0 items-center justify-center rounded-lg border border-gold/50 bg-amber-50/80 shadow-xs">
+            <span className="font-display text-xs font-black tracking-wider text-brand-strong">???</span>
+            <span className="absolute -top-1 -right-1 flex size-3.5 items-center justify-center rounded-full bg-sale text-[8px] font-bold text-white">
+              %
+            </span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 id="savings-heading-mobile" className="truncate font-display text-xs font-bold text-charcoal">
+              {t("home.savings.title")}
+            </h2>
+            <p className="truncate text-xs font-bold text-brand-ink">
+              {t("home.savings.upTo", { percent })}
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col items-end gap-0.5 shrink-0">
+          <Button asChild size="sm" className="h-7.5 rounded-sm bg-charcoal px-3 text-[11px] font-bold uppercase text-white hover:bg-brand-deep active:scale-95">
+            <Link href="/deals">
+              {t("home.openNow")}
+            </Link>
+          </Button>
+          <span className="text-[8px] text-muted-text/70 uppercase">
+            {t("home.promotion")}
+          </span>
+        </div>
+      </section>
+
+      {/* Desktop / Tablets: original photographic banner */}
       <section
         aria-labelledby="savings-heading"
-        className="relative isolate flex min-h-[340px] flex-col justify-end overflow-hidden rounded-hero bg-brand-banner text-white sm:min-h-[320px] lg:min-h-[260px] lg:justify-center"
+        className="relative isolate hidden sm:flex min-h-[320px] flex-col justify-end overflow-hidden rounded-hero bg-brand-banner text-white lg:min-h-[260px] lg:justify-center"
       >
         <div className="absolute inset-0 -z-10">
           <Image

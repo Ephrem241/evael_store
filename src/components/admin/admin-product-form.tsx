@@ -222,7 +222,7 @@ function AdminProductForm({ product }: { product?: Product }) {
                 value={field.value}
                 onChange={field.onChange}
                 aria-invalid={!!errors.category_id}
-                className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20"
+                className="h-10 w-full rounded-lg border border-input bg-card px-2.5 text-sm text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:h-11 max-lg:text-base aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20"
               >
                 <option value="">{t("admin.productForm.selectCategory")}</option>
                 {categories.map((c) => (

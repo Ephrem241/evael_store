@@ -9,6 +9,8 @@ export const home: Dictionary["home"] = {
     showPhoto: "ፎቶ {index} ከ{total} አሳይ",
     pause: "ፎቶዎቹን አቁም",
     play: "ፎቶዎቹን አጫውት",
+    upToPrefix: "እስከ",
+    offSuffix: "ቅናሽ",
   },
   categoriesTitle: "በምድብ ይግዙ",
   viewAll: "ሁሉንም ይመልከቱ",
@@ -103,4 +105,8 @@ export const home: Dictionary["home"] = {
     subscribe: "ተመዝገብ",
     success: "ተመዝግበዋል! ስለተቀላቀሉን እናመሰግናለን።",
   },
+  superDeals: "ልዩ ቅናሾች",
+  brandDeals: "የብራንድ ቅናሾች",
+  openNow: "አሁን ክፈት",
+  promotion: "ማስተዋወቂያ",
 }

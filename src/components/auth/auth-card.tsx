@@ -23,7 +23,7 @@ function AuthCard({
         <h1 className="font-display text-3xl font-bold text-charcoal">{title}</h1>
         {description && <p className="text-sm leading-relaxed text-muted-text">{description}</p>}
       </div>
-      <div className="rounded-card border border-border bg-surface p-6 shadow-soft sm:p-8">{children}</div>
+      <div className="rounded-card border border-border bg-surface p-4 min-[360px]:p-6 shadow-soft sm:p-8">{children}</div>
       {footer && <div className="space-y-1 text-center text-sm text-muted-text">{footer}</div>}
     </div>
   )

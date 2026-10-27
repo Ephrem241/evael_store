@@ -179,7 +179,7 @@ function AccountNav() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-linear-to-r from-surface from-35% via-surface/80 to-transparent"
         />
-        <div className="space-y-3 p-5 pr-[35%]">
+        <div className="space-y-3 p-5 max-sm:pr-4 sm:pr-[35%]">
           <p className="font-display text-xl leading-tight font-bold text-brand-deepest">{t("nav.tagline")}</p>
           <Logo />
         </div>

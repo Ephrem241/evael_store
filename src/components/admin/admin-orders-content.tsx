@@ -114,7 +114,7 @@ function AdminOrdersContent() {
                       disabled={isTerminal}
                       onCommit={(next) => handleStatusChange(order.id, next as Status)}
                       aria-label={t("admin.orders.changeStatus", { number: order.order_number })}
-                      className="h-7 rounded-lg border border-input bg-transparent px-1.5 text-xs text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="h-7 max-lg:h-9 max-lg:text-sm rounded-lg border border-input bg-transparent px-1.5 text-xs text-charcoal outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {statusMenuOptions(order.status).map((status) => (
                         <option key={status} value={status}>

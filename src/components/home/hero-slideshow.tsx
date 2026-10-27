@@ -117,7 +117,7 @@ function HeroSlideshow({
       <Container className="py-8 lg:py-14">{children}</Container>
 
       {many && (
-        <Container className="absolute inset-x-0 bottom-3 flex items-center gap-1 lg:bottom-6">
+        <Container className="absolute inset-x-0 bottom-2.5 flex items-center justify-center gap-1.5 lg:bottom-6 lg:justify-start lg:gap-1">
           {photos.map((photo, i) => (
             <button
               key={photo.src}

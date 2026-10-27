@@ -16,7 +16,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-card border border-border bg-card p-4">
       <p className="text-sm text-muted-text">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-charcoal">{value}</p>
+      <p className="mt-1 text-xl font-semibold text-charcoal break-words sm:text-2xl">{value}</p>
     </div>
   )
 }
@@ -37,7 +37,7 @@ function AdminDashboardContent() {
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 min-[360px]:gap-4 lg:grid-cols-4">
         <StatCard label={t("admin.dashboard.todaysSales")} value={formatPrice(stats.todaysSales, t)} />
         <StatCard label={t("admin.dashboard.monthlySales")} value={formatPrice(stats.monthlySales, t)} />
         <StatCard label={t("admin.dashboard.totalOrders")} value={String(stats.totalOrders)} />
@@ -81,7 +81,7 @@ function AdminDashboardContent() {
                 <li key={o.id}>
                   <Link
                     href={`/admin/orders/${o.id}`}
-                    className="flex items-center justify-between text-sm hover:text-brand-ink"
+                    className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 py-0.5 text-sm hover:text-brand-ink"
                   >
                     <span className="text-charcoal">
                       #{o.order_number} · {formatOrderDate(o.created_at, t.locale)}

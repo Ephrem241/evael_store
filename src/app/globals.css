@@ -276,6 +276,9 @@
   * {
     @apply border-border outline-ring/50;
     }
+  html, body {
+    overflow-x: clip;
+  }
   body {
     @apply bg-background text-foreground;
     }
@@ -293,10 +296,10 @@
      the brand header, so the height follows whichever is shown.
      Desktop is left as it was. */
   :root {
-    --mobile-header-height: 8.5rem;
+    --mobile-header-height: calc(5.75rem + env(safe-area-inset-top, 0px));
   }
   :root:has([data-page-bar]) {
-    --mobile-header-height: calc(3.5rem + 1px);
+    --mobile-header-height: calc(3.5rem + 1px + env(safe-area-inset-top, 0px));
   }
   @media (width < 64rem) {
     html {

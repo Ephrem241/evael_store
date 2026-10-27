@@ -57,7 +57,7 @@ function MobileMenu({ categories }: { categories: { href: string; label: string 
       </SheetTrigger>
       {/* The panel is its links; there is no separate description to announce. */}
       <SheetContent side="left" aria-describedby={undefined} className="w-[min(20rem,85vw)] gap-0 overflow-y-auto bg-background p-0">
-        <SheetHeader className="border-b border-border px-5 py-4">
+        <SheetHeader className="border-b border-border px-5 pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-4">
           <SheetTitle className="font-display text-xl font-bold text-charcoal">{t("nav.menu")}</SheetTitle>
         </SheetHeader>
         <nav aria-label={t("nav.menu")} className="space-y-1 p-3">
@@ -77,7 +77,7 @@ function MobileMenu({ categories }: { categories: { href: string; label: string 
             </MenuLink>
           ))}
         </nav>
-        <div className="flex items-center gap-3 border-t border-border px-5 py-4">
+        <div className="flex items-center gap-3 border-t border-border px-5 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
           <span className="text-sm text-muted-text">{t("footer.language")}</span>
           <LanguageSwitcher labels="full" />
         </div>

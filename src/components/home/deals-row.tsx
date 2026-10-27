@@ -1,9 +1,11 @@
 import Link from "next/link"
-import { ArrowRight, Zap } from "lucide-react"
+import { ArrowRight, ChevronRight, Sparkles, Zap } from "lucide-react"
 
+import { formatPrice } from "@/lib/currency"
 import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ProductCard } from "@/components/product/product-card"
+import { RemoteProductImage } from "@/components/product/remote-product-image"
 import { Reveal } from "@/components/motion/reveal"
 import { Button } from "@/components/ui/button"
 import { DealsCountdown } from "@/components/home/deals-countdown"
@@ -15,17 +17,9 @@ const ITEM_WIDTH = "w-[44%] sm:w-[31%] lg:w-[calc((100%-3rem)/4.3)]"
 const CARD_SIZES = "(min-width: 1024px) 200px, (min-width: 640px) 31vw, 44vw"
 const RAIL_ID = "deals-rail"
 
-// The homepage's Flash Deals: a deep burgundy panel. On the left (above, on
-// phones): a red bolt, "FLASH DEALS" in gold capitals, its line, the
-// countdown and a gold "View All Deals" button; on the right a row of compact
-// white product cards — the products really on flash sale (a compare-at price
-// above the price).
-//
-// The countdown appears ONLY when the admin has set a real end date for the
-// promotion (`countdown` is passed then; see app/page.tsx). Without one there
-// is no deadline to show — a timer that silently restarts every midnight would
-// be invented urgency. With no flash products the whole section is left out.
-// Gold on the deepest burgundy is 6.8:1; white is 16.6:1.
+// The homepage's Flash Deals:
+// Phones: side-by-side "Super Deals" and "Brand Deals" cards matching the eCommerce layout.
+// Desktop: deep burgundy panel with countdown timer and scrollable rail.
 async function DealsRow({
   products,
   countdown,
@@ -38,9 +32,83 @@ async function DealsRow({
 
   return (
     <Reveal>
+      {/* Phones: Dual Deals Section side-by-side matching reference screenshot */}
+      <div className="grid grid-cols-2 gap-2.5 sm:hidden">
+        {/* Card 1: Super Deals */}
+        <div className="flex flex-col rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
+          <Link href="/deals" className="group flex items-center justify-between pb-2">
+            <span className="flex items-center gap-1 text-xs font-bold text-charcoal group-hover:text-brand-ink">
+              <Zap aria-hidden className="size-3.5 fill-sale text-sale" />
+              {t("home.superDeals")}
+            </span>
+            <ChevronRight aria-hidden className="size-3.5 text-muted-text group-hover:text-charcoal" />
+          </Link>
+          <div className="grid grid-cols-2 gap-2 mt-auto">
+            {products.slice(0, 2).map((p) => {
+              const discount = p.compare_at_price ? Math.round(((p.compare_at_price - p.price) / p.compare_at_price) * 100) : null
+              return (
+                <Link key={p.id} href={`/product/${p.slug}`} className="group flex flex-col">
+                  <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-subtle">
+                    {p.image_url ? (
+                      <RemoteProductImage src={p.image_url} alt="" sizes="80px" />
+                    ) : (
+                      <div className="flex size-full items-center justify-center bg-brand-soft/40 text-[11px] font-bold text-brand-ink">
+                        {p.name_en.slice(0, 2)}
+                      </div>
+                    )}
+                  </div>
+                  <p className="mt-1.5 truncate text-[11px] font-bold text-brand-ink">
+                    {formatPrice(p.price, t)}
+                  </p>
+                  <p className="text-[9px] font-semibold text-sale">
+                    {discount ? t("home.dealPopup.badge", { percent: discount }) : t("home.flashTitle")}
+                  </p>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Card 2: Brand Deals */}
+        <div className="flex flex-col rounded-xl border border-border/70 bg-surface p-2.5 shadow-xs">
+          <Link href="/shop" className="group flex items-center justify-between pb-2">
+            <span className="flex items-center gap-1 text-xs font-bold text-charcoal group-hover:text-brand-ink">
+              <Sparkles aria-hidden className="size-3.5 text-gold" />
+              {t("home.brandDeals")}
+            </span>
+            <ChevronRight aria-hidden className="size-3.5 text-muted-text group-hover:text-charcoal" />
+          </Link>
+          <div className="grid grid-cols-2 gap-2 mt-auto">
+            {products.slice(2, 4).concat(products.slice(0, 2)).slice(0, 2).map((p) => (
+              <Link key={p.id} href={`/product/${p.slug}`} className="group flex flex-col">
+                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-subtle">
+                  <span className="absolute top-1 left-1 z-10 rounded bg-charcoal/80 px-1 py-0.5 text-[8px] font-semibold text-white">
+                    {p.categorySlug.toUpperCase()}
+                  </span>
+                  {p.image_url ? (
+                    <RemoteProductImage src={p.image_url} alt="" sizes="80px" />
+                  ) : (
+                    <div className="flex size-full items-center justify-center bg-brand-soft/40 text-[11px] font-bold text-brand-ink">
+                      {p.name_en.slice(0, 2)}
+                    </div>
+                  )}
+                </div>
+                <p className="mt-1.5 truncate text-[11px] font-bold text-brand-ink">
+                  {formatPrice(p.price, t)}
+                </p>
+                <p className="text-[9px] text-muted-text line-through">
+                  {p.compare_at_price ? formatPrice(p.compare_at_price, t) : ""}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop / Tablets: original burgundy panel with countdown and rail */}
       <section
         aria-labelledby="deals-row-heading"
-        className="grid grid-cols-1 gap-5 rounded-hero bg-brand-deepest p-4 sm:p-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-center lg:gap-8"
+        className="hidden sm:grid grid-cols-1 gap-5 rounded-hero bg-brand-deepest p-4 sm:p-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-center lg:gap-8"
       >
         <div className="space-y-4 text-white lg:space-y-5">
           <div className="space-y-1.5">

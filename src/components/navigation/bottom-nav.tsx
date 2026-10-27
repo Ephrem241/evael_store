@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Heart, Home, LayoutDashboard, LayoutGrid, ShoppingCart, User } from "lucide-react"
+import { LayoutDashboard, LayoutGrid, ShoppingBag, ShoppingCart, Sparkles, User } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -13,7 +13,7 @@ import { useCartStore, selectCartCount } from "@/lib/store/cart"
 type Tab = {
   href: string
   label: MessageKey
-  icon: typeof Home
+  icon: typeof ShoppingBag
   /** Which addresses light this tab up. */
   matches: (pathname: string) => boolean
   /** The outline icon can be filled when active (the cart's open shape can't). */
@@ -38,28 +38,25 @@ function BottomNav() {
   // keep this one.
   if (pathname.startsWith("/product/") && user?.role !== "admin") return null
 
-  const favorites = under("/account/favorites")
-
   // An admin browsing the shop doesn't shop: no wishlist or cart, and the last
   // tab leads back to the dashboard.
   const tabs: Tab[] =
     user?.role === "admin"
       ? [
-          { href: "/", label: "nav.home", icon: Home, matches: (p) => p === "/", fills: true },
+          { href: "/", label: "nav.home", icon: ShoppingBag, matches: (p) => p === "/", fills: true },
           { href: "/categories", label: "nav.categories", icon: LayoutGrid, matches: under("/categories"), fills: true },
           { href: "/admin", label: "admin.nav.dashboard", icon: LayoutDashboard, matches: under("/admin"), fills: true },
         ]
       : [
-          { href: "/", label: "nav.home", icon: Home, matches: (p) => p === "/", fills: true },
+          { href: "/", label: "nav.home", icon: ShoppingBag, matches: (p) => p === "/", fills: true },
           { href: "/categories", label: "nav.categories", icon: LayoutGrid, matches: under("/categories"), fills: true },
-          { href: "/account/favorites", label: "nav.wishlist", icon: Heart, matches: favorites, fills: true },
+          { href: "/deals", label: "nav.deals", icon: Sparkles, matches: under("/deals"), fills: true },
           { href: "/cart", label: "nav.cart", icon: ShoppingCart, matches: under("/cart") },
           {
             href: user ? "/account" : "/login",
             label: "nav.account",
             icon: User,
-            // The wishlist lives under /account too, but has its own tab.
-            matches: (p) => (under("/account")(p) && !favorites(p)) || p === "/login",
+            matches: (p) => under("/account")(p) || p === "/login",
             fills: true,
           },
         ]
