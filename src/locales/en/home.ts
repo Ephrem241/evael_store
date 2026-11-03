@@ -126,8 +126,6 @@ export const home = {
     subscribe: "Subscribe",
     success: "You're subscribed! Thanks for joining us.",
   },
-  superDeals: "Super Deals",
-  brandDeals: "Brand Deals",
   openNow: "Open Now",
   promotion: "Promotion",
 }

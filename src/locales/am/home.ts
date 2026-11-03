@@ -103,8 +103,6 @@ export const home: Dictionary["home"] = {
     subscribe: "ተመዝገብ",
     success: "ተመዝግበዋል! ስለተቀላቀሉን እናመሰግናለን።",
   },
-  superDeals: "ልዩ ቅናሾች",
-  brandDeals: "የብራንድ ቅናሾች",
   openNow: "አሁን ክፈት",
   promotion: "ማስተዋወቂያ",
 }

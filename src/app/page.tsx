@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
 // newsletter card (the footer follows from the layout). Phones follow a
 // shopping-app layout: the hero is a card on the header's burgundy, then a
 // white sheet with two perks and a sideways-scrolling category grid, the
-// savings strip, and the Super Deals / Brand Deals pair. Everything is read
+// savings strip, and the same Flash Deals panel. Everything is read
 // from the database — the copy, the categories, the products, the size of the
 // deal and whether it has a real end date. Sections with nothing to show
 // (no discounts, no flash products, no stocked categories) are left out.
