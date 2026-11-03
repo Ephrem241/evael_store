@@ -105,6 +105,4 @@ export const home: Dictionary["home"] = {
   },
   superDeals: "ልዩ ቅናሾች",
   brandDeals: "የብራንድ ቅናሾች",
-  openNow: "አሁን ክፈት",
-  promotion: "ማስተዋወቂያ",
 }

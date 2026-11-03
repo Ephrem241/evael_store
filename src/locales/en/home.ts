@@ -128,6 +128,4 @@ export const home = {
   },
   superDeals: "Super Deals",
   brandDeals: "Brand Deals",
-  openNow: "Open Now",
-  promotion: "Promotion",
 }
