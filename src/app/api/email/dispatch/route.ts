@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
   after(async () => {
     try {
       const result = await dispatchQueuedEmails()
+      if (result?.blocked) console.error(`email dispatch blocked, emails stay queued: ${result.blocked}`) // i18n-ignore: server log
       if (result && (result.sent || result.failed)) console.info(`email dispatch: ${JSON.stringify(result)}`) // i18n-ignore: server log
     } catch (error) {
       console.error("email dispatch failed:", error instanceof Error ? error.message : error) // i18n-ignore: server log

@@ -186,7 +186,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0026` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0027` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the
@@ -354,7 +354,10 @@ own account emails (password reset, sign-up) go through Resend too.
 
 **What's in the queue** (SQL Editor): `select kind, state, attempts, last_error,
 created_at from email_outbox order by created_at desc limit 20;` An invalid
-key or an unverified sender domain shows up in `last_error`. Contact messages are also kept in
+key or an unverified sender domain shows up in `last_error`; those emails stay queued without
+using up their tries (migration 0027) until the setup is fixed, and expire after 3 days. To resend
+ones that failed for an unverified domain, run `supabase/requeue-unverified-domain-emails.sql`
+once the domain is verified. Contact messages are also kept in
 the `contact_messages` table, and admins read and answer them under **Admin → Messages**
 (migration 0020): a reply is emailed to the customer, in the language they wrote in, with
 `SHOP_NOTIFY_EMAIL` as Reply-To.

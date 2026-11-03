@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { readEmailConfig } from "@/lib/email/config"
-import { dispatchEmails, isUndeliverable, type Mailer, type OutgoingMessage, type Outbox } from "@/lib/email/dispatch"
+import { dispatchEmails, isUndeliverable, MailerSetupError, type Mailer, type OutgoingMessage, type Outbox } from "@/lib/email/dispatch"
 import { createResendMailer } from "@/lib/email/resend"
 import { escapeHtml, renderEmail } from "@/lib/email/templates"
 import type { OutboxOrder, OutboxRow } from "@/lib/email/types"
@@ -113,12 +113,14 @@ describe("email templates", () => {
 })
 
 describe("email dispatch", () => {
-  function fakes(rows: OutboxRow[], failFor: string[] = []) {
+  function fakes(rows: OutboxRow[], failFor: string[] = [], setupErrorFor: string[] = []) {
     const sent: OutgoingMessage[] = []
     const completed: [string, string | null][] = []
+    const released: [string[], string][] = []
     let queue = [...rows]
     const mailer: Mailer = {
       async send(message) {
+        if (setupErrorFor.includes(message.to)) throw new MailerSetupError("Resend 400 domain is not verified")
         if (failFor.includes(message.to)) throw new Error("550 mailbox unavailable")
         sent.push(message)
       },
@@ -132,8 +134,11 @@ describe("email dispatch", () => {
       async complete(id, error) {
         completed.push([id, error])
       },
+      async release(ids, error) {
+        released.push([ids, error])
+      },
     }
-    return { mailer, outbox, sent, completed }
+    return { mailer, outbox, sent, completed, released }
   }
 
   it("sends each queued email from the shop's address and settles it", async () => {
@@ -152,6 +157,18 @@ describe("email dispatch", () => {
     const result = await dispatchEmails({ mailer: f.mailer, outbox: f.outbox, from: "x@evaelstore.et", context: ctx })
     expect(result).toEqual({ sent: 1, failed: 1, skipped: 0 })
     expect(f.completed).toEqual([["a", "550 mailbox unavailable"], ["b", null]])
+  })
+
+  it("on a setup problem stops at once and hands back this email and the rest, uncounted", async () => {
+    const f = fakes(
+      [row({ id: "a", kind: "order_alert" }), row({ id: "b" }), row({ id: "c" })],
+      [],
+      ["abebe@mail.et"]
+    )
+    const result = await dispatchEmails({ mailer: f.mailer, outbox: f.outbox, from: "x@evaelstore.et", context: ctx })
+    expect(result).toEqual({ sent: 1, failed: 0, skipped: 0, blocked: "Resend 400 domain is not verified" })
+    expect(f.completed).toEqual([["a", null]])
+    expect(f.released).toEqual([[["b", "c"], "Resend 400 domain is not verified"]])
   })
 
   it("never mails test addresses (and not the owner about a test order), but settles them", async () => {
@@ -266,7 +283,7 @@ describe("Resend mailer", () => {
     expect(JSON.parse(String(f.calls[0].init.body))).not.toHaveProperty("reply_to")
   })
 
-  it("throws Resend's own explanation on failure, so it is recorded and retried", async () => {
+  it("throws Resend's own explanation on failure, so it is recorded", async () => {
     const forbidden = fakeFetch({ status: 403, body: { statusCode: 403, name: "validation_error", message: "The evaelstore.et domain is not verified." } })
     await expect(createResendMailer("re_test", forbidden.impl).send(message)).rejects.toThrow(
       "Resend 403 validation_error: The evaelstore.et domain is not verified."
@@ -275,11 +292,26 @@ describe("Resend mailer", () => {
     await expect(createResendMailer("re_test", busy.impl).send(message)).rejects.toThrow("Resend 429")
   })
 
+  it("tells setup problems (which fail every email) from problems with one email", async () => {
+    const unverified = fakeFetch({
+      status: 400,
+      body: { message: "The associated domain with your API key is not verified. Please, create a new API key with full access or with a verified domain." },
+    })
+    await expect(createResendMailer("re_test", unverified.impl).send(message)).rejects.toBeInstanceOf(MailerSetupError)
+    const badKey = fakeFetch({ status: 401, body: { message: "API key is invalid" } })
+    await expect(createResendMailer("re_test", badKey.impl).send(message)).rejects.toBeInstanceOf(MailerSetupError)
+
+    for (const status of [400, 429, 500]) {
+      const other = fakeFetch({ status, body: { message: "Invalid `to` field" } })
+      await expect(createResendMailer("re_test", other.impl).send(message)).rejects.not.toBeInstanceOf(MailerSetupError)
+    }
+  })
+
   it("the dispatcher gives every attempt at one queued email the same idempotency key", async () => {
     const sent: string[] = []
     const mailer = { async send(m: OutgoingMessage) { sent.push(m.idempotencyKey!) } }
     const rows = [row({ id: "abc" })]
-    const outbox: Outbox = { claim: async () => rows.splice(0), complete: async () => {} }
+    const outbox: Outbox = { claim: async () => rows.splice(0), complete: async () => {}, release: async () => {} }
     await dispatchEmails({ mailer, outbox, from: "x@evaelstore.et", context: ctx })
     expect(sent).toEqual(["email-outbox-abc"])
   })

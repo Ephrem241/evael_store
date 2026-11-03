@@ -1,4 +1,4 @@
-import type { Mailer } from "@/lib/email/dispatch"
+import { MailerSetupError, type Mailer } from "@/lib/email/dispatch"
 
 // Sends through Resend's HTTP API (https://resend.com/docs/api-reference/emails/send-email):
 // one HTTPS request per email, which suits a serverless host better than
@@ -43,7 +43,12 @@ export function createResendMailer(apiKey: string, fetchImpl: typeof fetch = fet
       } catch {
         // not JSON
       }
-      throw new Error(`Resend ${response.status}${detail ? ` ${detail}` : ""}`) // i18n-ignore: stored for the developer
+      const failure = `Resend ${response.status}${detail ? ` ${detail}` : ""}` // i18n-ignore: stored for the developer
+      // An unverified domain has come back as a 400, so the words count too.
+      if (response.status === 401 || response.status === 403 || /domain.*not verified/i.test(detail)) {
+        throw new MailerSetupError(failure)
+      }
+      throw new Error(failure)
     },
   }
 }

@@ -24,6 +24,10 @@ function createDatabaseOutbox(secret: string): Outbox {
       const { error } = await supabase.rpc("complete_email_outbox", { p_secret: secret, p_id: id, p_error: sendError })
       if (error) throw new Error(`complete_email_outbox: ${error.message}`) // i18n-ignore: developer-facing
     },
+    async release(ids, sendError) {
+      const { error } = await supabase.rpc("release_email_outbox", { p_secret: secret, p_ids: ids, p_error: sendError })
+      if (error) throw new Error(`release_email_outbox: ${error.message}`) // i18n-ignore: developer-facing
+    },
   }
 }
 
