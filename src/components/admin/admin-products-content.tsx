@@ -164,6 +164,113 @@ function AdminProductsContent() {
         </Button>
       </div>
 
+      {/* Phones: a card per product, so the switches (Flash sale among them) are
+          in reach without scrolling a ten-column table sideways. */}
+      <ul className="space-y-3 md:hidden">
+        {products.map((product) => {
+          const category = categories.find((c) => c.id === product.category_id)
+          const productName = nameOf(product, t.locale)
+          const percent = discountPercent(product.price, product.compare_at_price)
+          const soldOut = product.stock <= 0
+          return (
+            <li key={product.id} className="space-y-3 rounded-card border border-border bg-card p-3">
+              <div className="flex items-center gap-3">
+                <div className="relative size-12 shrink-0">
+                  <ImagePlaceholder
+                    seed={product.id}
+                    icon={getCategoryIcon(category?.slug ?? "")}
+                    label={productName}
+                    decorative
+                    imageUrl={product.image_url}
+                    sizes="48px"
+                    className={soldOut ? "grayscale" : undefined}
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{productName}</p>
+                  <p className="text-sm">
+                    {formatPrice(product.price, t)}
+                    {percent > 0 && (
+                      <span className="ml-2 text-xs text-muted-text line-through">{formatPrice(product.compare_at_price!, t)}</span>
+                    )}
+                  </p>
+                </div>
+                <Button variant="ghost" size="icon-sm" aria-label={t("admin.products.edit")} asChild>
+                  <Link href={`/admin/products/${product.id}/edit`}>
+                    <Pencil className="size-4" />
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={t("admin.products.delete")}
+                  onClick={() => handleDelete(product.id, productName)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-text">{t("admin.products.columns.discount")}</span>
+                  <QuickNumberInput
+                    key={`discount-${product.id}-${percent}`}
+                    value={percent}
+                    min={0}
+                    max={MAX_DISCOUNT_PERCENT}
+                    suffix="%"
+                    label={t("admin.products.discountFor", { name: productName })}
+                    onCommit={(next) => handleDiscount(product, next)}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-text">{t("admin.products.columns.stock")}</span>
+                  <QuickNumberInput
+                    key={`stock-${product.id}-${product.stock}`}
+                    value={product.stock}
+                    min={0}
+                    label={t("admin.products.stockFor", { name: productName })}
+                    onCommit={(next) => handleStock(product.id, next)}
+                  />
+                  {soldOut && <Badge variant="destructive">{t("admin.products.soldOut")}</Badge>}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={product.is_flash_sale ?? false}
+                    onCheckedChange={(checked) => handleToggleFlashSale(product.id, checked)}
+                    aria-label={t("admin.products.toggleFlashSale", { name: productName })}
+                  />
+                  <span>{t("admin.products.columns.flashSale")}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={product.is_featured}
+                    onCheckedChange={(checked) => handleToggleFeatured(product.id, checked)}
+                    aria-label={t("admin.products.toggleFeatured")}
+                  />
+                  <span>{t("admin.products.columns.featured")}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={product.is_active}
+                    onCheckedChange={(checked) => handleToggleActive(product.id, checked)}
+                    aria-label={t("admin.products.toggleActive")}
+                  />
+                  <span>{t("admin.products.columns.active")}</span>
+                </div>
+              </div>
+              {product.is_flash_sale && percent === 0 && (
+                <p className="text-xs text-warning-text">{t("admin.products.flashNeedsDiscount")}</p>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+
+      <div className="max-md:hidden">
       <Table label={t("admin.products.title")}>
         <TableHeader>
           <TableRow>
@@ -303,6 +410,7 @@ function AdminProductsContent() {
           })}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

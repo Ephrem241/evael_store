@@ -11,6 +11,7 @@ import {
   fetchContactMessages,
   type ContactMessage,
 } from "@/lib/services/admin-messages"
+import { fetchAdminReviews, type AdminReview } from "@/lib/services/admin-reviews"
 import type { HomepageSettings } from "@/lib/services/homepage"
 import type { Product } from "@/lib/data/products"
 import type { Category } from "@/lib/data/categories"
@@ -57,6 +58,12 @@ export function useProfiles(enabled = true): Remote<AdminProfile[]> {
 const loadMessages = () => fetchContactMessages()
 const loadMessage = (id: string) => fetchContactMessage(id)
 const loadUnreadCount = () => countUnreadMessages()
+
+const loadReviews = () => fetchAdminReviews()
+
+export function useAdminReviews(): Remote<AdminReview[]> {
+  return useRemote("all", loadReviews)
+}
 
 export function useContactMessages(): Remote<ContactMessage[]> {
   return useRemote("all", loadMessages)

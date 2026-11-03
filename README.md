@@ -186,7 +186,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0025` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0026` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the

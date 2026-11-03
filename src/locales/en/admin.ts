@@ -21,6 +21,7 @@ export const admin = {
     orders: "Orders",
     customers: "Customers",
     messages: "Messages",
+    reviews: "Reviews",
     homepage: "Homepage",
     settings: "Settings",
   },
@@ -50,6 +51,7 @@ export const admin = {
     orders: "We couldn't load orders. Please refresh the page.",
     customers: "We couldn't load your customers. Please refresh the page.",
     messages: "We couldn't load your messages. Please refresh the page.",
+    reviews: "We couldn't load the reviews. Please refresh the page.",
     homepage: "We couldn't load the homepage settings. Please refresh the page.",
     settings: "We couldn't load the store settings. Please refresh the page.",
   },
@@ -218,6 +220,19 @@ export const admin = {
     removeAdminText: "They will become a customer and can no longer open the admin.",
     madeAdmin: "{name} is now an admin.",
     removedAdmin: "{name} is no longer an admin.",
+  },
+  // Customers' product comments, waiting to be approved.
+  reviews: {
+    title: "Reviews",
+    subtitle: "Customers' comments and feedback. A comment appears on its product page once you approve it.",
+    empty: "No reviews yet.",
+    emptyFilter: "Nothing here right now.",
+    filterLabel: "Filter reviews",
+    filterPending: "Pending",
+    filterApproved: "Approved",
+    approve: "Approve",
+    unapprove: "Unpublish",
+    delete: "Delete",
   },
   // Contact-form messages from customers, and the admin's email replies.
   messages: {

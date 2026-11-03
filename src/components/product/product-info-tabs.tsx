@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { MessageSquare } from "lucide-react"
 
 import { formatPrice } from "@/lib/currency"
 import { categoryNameOf, descriptionOf } from "@/lib/i18n/content"
@@ -7,14 +6,13 @@ import { getT } from "@/lib/i18n/server"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { getStockStatus } from "@/lib/services/catalog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { EmptyState } from "@/components/feedback/empty-state"
-import { Rating } from "@/components/product/rating"
+import { ProductReviews } from "@/components/product/product-reviews"
 
 // The product's information in three text tabs under the buy box (full width
 // on desktop): the description; the specifications (code, category,
 // availability, how delivery and payment work — no fee or day count that
 // isn't configured, only the free-delivery amount when there is one); and the
-// reviews, which are honestly empty (no review can be written yet).
+// customers' comments and ratings (product-reviews.tsx).
 async function ProductInfoTabs({
   product,
   freeDeliveryThreshold,
@@ -85,14 +83,8 @@ async function ProductInfoTabs({
           ))}
         </dl>
       </TabsContent>
-      <TabsContent value="reviews" className="space-y-4">
-        {product.rating != null && <Rating value={product.rating} t={t} />}
-        <EmptyState
-          icon={MessageSquare}
-          title={t("product.reviews.empty")}
-          description={t("product.reviews.emptyText")}
-          className="py-10 sm:py-12"
-        />
+      <TabsContent value="reviews">
+        <ProductReviews productId={product.id} productSlug={product.slug} />
       </TabsContent>
     </Tabs>
   )
