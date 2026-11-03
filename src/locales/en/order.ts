@@ -4,7 +4,7 @@ export const order = {
     pending: "Pending",
     confirmed: "Confirmed",
     preparing: "Preparing",
-    shipped: "Shipped",
+    shipped: "Out for delivery",
     delivered: "Delivered",
     cancelled: "Cancelled",
   },

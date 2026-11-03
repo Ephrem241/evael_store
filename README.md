@@ -186,7 +186,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0027` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0028` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the
@@ -269,7 +269,7 @@ own account emails (password reset, sign-up) go through Resend too.
 | Email | To | When |
 | --- | --- | --- |
 | Order confirmation | the customer, in their language | right after they order |
-| Order update | the customer, in their language | the admin moves the order to Confirmed, Shipped, Delivered or Cancelled |
+| Order update | the customer, in their language | the admin moves the order to Confirmed, Out for delivery, Delivered or Cancelled |
 | New-order alert | you (`SHOP_NOTIFY_EMAIL`), in English | every new order; replying writes to the customer |
 | Contact form | you, in English | a visitor sends the form on the Contact page; replying writes to them |
 
@@ -342,7 +342,7 @@ own account emails (password reset, sign-up) go through Resend too.
      Email → Confirm email* is off). If you turn it on, customers must click
      the mailed link and then sign in.
 6. **Test.** Send the Contact form with your own address. Place a test order
-   with a real email address, and move it to Shipped in the admin. Use
+   with a real email address, and move it to Out for delivery in the admin. Use
    "Forgot password" once. Every email, including Supabase's, shows up in
    Resend's *Emails* log with its delivery status. Check the spam folder the
    first time.

@@ -63,7 +63,7 @@ describe("email templates", () => {
 
   it("status updates: one per customer-facing status, in their language; none for other statuses", () => {
     const shipped = renderEmail(row({ kind: "order_status", status: "shipped" }), ctx)!
-    expect(shipped.subject).toBe("Order ETM-20260930-AB12: Shipped")
+    expect(shipped.subject).toBe("Order ETM-20260930-AB12: Out for delivery")
     expect(shipped.text).toContain("is on its way")
     const cancelled = renderEmail(row({ kind: "order_status", status: "cancelled", locale: "am" }), ctx)!
     expect(cancelled.subject).toBe("ትዕዛዝ ETM-20260930-AB12፦ ተሰርዟል")

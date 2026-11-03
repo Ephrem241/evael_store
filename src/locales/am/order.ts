@@ -5,7 +5,7 @@ export const order: Dictionary["order"] = {
     pending: "በመጠባበቅ ላይ",
     confirmed: "ተረጋግጧል",
     preparing: "በዝግጅት ላይ",
-    shipped: "ተልኳል",
+    shipped: "ለማድረስ ወጥቷል",
     delivered: "ደርሷል",
     cancelled: "ተሰርዟል",
   },

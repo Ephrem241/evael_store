@@ -51,7 +51,7 @@ export const info = {
     payText: "For now you pay in cash when your order arrives. More payment methods will be added later.",
     afterTitle: "After you order",
     afterText:
-      "Most orders are prepared and dispatched within a few business days. Follow the status of your order — pending, confirmed, preparing, shipped, delivered — in Account → Orders.",
+      "Most orders are prepared and dispatched within a few business days. Follow the status of your order — pending, confirmed, preparing, out for delivery, delivered — in Account → Orders.",
     tipTitle: "So your order finds you",
     tipText:
       "Please give a phone number you can answer and a clear address, with your sub-city and woreda, so your order reaches you.",
@@ -87,7 +87,7 @@ export const info = {
     q4: "How much is delivery?",
     a4: "It depends on your city — see Delivery Information for the current fees.",
     q5: "How can I follow my order?",
-    a5: "Sign in and open Account → Orders. Each order shows its status: pending, confirmed, preparing, shipped or delivered.",
+    a5: "Sign in and open Account → Orders. Each order shows its status: pending, confirmed, preparing, out for delivery or delivered.",
     q6: "Can I change or cancel an order?",
     a6: "Contact us as soon as possible with your order number. Orders that have not been prepared yet are the easiest to change.",
     q7: "What if my item arrives damaged or wrong?",
