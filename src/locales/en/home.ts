@@ -126,6 +126,4 @@ export const home = {
     subscribe: "Subscribe",
     success: "You're subscribed! Thanks for joining us.",
   },
-  openNow: "Open Now",
-  promotion: "Promotion",
 }

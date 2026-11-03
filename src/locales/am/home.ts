@@ -103,6 +103,4 @@ export const home: Dictionary["home"] = {
     subscribe: "ተመዝገብ",
     success: "ተመዝግበዋል! ስለተቀላቀሉን እናመሰግናለን።",
   },
-  openNow: "አሁን ክፈት",
-  promotion: "ማስተዋወቂያ",
 }

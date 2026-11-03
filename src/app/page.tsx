@@ -42,11 +42,12 @@ export async function generateMetadata(): Promise<Metadata> {
 // for Ethiopian Shoppers", Pay Your Way, and "Why Shop With Evael?" with the
 // newsletter card (the footer follows from the layout). Phones follow a
 // shopping-app layout: the hero is a card on the header's burgundy, then a
-// white sheet with two perks and a sideways-scrolling category grid, the
-// savings strip, and the same Flash Deals panel. Everything is read
-// from the database — the copy, the categories, the products, the size of the
-// deal and whether it has a real end date. Sections with nothing to show
-// (no discounts, no flash products, no stocked categories) are left out.
+// white sheet with two perks and a sideways-scrolling category grid, the Big
+// Savings banner (the desktop one, scaled down), and the same Flash Deals
+// panel. Everything is read from the database — the copy, the categories, the
+// products, the size of the deal and whether it has a real end date. Sections
+// with nothing to show (no discounts, no flash products, no stocked
+// categories) are left out.
 //
 // The promotion (its copy and countdown) is also a popup that opens a few
 // seconds in, once per session, plus a small floating button to reopen it
