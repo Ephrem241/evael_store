@@ -4,6 +4,7 @@ import {
   getNewArrivals,
   getDealsSummary,
   getFlashDeals,
+  getProducts,
   getRunningSaleEvents,
 } from "@/lib/services/catalog-queries"
 import { getHomepageSettings } from "@/lib/services/homepage-queries"
@@ -20,13 +21,11 @@ import { TrustSection } from "@/components/home/trust-section"
 import { DealsRow } from "@/components/home/deals-row"
 import { DealPopup } from "@/components/home/deal-popup"
 import { CategorySection } from "@/components/home/category-section"
-import { ProductGridSection } from "@/components/home/product-grid-section"
 import { SavingsBanner } from "@/components/home/savings-banner"
-import { NewArrivals } from "@/components/home/new-arrivals"
-import { LocalFeatures } from "@/components/home/local-features"
 import { PaymentMethods } from "@/components/home/payment-methods"
-import { WhyEvael } from "@/components/home/why-evael"
 import { SaleEventBanner } from "@/components/home/sale-event-banner"
+import { PromoTiles } from "@/components/home/promo-tiles"
+import { ForYouFeed } from "@/components/home/for-you-feed"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT()
@@ -38,15 +37,16 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-// The homepage, top to bottom as in the mockup: the hero (full-bleed, right
-// under the header) with the trust strip against it, Shop by Category, the
-// Big Savings banner, Flash Deals, Trending Products, New Arrivals, "Built
-// for Ethiopian Shoppers", Pay Your Way, and "Why Shop With Evael?" with the
-// newsletter card (the footer follows from the layout). Phones follow a
-// shopping-app layout: the hero is a card on the header's burgundy, then a
-// white sheet with two perks and a sideways-scrolling category grid, the Big
-// Savings banner (the desktop one, scaled down), and the same Flash Deals
-// panel. Everything is read from the database — the copy, the categories, the
+// The homepage, in the marketplace layout (one long shopping page that ends
+// in an endless feed), top to bottom: the hero (full-bleed, right under the
+// header) with the trust strip against it; Shop by Category as a dense grid
+// of round icons; the promo tiles (Trending, New Arrivals, Flash Deals: two
+// real products each, every tile a way into its list); a running holiday
+// sale's banner; the Big Savings banner; Flash Deals; Pay Your Way; and
+// "For You", the whole catalogue with "View more" (the footer follows from
+// the layout). Phones: the hero is a card on the header's burgundy, then a
+// white sheet with the perks and the category circles, then the same
+// sections. Everything is read from the database — the copy, the categories, the
 // products, the size of the deal and whether it has a real end date. Sections
 // with nothing to show (no discounts, no flash products, no stocked
 // categories) are left out.
@@ -57,15 +57,17 @@ export async function generateMetadata(): Promise<Metadata> {
 //
 // Sections are 48px apart on desktop, 28px on phones.
 export default async function Home() {
-  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings, saleEvents] = await Promise.all([
+  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings, saleEvents, feed] = await Promise.all([
     getLocale(),
     getCategories(),
-    getFeaturedProducts(12),
-    getNewArrivals(12),
+    getFeaturedProducts(2),
+    getNewArrivals(2),
     getDealsSummary(),
     getFlashDeals(12),
     getHomepageSettings(),
     getRunningSaleEvents(),
+    // The For You feed's first page: the same query /api/products answers for "View more".
+    getProducts({ page: 1 }),
   ])
   // A running holiday / special sale (the biggest, if several) gets its banner
   // right under the categories.
@@ -113,14 +115,18 @@ export default async function Home() {
           <CategorySection categories={categories} />
         </div>
       </div>
+      <PromoTiles
+        tiles={[
+          { id: "trending", title: t("home.featuredTitle"), href: "/shop", products: featured },
+          { id: "new", title: t("home.newArrivalsTitle"), href: "/shop?sort=newest", products: newArrivals },
+          { id: "deals", title: t("home.flashTitle"), href: "/deals", products: flashDeals },
+        ]}
+      />
       {saleEvent && <SaleEventBanner event={saleEvent} categories={categories} />}
       {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
       <DealsRow products={flashDeals} countdown={dealDeadline} />
-      <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />
-      <NewArrivals products={newArrivals} />
-      <LocalFeatures />
       <PaymentMethods />
-      <WhyEvael />
+      <ForYouFeed first={feed} />
     </div>
   )
 }

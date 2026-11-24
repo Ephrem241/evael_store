@@ -4,6 +4,7 @@ export const nav: Dictionary["nav"] = {
   home: "መነሻ",
   categories: "ምድቦች",
   deals: "ቅናሾች",
+  newIn: "አዲስ የገቡ",
   orders: "ትዕዛዞች",
   profile: "መገለጫ",
   favorites: "ተወዳጆች",

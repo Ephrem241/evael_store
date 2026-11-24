@@ -3,6 +3,8 @@ export const nav = {
   home: "Home",
   categories: "Categories",
   deals: "Deals",
+  // The header's link to the newest products.
+  newIn: "New In",
   orders: "Orders",
   profile: "Profile",
   favorites: "Favorites",

@@ -67,6 +67,9 @@ export const home = {
   flashTitle: "Flash Deals",
   flashSubtitle: "Limited-time prices. Don't miss out.",
   flashViewAll: "View All Deals",
+  // The endless product feed that closes the home page, and its button.
+  forYouTitle: "For You",
+  forYouMore: "View more",
   // The strip under the hero. Worded without promises the shop can't keep
   // (no "guaranteed", no delivery times).
   trustLabel: "Shopping with us",
@@ -87,33 +90,6 @@ export const home = {
     text: "on selected products",
     cta: "Shop Deals",
   },
-  // "Built for Ethiopian Shoppers": what the shop really offers today.
-  local: {
-    title: "Built for Ethiopian Shoppers",
-    text: "Your trusted local marketplace, designed for your needs.",
-    deliveryTitle: "Nationwide delivery",
-    deliveryText: "Across Ethiopia",
-    codTitle: "Cash on Delivery",
-    codText: "Pay when you receive",
-    languageTitle: "Amharic & English",
-    languageText: "Shop in your language",
-    supportTitle: "Local customer support",
-    supportText: "Here to help",
-    easyTitle: "Easy shopping",
-    easyText: "Simple & secure",
-  },
-  // "Why Shop With Evael?" {brand} is the store's short name.
-  why: {
-    title: "Why Shop With {brand}?",
-    secureTitle: "Secure Shopping",
-    secureText: "Your data is safe with us.",
-    deliveryTitle: "Fast Delivery",
-    deliveryText: "Delivered across Ethiopia.",
-    qualityTitle: "Quality Products",
-    qualityText: "Carefully selected for you.",
-    supportTitle: "Customer Support",
-    supportText: "We're here when you need help.",
-  },
   // The "Pay your way" strip. Only Cash on Delivery works today; the banks and
   // wallets are shown as coming soon until checkout can actually take them.
   payments: {
@@ -125,10 +101,6 @@ export const home = {
     listLabel: "Payment methods",
   },
   newsletter: {
-    // The home page's newsletter card.
-    cardTitle: "Get the best deals first.",
-    cardText: "Subscribe for new arrivals, exclusive offers and more.",
-    flourish: "More Great Deals",
     emailPlaceholder: "Enter your email",
     emailLabel: "Email address",
     subscribe: "Subscribe",

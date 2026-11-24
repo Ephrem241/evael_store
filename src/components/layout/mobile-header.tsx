@@ -49,6 +49,12 @@ async function MobileHeader() {
         >
           {t("nav.home")}
         </Link>
+        <Link href="/shop?sort=newest" className="shrink-0 text-white/80 transition-colors hover:text-white">
+          {t("nav.newIn")}
+        </Link>
+        <Link href="/deals" className="shrink-0 font-semibold text-gold transition-colors hover:text-white">
+          {t("nav.deals")}
+        </Link>
         {menu.map((cat) => (
           <Link
             key={cat.href}
@@ -58,12 +64,6 @@ async function MobileHeader() {
             {cat.label}
           </Link>
         ))}
-        <Link
-          href="/deals"
-          className="shrink-0 font-semibold text-gold transition-colors hover:text-white"
-        >
-          {t("nav.deals")}
-        </Link>
       </div>
     </header>
   )

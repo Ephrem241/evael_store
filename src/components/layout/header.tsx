@@ -12,27 +12,23 @@ import { SearchBar } from "@/components/navigation/search-bar"
 import { HideForAdmin } from "@/components/layout/storefront-only"
 import { DesktopNav, type NavLink } from "@/components/navigation/desktop-nav"
 
-// How many of the shop's categories get their own link in the second row.
-// The rest stay reachable through the Categories page ("View All Categories"
-// on the home page, the footer) — a row with every category would wrap on a
-// laptop screen.
-const NAV_CATEGORY_LIMIT = 6
-
 // The desktop header, on the cream page with a hairline under it. The logo and
 // the tagline sit on the left across both rows; to their right, the first row
 // holds the search field and Account / Wishlist / Cart, and the second the
-// navigation (Home, the shop's own categories from the database, Deals).
+// marketplace category bar: Home, New In, Deals, then every one of the shop's
+// categories from the database, scrolling sideways when they don't fit.
 // Sticks to the top while the page scrolls.
 async function Header() {
   const [t, categories] = await Promise.all([getT(), getNavCategories()])
 
   const links: NavLink[] = [
     { href: "/", label: t("nav.home") },
-    ...categories.slice(0, NAV_CATEGORY_LIMIT).map((category) => ({
+    { href: "/shop?sort=newest", label: t("nav.newIn") },
+    { href: "/deals", label: t("nav.deals"), highlight: true },
+    ...categories.map((category) => ({
       href: `/category/${category.slug}`,
       label: nameOf(category, t.locale),
     })),
-    { href: "/deals", label: t("nav.deals") },
   ]
 
   return (
