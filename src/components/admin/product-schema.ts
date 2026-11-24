@@ -5,6 +5,19 @@ import "@/lib/i18n/zod" // translated fallbacks for zod's default messages
 import { translate } from "@/lib/i18n/translate"
 import { MAX_SLUG_LENGTH } from "@/lib/slug"
 import { MAX_PRODUCT_IMAGES } from "@/lib/services/image-sync"
+import { MAX_SIZE_LABEL_LENGTH, MAX_SIZES } from "@/lib/product-sizes"
+
+// One size row. A blank label is an error (not silently dropped), so the admin
+// sees exactly what will be saved.
+const sizeSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(1, { error: () => translate("admin.validation.sizeLabel") })
+    .max(MAX_SIZE_LABEL_LENGTH, { error: () => translate("admin.validation.sizeLabel") })
+    .refine((label) => !label.includes("|"), { error: () => translate("admin.validation.sizeLabel") }),
+  stock: z.number().int().min(0, { error: () => translate("admin.validation.stock") }),
+})
 
 // Plain z.number()/nullable() rather than z.coerce.number() — z.coerce's
 // input type is `unknown`, which conflicts with react-hook-form's single
@@ -34,6 +47,13 @@ export const productSchema = z.object({
   category_id: z.string().min(1, { error: () => translate("admin.validation.category") }),
   // Main photo first; the admin can add up to MAX_PRODUCT_IMAGES.
   image_urls: z.array(z.string().trim().url({ error: () => translate("admin.validation.url") })).max(MAX_PRODUCT_IMAGES),
+  // Empty: not sold in sizes. Each label once (ignoring case: "m" and "M" are one size).
+  sizes: z
+    .array(sizeSchema)
+    .max(MAX_SIZES)
+    .refine((sizes) => new Set(sizes.map((s) => s.label.trim().toLowerCase())).size === sizes.length, {
+      error: () => translate("admin.validation.sizeDuplicate"),
+    }),
   is_featured: z.boolean(),
   is_popular: z.boolean(),
   is_active: z.boolean(),

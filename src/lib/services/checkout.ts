@@ -3,7 +3,7 @@ import { nameOf } from "@/lib/i18n/content"
 import { translateDbError } from "@/lib/i18n/db-errors"
 import { translate, getActiveLocale } from "@/lib/i18n/translate"
 import { useCartStore } from "@/lib/store/cart"
-import { resolveCartLines, computeCartTotals, getInsufficientStockLines } from "@/lib/cart-math"
+import { resolveCartLines, computeCartTotals, getInsufficientStockLines, lineLabel } from "@/lib/cart-math"
 import { fetchProductsByIds } from "@/lib/services/catalog-client"
 import { getDeliveryFee } from "@/lib/services/delivery"
 import { getPaymentProvider } from "@/lib/services/payment"
@@ -60,7 +60,7 @@ async function submitOrder(input: PlaceOrderInput): Promise<PlaceOrderResult> {
   const insufficientStock = getInsufficientStockLines(resolvedLines)
   if (insufficientStock.length > 0) {
     const locale = getActiveLocale()
-    const names = insufficientStock.map(({ product }) => nameOf(product, locale)).join(", ")
+    const names = insufficientStock.map(({ line, product }) => lineLabel(nameOf(product, locale), line.size)).join(", ")
     return { success: false, error: translate("checkout.errors.insufficientStock", { names }) }
   }
 
@@ -82,7 +82,7 @@ async function submitOrder(input: PlaceOrderInput): Promise<PlaceOrderResult> {
   const { data, error } = await createClient().rpc("place_order", {
     p_delivery_address: input.deliveryAddress,
     p_payment_method: input.paymentMethod,
-    p_items: resolvedLines.map(({ line }) => ({ product_id: line.productId, quantity: line.quantity })),
+    p_items: resolvedLines.map(({ line }) => ({ product_id: line.productId, quantity: line.quantity, size: line.size ?? null })),
   })
 
   if (error) {

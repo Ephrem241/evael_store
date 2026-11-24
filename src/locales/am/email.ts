@@ -7,6 +7,7 @@ export const email: Dictionary["email"] = {
   viewOrder: "ትዕዛዝዎን ይመልከቱ",
   orderNumber: "የትዕዛዝ ቁጥር",
   item: "ዕቃ",
+  size: "መጠን፦ {size}",
   quantity: "ብዛት",
   amount: "ዋጋ",
   subtotal: "ንዑስ ድምር",

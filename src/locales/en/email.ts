@@ -8,6 +8,7 @@ export const email = {
   viewOrder: "View your order",
   orderNumber: "Order number",
   item: "Item",
+  size: "Size: {size}",
   quantity: "Qty",
   amount: "Amount",
   subtotal: "Subtotal",

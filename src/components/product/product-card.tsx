@@ -6,6 +6,7 @@ import type { Translator } from "@/lib/i18n/translator"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { getCategoryIcon } from "@/components/product/category-icons"
+import { hasSizes } from "@/lib/product-sizes"
 import { AddToCartButton } from "@/components/product/add-to-cart-button"
 import { FavoriteButton } from "@/components/product/favorite-button"
 import { QuickViewButton } from "@/components/product/quick-view"
@@ -103,6 +104,11 @@ function ProductCard({
             keyboard/screen-reader users. */}
         <div className="pointer-events-none absolute top-2.5 left-2.5 z-10 flex flex-col items-start gap-1.5">
           <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} />
+          {product.sale && (
+            <span className="inline-flex h-5 max-w-32 items-center truncate rounded-full bg-gold px-2 text-[11px] font-semibold text-brand-deepest">
+              {nameOf(product.sale, t.locale)}
+            </span>
+          )}
           {badge && (
             <span className="inline-flex h-5 items-center rounded-full bg-charcoal px-2 text-[11px] font-semibold text-white">
               {badge}
@@ -142,6 +148,7 @@ function ProductCard({
           <AddToCartButton
             productId={product.id}
             outOfStock={soldOut}
+            chooseSizeHref={hasSizes(product) ? href : undefined}
             className={cn("relative z-10 mt-2 w-full", compact && "h-9 text-xs")}
           />
         )}

@@ -20,7 +20,10 @@ import {
   type GetProductsParams,
   type ProductListResult,
   type FilterFacets,
+  PRODUCT_JOINS,
 } from "@/lib/services/catalog"
+import { applySaleEvents, runningEvents, type SaleEvent } from "@/lib/sale-events"
+import type { Product } from "@/lib/data/products"
 
 // Server-side catalog reads (Server Components). Every request reads the
 // live database — an admin's edit is visible to every visitor immediately,
@@ -42,11 +45,43 @@ import {
 // `cache` = memoized for the duration of ONE request. A page, its
 // generateMetadata and the components under it all ask for the catalog (or the
 // same product); this makes the database see each question once per request.
+// Holiday / special sale events that haven't ended (running or still to
+// come), read once per request. Every storefront product read lays the running
+// ones over its prices (applySaleEvents), so cards, the product page, the
+// cart and the assistant all show the sale price place_order will charge.
+// A failed read shows regular prices rather than breaking the page.
+export const getSaleEvents = cache(async (): Promise<SaleEvent[]> => {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("sale_events")
+    .select("*")
+    .eq("is_active", true)
+    .gt("ends_at", new Date().toISOString())
+    .order("starts_at", { ascending: true })
+  if (error) {
+    console.error(`Failed to load sale events: ${error.message}`) // i18n-ignore: developer-facing
+    return []
+  }
+  return (data ?? []) as SaleEvent[]
+})
+
+/** The sale events running right now, biggest discount first. */
+export async function getRunningSaleEvents(): Promise<SaleEvent[]> {
+  return runningEvents(await getSaleEvents(), Date.now())
+}
+
+async function withSales<T extends Product>(products: T[]): Promise<T[]> {
+  const events = await getSaleEvents()
+  if (events.length === 0) return products
+  const now = Date.now()
+  return products.map((product) => applySaleEvents(product, events, now))
+}
+
 const loadCatalog = cache(async () => {
   const supabase = await createClient()
   const [categoriesResult, productsResult] = await Promise.all([
     supabase.from("categories").select("*").order("sort_order", { ascending: true }),
-    supabase.from("products").select("*, product_images(image_url, sort_order)").eq("is_active", true),
+    supabase.from("products").select(`*, ${PRODUCT_JOINS}`).eq("is_active", true),
   ])
 
   if (categoriesResult.error) throw new Error(`Failed to load categories: ${categoriesResult.error.message}`) // i18n-ignore: developer-facing
@@ -57,7 +92,7 @@ const loadCatalog = cache(async () => {
 
   // "Recommended" = catalog order: by category, then SKU within it (this is
   // exactly the order the seed data was authored in).
-  const products = inActiveCategories((productsResult.data as ProductRow[]).map(toProduct), categories)
+  const products = (await withSales(inActiveCategories((productsResult.data as ProductRow[]).map(toProduct), categories)))
     .sort(
       (a, b) =>
         (sortOrderById.get(a.category_id) ?? 0) - (sortOrderById.get(b.category_id) ?? 0) ||
@@ -84,7 +119,7 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductWithC
   const { data, error } = await supabase
     .from("products")
     // !inner + the filter: a product whose category is switched off is "not found" too.
-    .select("*, product_images(image_url, sort_order), categories!inner(name_en, name_am, slug)")
+    .select(`*, ${PRODUCT_JOINS}, categories!inner(name_en, name_am, slug)`)
     .eq("slug", slug)
     .eq("is_active", true)
     .eq("categories.is_active", true)
@@ -96,8 +131,9 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductWithC
   const { categories: category, ...row } = data as ProductRow & {
     categories: { name_en: string; name_am: string; slug: string } | null
   }
+  const [product] = await withSales([toProduct(row)])
   return {
-    ...toProduct(row),
+    ...product,
     categoryName: category?.name_en ?? "",
     categoryNameAm: category?.name_am ?? "",
     categorySlug: category?.slug ?? "",

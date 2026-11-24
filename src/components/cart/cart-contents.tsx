@@ -11,6 +11,7 @@ import { useCartStore } from "@/lib/store/cart"
 import { useIsAdmin } from "@/lib/store/auth"
 import { useProductsByIds } from "@/lib/hooks/use-products-by-ids"
 import { resolveCartLines, computeCartTotals } from "@/lib/cart-math"
+import { keyOf } from "@/lib/cart-line"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { Button } from "@/components/ui/button"
 import { CartLineItem } from "@/components/cart/cart-line-item"
@@ -70,16 +71,16 @@ function CartContents() {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="space-y-3">
         {resolvedLines.map(({ line, product }) => (
-          <CartLineItem key={product.id} line={line} product={product} />
+          <CartLineItem key={keyOf(line)} line={line} product={product} />
         ))}
         {unavailableLines.map((line) => (
           <div
-            key={line.productId}
+            key={keyOf(line)}
             className="flex items-center gap-4 rounded-card border border-dashed border-border bg-surface p-4 text-sm text-muted-text"
           >
             <Package aria-hidden className="size-8 shrink-0" />
             <p className="flex-1">{t("cart.unavailable")}</p>
-            <Button variant="ghost" size="sm" onClick={() => removeItem(line.productId)}>
+            <Button variant="ghost" size="sm" onClick={() => removeItem(keyOf(line))}>
               {t("cart.remove")}
             </Button>
           </div>

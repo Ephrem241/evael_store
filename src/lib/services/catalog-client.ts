@@ -2,9 +2,11 @@ import { createClient } from "@/lib/supabase/client"
 import type { Category } from "@/lib/data/categories"
 import {
   toProduct,
+  PRODUCT_JOINS,
   type ProductRow,
   type ProductWithCategory,
 } from "@/lib/services/catalog"
+import { applySaleEvents, salePrice, bestEventFor, type SaleEvent } from "@/lib/sale-events"
 import { UUID_RE } from "@/lib/uuid"
 
 // Browser-side catalog reads, for client components that only know product
@@ -27,7 +29,23 @@ function toProductWithCategory(row: ProductWithCategoryJoin): ProductWithCategor
 
 // !inner, with the categories.is_active filter below: products of a switched-off
 // category count as unavailable (cart, favorites), like deactivated ones.
-const PRODUCT_SELECT = "*, product_images(image_url, sort_order), categories!inner(name_en, name_am, slug)"
+const PRODUCT_SELECT = `*, ${PRODUCT_JOINS}, categories!inner(name_en, name_am, slug)`
+
+// Sale events that haven't ended, as on the server (catalog-queries.ts): the
+// cart and checkout show the same sale prices place_order charges. A failed
+// read means regular prices, never a broken cart.
+export async function fetchSaleEvents(): Promise<SaleEvent[]> {
+  const { data, error } = await createClient()
+    .from("sale_events")
+    .select("*")
+    .eq("is_active", true)
+    .gt("ends_at", new Date().toISOString())
+  if (error) {
+    console.error(`Failed to load sale events: ${error.message}`) // i18n-ignore: developer-facing
+    return []
+  }
+  return (data ?? []) as SaleEvent[]
+}
 
 // Active products only, matching what a shopper can actually buy. An id that
 // no longer resolves (deleted or deactivated product) is simply absent, which
@@ -38,15 +56,19 @@ export async function fetchProductsByIds(ids: string[]): Promise<ProductWithCate
   const validIds = ids.filter((id) => UUID_RE.test(id))
   if (validIds.length === 0) return []
 
-  const { data, error } = await createClient()
-    .from("products")
-    .select(PRODUCT_SELECT)
-    .in("id", validIds)
-    .eq("is_active", true)
-    .eq("categories.is_active", true)
+  const [{ data, error }, events] = await Promise.all([
+    createClient()
+      .from("products")
+      .select(PRODUCT_SELECT)
+      .in("id", validIds)
+      .eq("is_active", true)
+      .eq("categories.is_active", true),
+    fetchSaleEvents(),
+  ])
 
   if (error) throw new Error(`Failed to load products: ${error.message}`) // i18n-ignore: developer-facing
-  return (data as ProductWithCategoryJoin[]).map(toProductWithCategory)
+  const now = Date.now()
+  return (data as ProductWithCategoryJoin[]).map((row) => applySaleEvents(toProductWithCategory(row), events, now))
 }
 
 export interface SearchSuggestions {
@@ -82,10 +104,10 @@ export async function searchSuggestions(query: string): Promise<SearchSuggestion
   const nameMatches = `name_en.ilike.${quoted},name_am.ilike.${quoted}`
   const supabase = createClient()
 
-  const [productsResult, categoriesResult] = await Promise.all([
+  const [productsResult, categoriesResult, events] = await Promise.all([
     supabase
       .from("products")
-      .select("id, slug, name_en, name_am, price, product_images(image_url, sort_order), categories!inner(is_active)")
+      .select("id, slug, name_en, name_am, price, category_id, product_images(image_url, sort_order), categories!inner(is_active)")
       .eq("is_active", true)
       .eq("categories.is_active", true)
       .or(nameMatches)
@@ -96,15 +118,17 @@ export async function searchSuggestions(query: string): Promise<SearchSuggestion
       .eq("is_active", true)
       .or(nameMatches)
       .limit(3),
+    fetchSaleEvents(),
   ])
+  const now = Date.now()
 
   return {
-    products: (productsResult.data ?? []).map(({ id, slug, name_en, name_am, price, product_images }) => ({
+    products: (productsResult.data ?? []).map(({ id, slug, name_en, name_am, price, category_id, product_images }) => ({
       id,
       slug,
       name_en,
       name_am,
-      price: Number(price),
+      price: salePrice(Number(price), bestEventFor(category_id, events, now)?.discount_percent ?? 0),
       image_url: [...(product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order)[0]?.image_url ?? null,
     })),
     categories: (categoriesResult.data as Pick<Category, "id" | "slug" | "name_en" | "name_am">[] | null) ?? [],

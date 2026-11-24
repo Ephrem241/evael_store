@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { computeCartTotals, getInsufficientStockLines, resolveCartLines } from "@/lib/cart-math"
+import { computeCartTotals, getInsufficientStockLines, lineLabel, resolveCartLines } from "@/lib/cart-math"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { makeProduct } from "@/test/factories"
 
@@ -96,5 +96,51 @@ describe("getInsufficientStockLines", () => {
       [enough, exact, short, soldOut]
     )
     expect(getInsufficientStockLines(resolvedLines).map((r) => r.product.id)).toEqual(["short", "sold-out"])
+  })
+})
+
+describe("sized products in the cart", () => {
+  const tee = withCategory({
+    id: "tee",
+    stock: 5,
+    sizes: [
+      { label: "M", stock: 4 },
+      { label: "L", stock: 1 },
+    ],
+  })
+
+  it("keeps one line per size, and checks each against its own size's stock", () => {
+    const { resolvedLines, unavailableLines } = resolveCartLines(
+      [
+        { productId: "tee", quantity: 3, size: "M" },
+        { productId: "tee", quantity: 2, size: "L" },
+      ],
+      [tee]
+    )
+    expect(resolvedLines).toHaveLength(2)
+    expect(unavailableLines).toEqual([])
+    expect(getInsufficientStockLines(resolvedLines).map((r) => r.line.size)).toEqual(["L"])
+  })
+
+  it("treats a size the product no longer has, or a missing size, as unavailable", () => {
+    const { resolvedLines, unavailableLines } = resolveCartLines(
+      [
+        { productId: "tee", quantity: 1, size: "XS" },
+        { productId: "tee", quantity: 1 },
+      ],
+      [tee]
+    )
+    expect(resolvedLines).toEqual([])
+    expect(unavailableLines).toHaveLength(2)
+  })
+
+  it("treats a size on a product without sizes as unavailable", () => {
+    const mug = withCategory({ id: "mug", stock: 9 })
+    expect(resolveCartLines([{ productId: "mug", quantity: 1, size: "M" }], [mug]).unavailableLines).toHaveLength(1)
+  })
+
+  it("names a line with its size in warnings", () => {
+    expect(lineLabel("Classic Tee", "M")).toBe("Classic Tee (M)")
+    expect(lineLabel("Mug")).toBe("Mug")
   })
 })

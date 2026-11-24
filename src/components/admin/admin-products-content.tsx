@@ -19,6 +19,7 @@ import {
 } from "@/lib/services/admin-catalog"
 import type { Product } from "@/lib/data/products"
 import { discountPercent, MAX_DISCOUNT_PERCENT } from "@/lib/discount"
+import { hasSizes } from "@/lib/product-sizes"
 import { getCategoryIcon } from "@/components/product/category-icons"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { formatPrice } from "@/lib/currency"
@@ -28,6 +29,18 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table"
+
+// A sized product's stock is the sum of its sizes, so it is changed per size
+// in the product form, not here: the total, and how many sizes it is spread over.
+function SizedStock({ product }: { product: Product }) {
+  const t = useT()
+  return (
+    <span className="inline-flex items-baseline gap-1.5 text-sm tabular-nums text-charcoal">
+      {product.stock}
+      <span className="text-xs text-muted-text">{t("admin.products.inSizes", { count: product.sizes?.length ?? 0 })}</span>
+    </span>
+  )
+}
 
 // A small number box in a table row that saves when the admin leaves it or
 // presses Enter — and only if the number actually changed. Remounted (key) on
@@ -225,13 +238,17 @@ function AdminProductsContent() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-text">{t("admin.products.columns.stock")}</span>
-                  <QuickNumberInput
-                    key={`stock-${product.id}-${product.stock}`}
-                    value={product.stock}
-                    min={0}
-                    label={t("admin.products.stockFor", { name: productName })}
-                    onCommit={(next) => handleStock(product.id, next)}
-                  />
+                  {hasSizes(product) ? (
+                    <SizedStock product={product} />
+                  ) : (
+                    <QuickNumberInput
+                      key={`stock-${product.id}-${product.stock}`}
+                      value={product.stock}
+                      min={0}
+                      label={t("admin.products.stockFor", { name: productName })}
+                      onCommit={(next) => handleStock(product.id, next)}
+                    />
+                  )}
                   {soldOut && <Badge variant="destructive">{t("admin.products.soldOut")}</Badge>}
                 </div>
               </div>
@@ -338,16 +355,20 @@ function AdminProductsContent() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <QuickNumberInput
-                      key={`stock-${product.id}-${product.stock}`}
-                      value={product.stock}
-                      min={0}
-                      label={t("admin.products.stockFor", { name: productName })}
-                      onCommit={(next) => handleStock(product.id, next)}
-                    />
+                    {hasSizes(product) ? (
+                      <SizedStock product={product} />
+                    ) : (
+                      <QuickNumberInput
+                        key={`stock-${product.id}-${product.stock}`}
+                        value={product.stock}
+                        min={0}
+                        label={t("admin.products.stockFor", { name: productName })}
+                        onCommit={(next) => handleStock(product.id, next)}
+                      />
+                    )}
                     {soldOut ? (
                       <Badge variant="destructive">{t("admin.products.soldOut")}</Badge>
-                    ) : (
+                    ) : hasSizes(product) ? null : (
                       <Button
                         variant="ghost"
                         size="icon-sm"

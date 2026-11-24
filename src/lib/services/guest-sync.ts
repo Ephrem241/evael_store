@@ -1,6 +1,7 @@
 import { useCartStore, cartEdits } from "@/lib/store/cart"
 import { useFavoritesStore, favoriteEdits } from "@/lib/store/favorites"
 import { UUID_RE } from "@/lib/uuid"
+import { keyOf } from "@/lib/cart-line"
 import {
   reconcileCart,
   reconcileFavorites,
@@ -108,14 +109,18 @@ async function syncCart(userId: string) {
 
   const merged: Quantities = new Map(server)
   for (const line of guestLines) {
-    merged.set(line.productId, (merged.get(line.productId) ?? 0) + line.quantity)
+    const key = keyOf(line)
+    merged.set(key, (merged.get(key) ?? 0) + line.quantity)
   }
 
   // The guest lines reach the server BEFORE this device starts treating its
   // copy as a mirror, so closing the page right now can't lose them (the next
   // load merges again).
   const uploaded = await Promise.all(
-    guestLines.map(async (line) => ({ id: line.productId, ok: await upsertRemoteCartLine(userId, line.productId, merged.get(line.productId)!) }))
+    guestLines.map(async (line) => {
+      const key = keyOf(line)
+      return { id: key, ok: await upsertRemoteCartLine(userId, key, merged.get(key)!) }
+    })
   )
 
   // Whatever the shopper changed while that was in flight wins over the merge.

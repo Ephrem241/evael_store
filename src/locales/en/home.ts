@@ -33,6 +33,14 @@ export const home = {
   },
   // The Special Deals headline, subtext and button come from the admin-edited
   // homepage copy (homepage_sections.promo); these are the fixed parts around it.
+  // The banner of a running holiday / special sale (admin: Sales). {percent} is a whole number.
+  saleEvent: {
+    eyebrow: "Special sale",
+    offEverything: "{percent}% off everything",
+    offCategory: "{percent}% off {category}",
+    cta: "Shop the sale",
+    endsIn: "Sale ends in",
+  },
   deals: {
     imageAlt: "A warm kitchen with copper pans, woven pendant lamps and a wooden island",
     endsIn: "Deal ends in",

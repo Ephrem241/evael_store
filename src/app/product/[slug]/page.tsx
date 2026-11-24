@@ -21,6 +21,8 @@ import { RecentlyViewed } from "@/components/product/recently-viewed"
 import { Price } from "@/components/product/price"
 import { DiscountBadge } from "@/components/product/discount-badge"
 import { Rating } from "@/components/product/rating"
+import { SaleEventTag } from "@/components/product/sale-event-tag"
+import { msUntil } from "@/lib/sale-events"
 import { InfoCell } from "@/components/ui/info-cell"
 import { SectionHeading } from "@/components/home/section-heading"
 import { ProductRail } from "@/components/home/product-rail"
@@ -143,6 +145,7 @@ export default async function ProductPage({
               {hasDiscount && <Price amount={product.compare_at_price!} t={t} variant="compare" className="text-sm" />}
               <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} variant="sale" />
             </div>
+            {product.sale && <SaleEventTag sale={product.sale} initialRemainingMs={msUntil(product.sale.ends_at)} />}
             <p className={`flex items-center gap-2 text-sm font-medium ${stock.className}`}>
               <span aria-hidden className="size-2 rounded-full bg-current" />
               {stock.label}

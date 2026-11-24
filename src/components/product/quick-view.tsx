@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { Skeleton } from "@/components/ui/skeleton"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { getCategoryIcon } from "@/components/product/category-icons"
+import { hasSizes } from "@/lib/product-sizes"
 import { AddToCartButton } from "@/components/product/add-to-cart-button"
 import { FavoriteButton } from "@/components/product/favorite-button"
 import { DiscountBadge } from "@/components/product/discount-badge"
@@ -139,7 +140,13 @@ function QuickViewBody({ product }: { product: ProductWithCategory }) {
         </DialogDescription>
 
         <div className="mt-auto flex items-center gap-2 pt-2">
-          <AddToCartButton productId={product.id} outOfStock={product.stock <= 0} size="lg" className="flex-1" />
+          <AddToCartButton
+            productId={product.id}
+            outOfStock={product.stock <= 0}
+            chooseSizeHref={hasSizes(product) ? `/product/${product.slug}` : undefined}
+            size="lg"
+            className="flex-1"
+          />
           <FavoriteButton productId={product.id} className="size-12 shrink-0 border border-border shadow-none" />
         </div>
         <Link

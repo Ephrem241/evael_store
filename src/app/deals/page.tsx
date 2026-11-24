@@ -5,7 +5,15 @@ import { BadgePercent, SlidersHorizontal } from "lucide-react"
 import { getT } from "@/lib/i18n/server"
 import { pageMetadata } from "@/lib/seo/metadata"
 import { isOnSale, type ProductWithCategory } from "@/lib/services/catalog"
-import { getFeaturedProducts, getFlashDeals } from "@/lib/services/catalog-queries"
+import {
+  getAllActiveProducts,
+  getCategories,
+  getFeaturedProducts,
+  getFlashDeals,
+  getRunningSaleEvents,
+} from "@/lib/services/catalog-queries"
+import { nameOf } from "@/lib/i18n/content"
+import { SaleEventBanner } from "@/components/home/sale-event-banner"
 import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 import { ProductGrid } from "@/components/product/product-grid"
 import { EmptyState } from "@/components/feedback/empty-state"
@@ -35,17 +43,33 @@ const MAX_DEALS = 60
 //   * On sale now: everything else that is discounted.
 // Each product appears once, in the first group it fits. Nothing is invented:
 // a group with no products is simply not shown.
+//
+// While a holiday / special sale runs, its banner leads the page and the
+// products it covers come first, under its name (they are on sale even if the
+// admin didn't pick them as flash deals).
 export default async function DealsPage() {
-  const [t, deals, featured] = await Promise.all([getT(), getFlashDeals(MAX_DEALS), getFeaturedProducts(MAX_DEALS)])
+  const [t, flashDeals, featured, saleEvents, allProducts, categories] = await Promise.all([
+    getT(),
+    getFlashDeals(MAX_DEALS),
+    getFeaturedProducts(MAX_DEALS),
+    getRunningSaleEvents(),
+    getAllActiveProducts(),
+    getCategories(),
+  ])
+  const saleEvent = saleEvents[0]
+  const inSale = allProducts.filter((p) => p.sale).slice(0, MAX_DEALS)
+  const inSaleIds = new Set(inSale.map((p) => p.id))
+  const deals = [...inSale, ...flashDeals.filter((p) => !inSaleIds.has(p.id))]
 
   const featuredIds = new Set(featured.map((p) => p.id))
-  const featuredOffers = deals.filter((p) => featuredIds.has(p.id) && isOnSale(p))
-  const taken = new Set(featuredOffers.map((p) => p.id))
+  const featuredOffers = deals.filter((p) => !inSaleIds.has(p.id) && featuredIds.has(p.id) && isOnSale(p))
+  const taken = new Set([...inSaleIds, ...featuredOffers.map((p) => p.id)])
   const limited = deals.filter((p) => !taken.has(p.id) && p.stock > 0 && p.stock <= LOW_STOCK)
   limited.forEach((p) => taken.add(p.id))
   const rest = deals.filter((p) => !taken.has(p.id))
 
   const groups: { id: string; title: string; products: ProductWithCategory[] }[] = [
+    ...(saleEvent ? [{ id: "sale-event-products", title: nameOf(saleEvent, t.locale), products: inSale }] : []),
     { id: "featured-offers", title: t("catalog.dealsPage.featured"), products: featuredOffers },
     { id: "limited-stock", title: t("catalog.dealsPage.limited"), products: limited },
     { id: "on-sale", title: t("catalog.dealsPage.onSale"), products: rest },
@@ -75,6 +99,8 @@ export default async function DealsPage() {
           )
         }
       />
+
+      {saleEvent && <SaleEventBanner event={saleEvent} categories={categories} headingId="deals-sale-event-heading" />}
 
       {deals.length === 0 ? (
         <EmptyState

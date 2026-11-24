@@ -3,10 +3,15 @@ import { persist } from "zustand/middleware"
 
 import { useAuthStore } from "@/lib/store/auth"
 import { browserStorage, createEditTracker, type Settle } from "@/lib/store/edit-tracker"
+import { keyOf, lineKey } from "@/lib/cart-line"
 
+// One product in one size (`size` is set only for products sold in sizes).
+// Lines are told apart by their key, the product id plus the size
+// (lib/cart-line.ts): setQuantity and removeItem take that key.
 export interface CartLine {
   productId: string
   quantity: number
+  size?: string
 }
 
 interface CartState {
@@ -20,9 +25,9 @@ interface CartState {
   // renders nothing until this flips, rather than briefly showing the
   // empty-cart state for a user who actually has a saved cart.
   hasHydrated: boolean
-  addItem: (productId: string, quantity?: number) => void
-  setQuantity: (productId: string, quantity: number) => void
-  removeItem: (productId: string) => void
+  addItem: (productId: string, quantity?: number, size?: string) => void
+  setQuantity: (key: string, quantity: number) => void
+  removeItem: (key: string) => void
   clearCart: () => void
   setHasHydrated: (value: boolean) => void
   _replace: (items: CartLine[], ownerId: string | null) => void
@@ -67,36 +72,35 @@ export const useCartStore = create<CartState>()(
       ownerId: null,
       hasHydrated: false,
       setHasHydrated: (value) => set({ hasHydrated: value }),
-      addItem: (productId, quantity = 1) => {
-        const settle = cartEdits.record(productId)
+      addItem: (productId, quantity = 1, size) => {
+        const key = lineKey(productId, size)
+        const settle = cartEdits.record(key)
         set((state) => {
-          const existing = state.items.find((i) => i.productId === productId)
+          const existing = state.items.find((i) => keyOf(i) === key)
           return existing
             ? {
-                items: state.items.map((i) =>
-                  i.productId === productId ? { ...i, quantity: i.quantity + quantity } : i
-                ),
+                items: state.items.map((i) => (keyOf(i) === key ? { ...i, quantity: i.quantity + quantity } : i)),
               }
-            : { items: [...state.items, { productId, quantity }] }
+            : { items: [...state.items, size ? { productId, quantity, size } : { productId, quantity }] }
         })
-        const line = get().items.find((i) => i.productId === productId)
-        if (line) mirror(get, (r, uid) => r.upsertRemoteCartLine(uid, productId, line.quantity), settle)
+        const line = get().items.find((i) => keyOf(i) === key)
+        if (line) mirror(get, (r, uid) => r.upsertRemoteCartLine(uid, key, line.quantity), settle)
       },
-      setQuantity: (productId, quantity) => {
-        const settle = cartEdits.record(productId)
+      setQuantity: (key, quantity) => {
+        const settle = cartEdits.record(key)
         set((state) => ({
           items:
             quantity <= 0
-              ? state.items.filter((i) => i.productId !== productId)
-              : state.items.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+              ? state.items.filter((i) => keyOf(i) !== key)
+              : state.items.map((i) => (keyOf(i) === key ? { ...i, quantity } : i)),
         }))
-        if (quantity <= 0) mirror(get, (r, uid) => r.deleteRemoteCartLine(uid, productId), settle)
-        else mirror(get, (r, uid) => r.upsertRemoteCartLine(uid, productId, quantity), settle)
+        if (quantity <= 0) mirror(get, (r, uid) => r.deleteRemoteCartLine(uid, key), settle)
+        else mirror(get, (r, uid) => r.upsertRemoteCartLine(uid, key, quantity), settle)
       },
-      removeItem: (productId) => {
-        const settle = cartEdits.record(productId)
-        set((state) => ({ items: state.items.filter((i) => i.productId !== productId) }))
-        mirror(get, (r, uid) => r.deleteRemoteCartLine(uid, productId), settle)
+      removeItem: (key) => {
+        const settle = cartEdits.record(key)
+        set((state) => ({ items: state.items.filter((i) => keyOf(i) !== key) }))
+        mirror(get, (r, uid) => r.deleteRemoteCartLine(uid, key), settle)
       },
       clearCart: () => {
         const settle = cartEdits.recordAll()

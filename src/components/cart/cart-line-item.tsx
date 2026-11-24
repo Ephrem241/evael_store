@@ -12,6 +12,8 @@ import { useCartStore } from "@/lib/store/cart"
 import { useFavoritesStore } from "@/lib/store/favorites"
 import type { ProductWithCategory } from "@/lib/services/catalog"
 import { isOnSale } from "@/lib/services/catalog"
+import { keyOf } from "@/lib/cart-line"
+import { availableStock } from "@/lib/product-sizes"
 import { getCategoryIcon } from "@/components/product/category-icons"
 import { ImagePlaceholder } from "@/components/product/image-placeholder"
 import { Price } from "@/components/product/price"
@@ -40,10 +42,11 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
   const hasDiscount = isOnSale(product)
   const lineSubtotal = product.price * line.quantity
   const name = nameOf(product, t.locale)
+  const key = keyOf(line)
 
   function moveToWishlist() {
     if (!isFavorited) toggleFavorite(product.id)
-    removeItem(product.id)
+    removeItem(key)
     toast.success(t("cart.movedToWishlist"), {
       action: { label: t("cart.viewWishlist"), onClick: () => router.push("/account/favorites") },
     })
@@ -51,9 +54,9 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
 
   function remove() {
     const quantity = line.quantity
-    removeItem(product.id)
+    removeItem(key)
     toast(t("cart.removed", { name }), {
-      action: { label: t("cart.undo"), onClick: () => addItem(product.id, quantity) },
+      action: { label: t("cart.undo"), onClick: () => addItem(product.id, quantity, line.size) },
     })
   }
 
@@ -86,7 +89,13 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
             >
               {name}
             </Link>
-            <p className="text-xs text-muted-text">{categoryNameOf(product, t.locale)}</p>
+            <p className="text-xs text-muted-text">
+              {line.size ? (
+                <span className="font-medium text-charcoal">{t("product.sizes.line", { size: line.size })}</span>
+              ) : (
+                categoryNameOf(product, t.locale)
+              )}
+            </p>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-1">
             <DiscountBadge price={product.price} compareAtPrice={product.compare_at_price} t={t} variant="sale" />
@@ -109,7 +118,7 @@ function CartLineItem({ line, product }: { line: CartLine; product: ProductWithC
         </div>
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1.5">
-          <QuantitySelector value={line.quantity} onChange={(q) => setQuantity(product.id, q)} max={product.stock} />
+          <QuantitySelector value={line.quantity} onChange={(q) => setQuantity(key, q)} max={availableStock(product, line.size)} />
           <div className="flex items-center gap-1.5">
             <Price amount={lineSubtotal} t={t} className="text-sm text-charcoal" />
             <Button

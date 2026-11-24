@@ -15,6 +15,8 @@ import { applyDiscount, discountPercent, MAX_DISCOUNT_PERCENT } from "@/lib/disc
 import { productSchema, type ProductValues } from "@/components/admin/product-schema"
 import { FormField } from "@/components/forms/form-field"
 import { ProductImagesField } from "@/components/admin/product-images-field"
+import { ProductSizesField } from "@/components/admin/product-sizes-field"
+import { totalSizeStock } from "@/lib/product-sizes"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
@@ -47,6 +49,7 @@ function toDefaultValues(product?: Product): ProductValues {
     sku: product?.sku ?? "",
     category_id: product?.category_id ?? "",
     image_urls: product?.image_urls ?? (product?.image_url ? [product.image_url] : []),
+    sizes: product?.sizes ?? [],
     is_featured: product?.is_featured ?? false,
     is_popular: product?.is_popular ?? false,
     is_active: product?.is_active ?? true,
@@ -77,6 +80,10 @@ function AdminProductForm({ product }: { product?: Product }) {
   })
 
   const stock = useWatch({ control, name: "stock" })
+  const sizes = useWatch({ control, name: "sizes" })
+  // Sold in sizes: the stock is the sum of the sizes, entered per size below.
+  const sized = (sizes?.length ?? 0) > 0
+  const sizedTotal = totalSizeStock(sizes ?? [])
 
   // Rewrites price / compare-at price for `value`% off the original price.
   function handleDiscountChange(value: string) {
@@ -167,13 +174,25 @@ function AdminProductForm({ product }: { product?: Product }) {
           })}
           error={errors.compare_at_price?.message}
         />
-        <FormField
-          id="stock"
-          label={t("admin.productForm.stock")}
-          type="number"
-          registration={register("stock", { valueAsNumber: true })}
-          error={errors.stock?.message}
-        />
+        {sized ? (
+          <div className="space-y-1.5">
+            <label htmlFor="stock_total" className="text-sm font-medium text-charcoal">
+              {t("admin.productForm.stock")}
+            </label>
+            <Input id="stock_total" type="number" value={sizedTotal} readOnly disabled aria-describedby="stock_total-hint" />
+            <p id="stock_total-hint" className="text-xs text-muted-text">
+              {t("admin.productForm.sizes.stockFromSizes")}
+            </p>
+          </div>
+        ) : (
+          <FormField
+            id="stock"
+            label={t("admin.productForm.stock")}
+            type="number"
+            registration={register("stock", { valueAsNumber: true })}
+            error={errors.stock?.message}
+          />
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -198,7 +217,12 @@ function AdminProductForm({ product }: { product?: Product }) {
         </div>
         <div className="space-y-1.5">
           <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
-            <Switch checked={Number(stock) === 0} onCheckedChange={handleSoldOutChange} aria-describedby="sold_out-hint" />
+            <Switch
+              checked={sized ? sizedTotal === 0 : Number(stock) === 0}
+              onCheckedChange={handleSoldOutChange}
+              disabled={sized}
+              aria-describedby="sold_out-hint"
+            />
             {t("admin.productForm.soldOut")}
           </label>
           <p id="sold_out-hint" className="text-xs text-muted-text">
@@ -236,6 +260,25 @@ function AdminProductForm({ product }: { product?: Product }) {
           {errors.category_id && <p className="text-xs text-error">{errors.category_id.message}</p>}
         </div>
       </div>
+
+      <Controller
+        name="sizes"
+        control={control}
+        render={({ field }) => (
+          <ProductSizesField
+            value={field.value}
+            onChange={field.onChange}
+            error={
+              errors.sizes?.message ??
+              errors.sizes?.root?.message ??
+              (Array.isArray(errors.sizes)
+                ? errors.sizes.find((row) => row?.label?.message || row?.stock?.message)?.label?.message ??
+                  errors.sizes.find((row) => row?.stock?.message)?.stock?.message
+                : undefined)
+            }
+          />
+        )}
+      />
 
       <Controller
         name="image_urls"

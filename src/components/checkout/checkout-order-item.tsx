@@ -36,7 +36,10 @@ function CheckoutOrderItem({ line, product }: ResolvedCartLine) {
       </Link>
       <div className="min-w-0 flex-1">
         <p className="line-clamp-2 text-sm font-medium text-charcoal">{name}</p>
-        <p className="text-xs text-muted-text">{t("checkout.review.qty", { count: line.quantity })}</p>
+        <p className="text-xs text-muted-text">
+          {line.size && <span className="mr-2">{t("product.sizes.line", { size: line.size })}</span>}
+          {t("checkout.review.qty", { count: line.quantity })}
+        </p>
       </div>
       <Price amount={product.price * line.quantity} t={t} className="text-sm" />
     </div>

@@ -63,13 +63,18 @@ function button(label: string, href: string): Part {
   ]
 }
 
+// "Classic Tee (Size: M)" for a sized line, the plain name otherwise.
+function itemName(item: OutboxOrder["items"][number], t: Translator): string {
+  return item.size ? `${item.name} (${t("email.size", { size: item.size })})` : item.name
+}
+
 function orderTable(order: OutboxOrder, t: Translator): Part {
   const cell = `padding:8px 0;border-bottom:1px solid ${COLORS.line};font-size:14px;color:${COLORS.text}`
   const head = `padding:0 0 8px;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:${COLORS.muted};text-align:left`
   const rows = order.items
     .map(
       (item) =>
-        `<tr><td style="${cell}">${escapeHtml(item.name)}</td><td style="${cell};text-align:center">${item.quantity}</td><td style="${cell};text-align:right;white-space:nowrap">${escapeHtml(money(item.total, t))}</td></tr>`
+        `<tr><td style="${cell}">${escapeHtml(itemName(item, t))}</td><td style="${cell};text-align:center">${item.quantity}</td><td style="${cell};text-align:right;white-space:nowrap">${escapeHtml(money(item.total, t))}</td></tr>`
     )
     .join("")
   const delivery = Number(order.delivery_fee) === 0 ? t("email.free") : money(order.delivery_fee, t)
@@ -93,7 +98,7 @@ ${totalRows}
 </table>`
 
   const text = [
-    ...order.items.map((item) => `- ${item.name} × ${item.quantity}: ${money(item.total, t)}`),
+    ...order.items.map((item) => `- ${itemName(item, t)} × ${item.quantity}: ${money(item.total, t)}`),
     "",
     ...totals.map(([label, value]) => `${label}: ${value}`),
   ].join("\n")

@@ -11,8 +11,8 @@ export function useAddToCart() {
   const router = useRouter()
   const addItem = useCartStore((s) => s.addItem)
 
-  return function addToCart(productId: string, quantity = 1) {
-    addItem(productId, quantity)
+  return function addToCart(productId: string, quantity = 1, size?: string) {
+    addItem(productId, quantity, size)
     toast.success(t("product.addedToCart"), {
       action: { label: t("product.viewCart"), onClick: () => router.push("/cart") },
     })

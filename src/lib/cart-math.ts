@@ -1,5 +1,6 @@
 import type { CartLine } from "@/lib/store/cart"
 import { isOnSale, type ProductWithCategory } from "@/lib/services/catalog"
+import { availableStock, isSizeChoiceValid } from "@/lib/product-sizes"
 
 export interface ResolvedCartLine {
   line: CartLine
@@ -21,7 +22,12 @@ export function resolveCartLines(
   unavailableLines: CartLine[]
 } {
   const byId = new Map(products.map((p) => [p.id, p]))
-  const decorated = items.map((line) => ({ line, product: byId.get(line.productId) }))
+  // A size the product is no longer sold in (or a line without a size for a
+  // product that now has sizes) can't be bought either: place_order refuses it.
+  const decorated = items.map((line) => {
+    const product = byId.get(line.productId)
+    return { line, product: product && isSizeChoiceValid(product, line.size) ? product : undefined }
+  })
   const resolvedLines = decorated.filter(
     (entry): entry is ResolvedCartLine => !!entry.product
   )
@@ -48,5 +54,10 @@ export function computeCartTotals(resolvedLines: ResolvedCartLine[]): {
 // authoritative check checkout.ts re-runs at submit time; the checkout
 // review section also calls this to warn/disable pre-emptively.
 export function getInsufficientStockLines(resolvedLines: ResolvedCartLine[]): ResolvedCartLine[] {
-  return resolvedLines.filter(({ line, product }) => line.quantity > product.stock)
+  return resolvedLines.filter(({ line, product }) => line.quantity > availableStock(product, line.size))
+}
+
+// "Classic Tee (M)": the name the stock warnings use, with the size when there is one.
+export function lineLabel(name: string, size?: string): string {
+  return size ? `${name} (${size})` : name
 }

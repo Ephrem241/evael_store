@@ -2,19 +2,23 @@
 // shopper changed on THIS device over the server's copy. Kept free of stores
 // and network code so it can be tested on its own.
 
+import { keyOf, parseLineKey } from "@/lib/cart-line"
+
 /** What was edited on this device since the server copy was last reconciled (store/edit-tracker.ts). */
 export type Edits = { ids: Set<string>; all: boolean }
+// Keyed by line key: the product id, plus "|size" for a sized product (lib/cart-line.ts).
 export type Quantities = Map<string, number>
 export interface QuantityLine {
   productId: string
   quantity: number
+  size?: string
 }
 
 export const toQuantities = (lines: QuantityLine[]): Quantities =>
-  new Map(lines.map((line) => [line.productId, line.quantity]))
+  new Map(lines.map((line) => [keyOf(line), line.quantity]))
 
 export const toLines = (quantities: Quantities): QuantityLine[] =>
-  [...quantities].map(([productId, quantity]) => ({ productId, quantity }))
+  [...quantities].map(([key, quantity]) => ({ ...parseLineKey(key), quantity }))
 
 // The server's cart (`base`) with the shopper's own edits laid over it: for
 // every line they touched, what is on this device wins.

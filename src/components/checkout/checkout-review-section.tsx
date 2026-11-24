@@ -13,9 +13,11 @@ import {
   resolveCartLines,
   computeCartTotals,
   getInsufficientStockLines,
+  lineLabel,
   type ResolvedCartLine,
 } from "@/lib/cart-math"
 import type { CartLine } from "@/lib/store/cart"
+import { keyOf } from "@/lib/cart-line"
 import { getDeliveryFee } from "@/lib/services/delivery"
 import { CheckoutOrderItem } from "@/components/checkout/checkout-order-item"
 import { OrderSummary } from "@/components/cart/order-summary"
@@ -82,7 +84,7 @@ function CheckoutReviewSection({
     >
       <div>
         {resolvedLines.map(({ line, product }) => (
-          <CheckoutOrderItem key={product.id} line={line} product={product} />
+          <CheckoutOrderItem key={keyOf(line)} line={line} product={product} />
         ))}
       </div>
 
@@ -90,7 +92,7 @@ function CheckoutReviewSection({
         <p className="flex items-start gap-2 rounded-(--radius-control) bg-warning/10 p-3 text-sm text-warning-text">
           <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
           {t("checkout.review.insufficientStock", {
-            names: insufficientStock.map(({ product }) => nameOf(product, t.locale)).join(", "),
+            names: insufficientStock.map(({ line, product }) => lineLabel(nameOf(product, t.locale), line.size)).join(", "),
           })}
         </p>
       )}

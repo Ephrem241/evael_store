@@ -1,6 +1,7 @@
 "use client"
 
-import { ShoppingCart } from "lucide-react"
+import Link from "next/link"
+import { Ruler, ShoppingCart } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -16,14 +17,20 @@ import { Button } from "@/components/ui/button"
 // A full-width labelled button at every width: on a phone's two-column grid
 // the words fit, and a word is clearer than an icon alone. The card's size is
 // 40px tall on desktop and 44px on phones (the Button's default).
+//
+// A product sold in sizes can't be added without one, so for it the button is
+// "Choose size", a link to the product page (`chooseSizeHref`), where the
+// size picker is.
 function AddToCartButton({
   productId,
   outOfStock,
+  chooseSizeHref,
   size = "default",
   className,
 }: {
   productId: string
   outOfStock?: boolean
+  chooseSizeHref?: string
   size?: "default" | "lg"
   className?: string
 }) {
@@ -33,6 +40,17 @@ function AddToCartButton({
 
   // Admins don't shop (see useIsAdmin).
   if (isAdmin) return null
+
+  if (chooseSizeHref && !outOfStock) {
+    return (
+      <Button asChild size={size} className={cn(size === "default" && "text-[13px] max-lg:px-2 lg:text-sm", className)}>
+        <Link href={chooseSizeHref}>
+          <Ruler aria-hidden className="max-[359px]:hidden" />
+          {t("product.sizes.choose")}
+        </Link>
+      </Button>
+    )
+  }
 
   return (
     <Button

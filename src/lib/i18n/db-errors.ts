@@ -17,6 +17,11 @@ const KNOWN: { pattern: RegExp; key: MessageKey; params?: (match: RegExpMatchArr
     key: "checkout.errors.insufficientStock",
     params: (m) => ({ names: m[1] }),
   },
+  {
+    pattern: /^Please choose a size for: (.+?).$/i,
+    key: "checkout.errors.chooseSize",
+    params: (m) => ({ name: m[1] }),
+  },
   { pattern: /payment method isn't available/i, key: "checkout.errors.paymentUnavailable" },
   { pattern: /^Delivery address is incomplete/i, key: "errors.addressIncomplete" },
   { pattern: /^Delivery is not available/i, key: "errors.deliveryUnavailable" },

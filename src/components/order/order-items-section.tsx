@@ -68,6 +68,9 @@ function OrderItemsSection({ items }: { items: OrderItemRecord[] }) {
                   <p className="line-clamp-2 text-sm font-medium text-charcoal">{name}</p>
                 )}
                 <p className="text-xs text-muted-text">
+                  {item.size && (
+                    <span className="mr-2 font-medium text-charcoal">{t("product.sizes.line", { size: item.size })}</span>
+                  )}
                   {t("order.items.qtyLine", { quantity: item.quantity, price: formatPrice(item.unit_price, t) })}
                 </p>
               </div>

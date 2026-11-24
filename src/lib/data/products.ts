@@ -1,3 +1,6 @@
+import type { ProductSize } from "@/lib/product-sizes"
+import type { ActiveSale } from "@/lib/sale-events"
+
 export interface Product {
   id: string
   category_id: string
@@ -43,6 +46,17 @@ export interface Product {
    * "every discounted product is a flash deal", the behaviour before the switch.
    */
   is_flash_sale?: boolean
+  /**
+   * The sizes it is sold in, each with its own stock, in display order
+   * (migration 0029). Empty or missing: sold as one item, with `stock`.
+   * For a sized product `stock` is the sum of its sizes.
+   */
+  sizes?: ProductSize[]
+  /**
+   * Set only on storefront reads while a holiday / special sale event lowers
+   * the price (`price` is then already the sale price): see lib/sale-events.ts.
+   */
+  sale?: ActiveSale
 }
 
 const TIMESTAMP = "2026-01-15T00:00:00.000Z"

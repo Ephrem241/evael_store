@@ -7,6 +7,7 @@ import type { Category } from "@/lib/data/categories"
 import { toProduct, type ProductRow } from "@/lib/services/catalog"
 import { planImageSync, type ImageRow } from "@/lib/services/image-sync"
 import { applyDiscount } from "@/lib/discount"
+import { normalizeSizes, totalSizeStock, type ProductSize } from "@/lib/product-sizes"
 
 // Admin product/category management against the real database. Authorization
 // is enforced by Postgres RLS (every write requires is_admin()), not by this
@@ -33,6 +34,8 @@ export interface ProductFormValues {
   sku: string
   category_id: string
   image_urls: string[] // main photo first
+  // In display order. Empty: the product isn't sold in sizes.
+  sizes: ProductSize[]
   is_featured: boolean
   is_popular: boolean
   is_active: boolean
@@ -83,7 +86,7 @@ function describe(error: PostgrestError, subject: "product" | "category"): strin
   return translate("common.somethingWentWrong")
 }
 
-const PRODUCT_SELECT = "*, product_images(id, image_url, sort_order)"
+const PRODUCT_SELECT = "*, product_images(id, image_url, sort_order), product_sizes(label, stock, sort_order)"
 
 // ---------------------------------------------------------------------------
 // Reads (admin sees inactive products/categories too — RLS: is_admin())
@@ -150,6 +153,34 @@ async function syncProductImages(productId: string, imageUrls: string[], altText
   return results.every((result) => !result.error)
 }
 
+// The form's size list becomes the product's `product_sizes` rows: sizes no
+// longer listed are removed, the rest are written with their stock and order
+// (sort_order 0..n). The database then re-totals the product's stock (0029).
+// A cart line for a removed size shows as "no longer available".
+async function syncProductSizes(productId: string, sizes: ProductSize[]): Promise<boolean> {
+  const supabase = createClient()
+  const { data: existing, error } = await supabase.from("product_sizes").select("id, label").eq("product_id", productId)
+  if (error) return false
+
+  const keep = new Set(sizes.map((s) => s.label))
+  const remove = (existing ?? []).filter((row) => !keep.has(row.label as string)).map((row) => row.id as string)
+  if (remove.length) {
+    const { error: deleteError } = await supabase.from("product_sizes").delete().in("id", remove)
+    if (deleteError) return false
+  }
+  if (sizes.length === 0) return true
+
+  const { error: upsertError } = await supabase.from("product_sizes").upsert(
+    sizes.map((size, sort_order) => ({ product_id: productId, label: size.label, stock: size.stock, sort_order })),
+    { onConflict: "product_id,label" }
+  )
+  return !upsertError
+}
+
+function withSizes(product: Product, sizes: ProductSize[]): Product {
+  return sizes.length ? { ...product, sizes, stock: totalSizeStock(sizes) } : { ...product, sizes }
+}
+
 function cleanImageUrls(urls: string[]): string[] {
   return urls.map((url) => url.trim()).filter(Boolean)
 }
@@ -159,6 +190,7 @@ function withImages(row: ProductRow, imageUrls: string[]): Product {
 }
 
 function productColumns(input: ProductFormValues) {
+  const sizes = normalizeSizes(input.sizes)
   return {
     category_id: input.category_id,
     name_en: input.name_en.trim(),
@@ -168,7 +200,8 @@ function productColumns(input: ProductFormValues) {
     description_am: input.description_am.trim(),
     price: input.price,
     compare_at_price: input.compare_at_price,
-    stock: input.stock,
+    // A sized product's stock is the sum of its sizes (the database keeps it so).
+    stock: sizes.length ? totalSizeStock(sizes) : input.stock,
     sku: input.sku.trim(),
     is_featured: input.is_featured,
     is_popular: input.is_popular,
@@ -192,7 +225,9 @@ export async function createProduct(input: ProductFormValues): Promise<Result<Pr
 
   const imageUrls = cleanImageUrls(input.image_urls)
   if (!(await syncProductImages(data.id, imageUrls, input.name_en.trim()))) return fail(translate("admin.errors.imagesNotSaved"))
-  return ok(withImages(data as ProductRow, imageUrls))
+  const sizes = normalizeSizes(input.sizes)
+  if (!(await syncProductSizes(data.id, sizes))) return fail(translate("admin.errors.sizesNotSaved"))
+  return ok(withSizes(withImages(data as ProductRow, imageUrls), sizes))
 }
 
 export async function updateProduct(id: string, input: ProductFormValues): Promise<Result<Product>> {
@@ -211,7 +246,9 @@ export async function updateProduct(id: string, input: ProductFormValues): Promi
 
   const imageUrls = cleanImageUrls(input.image_urls)
   if (!(await syncProductImages(id, imageUrls, input.name_en.trim()))) return fail(translate("admin.errors.imagesNotSaved"))
-  return ok(withImages(data[0] as ProductRow, imageUrls))
+  const sizes = normalizeSizes(input.sizes)
+  if (!(await syncProductSizes(id, sizes))) return fail(translate("admin.errors.sizesNotSaved"))
+  return ok(withSizes(withImages(data[0] as ProductRow, imageUrls), sizes))
 }
 
 // No blocking guard: order line items are point-in-time snapshots whose

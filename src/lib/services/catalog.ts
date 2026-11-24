@@ -27,19 +27,29 @@ export type CategoryWithCount = Category & {
 // nests the product's images; flatten to the single `image_url` the UI has
 // always consumed (first image by sort_order), so ProductCard,
 // ImagePlaceholder and the admin form needed no changes for real images.
-export interface ProductRow extends Omit<Product, "rating" | "image_url" | "image_urls"> {
+export interface ProductRow extends Omit<Product, "rating" | "image_url" | "image_urls" | "sizes" | "sale"> {
   rating: number | null
   product_images?: { image_url: string; sort_order: number }[] | null
+  product_sizes?: { label: string; stock: number; sort_order: number }[] | null
 }
 
+// The joins every product read asks for: photos and sizes, each with its order.
+export const PRODUCT_JOINS = "product_images(image_url, sort_order), product_sizes(label, stock, sort_order)"
+
 export function toProduct(row: ProductRow): Product {
-  const { product_images, rating, ...rest } = row
+  const { product_images, product_sizes, rating, ...rest } = row
   const images = [...(product_images ?? [])].sort((a, b) => a.sort_order - b.sort_order)
+  const sizes = [...(product_sizes ?? [])]
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map(({ label, stock }) => ({ label, stock: Number(stock) }))
   return {
     ...rest,
+    price: Number(rest.price),
+    compare_at_price: rest.compare_at_price == null ? null : Number(rest.compare_at_price),
     rating: rating ?? undefined,
     image_url: images[0]?.image_url ?? null,
     image_urls: images.map((image) => image.image_url),
+    sizes,
   }
 }
 

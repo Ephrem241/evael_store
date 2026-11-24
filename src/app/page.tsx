@@ -4,6 +4,7 @@ import {
   getNewArrivals,
   getDealsSummary,
   getFlashDeals,
+  getRunningSaleEvents,
 } from "@/lib/services/catalog-queries"
 import { getHomepageSettings } from "@/lib/services/homepage-queries"
 import { dealsCountdown, fillDealTokens, localizeHomepage } from "@/lib/services/homepage"
@@ -25,6 +26,7 @@ import { NewArrivals } from "@/components/home/new-arrivals"
 import { LocalFeatures } from "@/components/home/local-features"
 import { PaymentMethods } from "@/components/home/payment-methods"
 import { WhyEvael } from "@/components/home/why-evael"
+import { SaleEventBanner } from "@/components/home/sale-event-banner"
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getT()
@@ -55,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
 //
 // Sections are 48px apart on desktop, 28px on phones.
 export default async function Home() {
-  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings] = await Promise.all([
+  const [locale, categories, featured, newArrivals, deals, flashDeals, rawSettings, saleEvents] = await Promise.all([
     getLocale(),
     getCategories(),
     getFeaturedProducts(12),
@@ -63,7 +65,11 @@ export default async function Home() {
     getDealsSummary(),
     getFlashDeals(12),
     getHomepageSettings(),
+    getRunningSaleEvents(),
   ])
+  // A running holiday / special sale (the biggest, if several) gets its banner
+  // right under the categories.
+  const saleEvent = saleEvents[0]
   const settings = localizeHomepage(rawSettings, locale)
   const t = await getT()
   // No discounted product, no deals banner or popup: they would have nothing to point at.
@@ -107,6 +113,7 @@ export default async function Home() {
           <CategorySection categories={categories} />
         </div>
       </div>
+      {saleEvent && <SaleEventBanner event={saleEvent} categories={categories} />}
       {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
       <DealsRow products={flashDeals} countdown={dealDeadline} />
       <ProductGridSection id="trending-heading" title={t("home.featuredTitle")} href="/shop" products={featured} />

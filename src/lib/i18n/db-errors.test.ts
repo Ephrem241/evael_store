@@ -38,6 +38,15 @@ describe("translateDbError", () => {
     expect(message).toBe(en.checkout.errors.insufficientStock.replace("{names}", "Leather Wallet, Minimalist Watch"))
   })
 
+  it("names the product (and size) a size must be chosen for, or that is short", () => {
+    expect(translateDbError("Please choose a size for: Classic Tee.")).toBe(
+      en.checkout.errors.chooseSize.replace("{name}", "Classic Tee")
+    )
+    expect(translateDbError("Not enough stock for: Classic Tee (M). Please update the quantity in your cart and try again.")).toBe(
+      en.checkout.errors.insufficientStock.replace("{names}", "Classic Tee (M)")
+    )
+  })
+
   it("names the status an order is stuck in, translated", () => {
     const message = translateDbError("Cannot change status of a delivered order.")
     expect(message).toBe(en.errors.statusTerminal.replace("{status}", en.order.status.delivered))

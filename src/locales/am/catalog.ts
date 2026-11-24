@@ -90,6 +90,19 @@ export const product: Dictionary["product"] = {
   viewCart: "ጋሪን ይመልከቱ",
   rated: "ከ5 {value} ተሰጥቶታል",
   percentOff: "{percent}% ቅናሽ",
+  sizes: {
+    label: "መጠን",
+    line: "መጠን፦ {size}",
+    choose: "መጠን ይምረጡ",
+    required: "እባክዎ መጠን ይምረጡ።",
+    soldOut: "{size}፣ ተሽጦ አልቋል",
+  },
+  saleEvent: {
+    percentOff: "{percent}% ቅናሽ",
+    endsIn: "የሚያበቃው በ{time}",
+    daysClock: "{days} ቀን {clock}",
+    ended: "ይህ ቅናሽ አብቅቷል",
+  },
   favorites: {
     add: "ወደ ተወዳጆች ጨምር",
     remove: "ከተወዳጆች አስወግድ",

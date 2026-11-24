@@ -23,6 +23,13 @@ export const home: Dictionary["home"] = {
     next: "ቀጣይ ምርቶች",
     rail: "{title}፣ ተንሸራታች ዝርዝር",
   },
+  saleEvent: {
+    eyebrow: "ልዩ ቅናሽ",
+    offEverything: "በሁሉም ምርቶች ላይ {percent}% ቅናሽ",
+    offCategory: "በ{category} ላይ {percent}% ቅናሽ",
+    cta: "ቅናሹን ይግዙ",
+    endsIn: "ቅናሹ የሚያበቃው በ",
+  },
   deals: {
     imageAlt: "የመዳብ ድስቶች፣ የተሸመኑ የተንጠለጠሉ መብራቶችና የእንጨት ጠረጴዛ ያሉት ሞቅ ያለ ወጥ ቤት",
     endsIn: "ቅናሹ የሚያበቃው በ",

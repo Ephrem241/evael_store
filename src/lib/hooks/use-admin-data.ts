@@ -12,6 +12,8 @@ import {
   type ContactMessage,
 } from "@/lib/services/admin-messages"
 import { fetchAdminReviews, type AdminReview } from "@/lib/services/admin-reviews"
+import { fetchAdminSaleEvents } from "@/lib/services/admin-sale-events"
+import type { SaleEvent } from "@/lib/sale-events"
 import type { HomepageSettings } from "@/lib/services/homepage"
 import type { Product } from "@/lib/data/products"
 import type { Category } from "@/lib/data/categories"
@@ -76,4 +78,10 @@ export function useContactMessage(id: string): Remote<ContactMessage | null> {
 
 export function useUnreadMessageCount(enabled = true): Remote<number> {
   return useRemote(enabled ? "unread" : null, loadUnreadCount)
+}
+
+const loadSaleEvents = () => fetchAdminSaleEvents()
+
+export function useAdminSaleEvents(): Remote<SaleEvent[]> {
+  return useRemote("sale-events", loadSaleEvents)
 }

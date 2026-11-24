@@ -2,6 +2,7 @@ import { toast } from "sonner"
 
 import { createClient } from "@/lib/supabase/client"
 import { translate } from "@/lib/i18n/translate"
+import { parseLineKey } from "@/lib/cart-line"
 
 // Raw `cart_items` reads/writes for a SIGNED-IN user. Guests never touch
 // this table (checkout already requires login, so an anonymous cart is never
@@ -11,6 +12,7 @@ import { translate } from "@/lib/i18n/translate"
 export interface RemoteCartLine {
   productId: string
   quantity: number
+  size?: string
 }
 
 // Carts saved before this phase keyed lines by the old mock slug-style ids
@@ -28,7 +30,7 @@ function reportSyncFailure(action: string, message: string) {
 export async function fetchRemoteCart(userId: string): Promise<RemoteCartLine[] | null> {
   const { data, error } = await createClient()
     .from("cart_items")
-    .select("product_id, quantity")
+    .select("product_id, quantity, size")
     .eq("user_id", userId)
     .order("created_at", { ascending: true })
 
@@ -36,26 +38,39 @@ export async function fetchRemoteCart(userId: string): Promise<RemoteCartLine[] 
     reportSyncFailure("load", error.message)
     return null
   }
-  return (data ?? []).map((row) => ({ productId: row.product_id as string, quantity: row.quantity as number }))
+  return (data ?? []).map((row) => {
+    const line = { productId: row.product_id as string, quantity: row.quantity as number }
+    const size = (row.size as string | null) || undefined
+    return size ? { ...line, size } : line
+  })
 }
 
-// The writes below say whether the server confirmed them (`true`), so the
+// The writes below take a line key: the product id, plus "|size" for a sized
+// product (lib/cart-line.ts). In the table, "no size" is stored as "".
+//
+// They also say whether the server confirmed them (`true`), so the
 // caller can stop remembering the edit (see store/edit-tracker.ts). A failed
 // write is reported to the shopper and the edit is kept for the next load.
-export async function upsertRemoteCartLine(userId: string, productId: string, quantity: number): Promise<boolean> {
+export async function upsertRemoteCartLine(userId: string, key: string, quantity: number): Promise<boolean> {
+  const { productId, size } = parseLineKey(key)
   const { error } = await createClient()
     .from("cart_items")
-    .upsert({ user_id: userId, product_id: productId, quantity }, { onConflict: "user_id,product_id" })
+    .upsert(
+      { user_id: userId, product_id: productId, size: size ?? "", quantity },
+      { onConflict: "user_id,product_id,size" }
+    )
   if (error) reportSyncFailure("save", error.message)
   return !error
 }
 
-export async function deleteRemoteCartLine(userId: string, productId: string): Promise<boolean> {
+export async function deleteRemoteCartLine(userId: string, key: string): Promise<boolean> {
+  const { productId, size } = parseLineKey(key)
   const { error } = await createClient()
     .from("cart_items")
     .delete()
     .eq("user_id", userId)
     .eq("product_id", productId)
+    .eq("size", size ?? "")
   if (error) reportSyncFailure("remove", error.message)
   return !error
 }

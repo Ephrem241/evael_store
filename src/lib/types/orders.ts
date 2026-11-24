@@ -21,6 +21,8 @@ export interface OrderItemRecord {
   // its own snapshot (name, price), so history survives product deletion.
   product_id: string | null
   product_name: string
+  // The size chosen, for a product sold in sizes (migration 0029); null otherwise.
+  size?: string | null
   quantity: number
   unit_price: number
   total: number

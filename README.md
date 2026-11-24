@@ -125,6 +125,26 @@ screen reader.
   set in Admin → Categories. Products marked *popular* (product form) fill the
   "Popular picks" of an empty search and the "Popular" sort. The hero
   cross-fades three store photographs from `public/images/home/`.
+- **Sizes** — product form → Sizes. Add the sizes a product is sold in
+  ("Clothing sizes" fills XS–XXL, "Shoe sizes" 36–45, "Add size" anything
+  else), each with its own stock; the product's stock is then their total and
+  is edited per size, not in the product list. Shoppers must pick a size on the
+  product page before adding to the cart (cards say "Choose size"), a sold-out
+  size is struck through, the cart can hold the same product in several sizes,
+  and orders, the admin's order page and the emails show the size. The
+  database checks and takes stock per size when the order is placed, and
+  cancelling puts it back on that size. Leave Sizes empty for products without.
+- **Holiday and special sales** — Admin → Sales. A sale takes a percentage
+  (1–90) off every product in the shop or in one category, between a start and
+  an end (Addis Ababa time). "Holiday" fills in the names for Genna, Timket,
+  Fasika, Eid, Enkutatash, Meskel, Black Friday or a weekend special in both
+  languages; the discount and dates are always the admin's. While a sale runs,
+  the homepage and the Deals page show its banner with a live countdown to the
+  real end, products carry its name and the lower price (struck-through old
+  price), the product page counts down, and checkout charges the sale price —
+  `place_order` works it out in the database, never the browser. Where two
+  sales overlap, a product gets the bigger discount. A sale can be switched off
+  at any time.
 - **Deals countdown** — Admin → Homepage → "Offer ends". While that moment is
   in the future the banner shows a live countdown; leave it empty for none. A
   countdown is never invented.
@@ -186,7 +206,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0028` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0029` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the

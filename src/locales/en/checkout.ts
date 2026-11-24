@@ -85,6 +85,7 @@ export const checkout = {
     invalidPayment: "Select a valid payment method.",
     paymentFailed: "Payment could not be processed.",
     paymentUnavailable: "This payment method isn't available yet.",
+    chooseSize: "Please choose a size for: {name}.",
   },
   validation: {
     fullName: "Enter your full name.",

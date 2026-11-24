@@ -90,3 +90,30 @@ describe("reconcileFavorites", () => {
     expect([...reconcileFavorites(["a"], new Set(["a"]), edited("a"))]).toEqual(["a"])
   })
 })
+
+describe("sized cart lines", () => {
+  it("keeps two sizes of one product as two lines through a round trip", () => {
+    const lines = [
+      { productId: "tee", quantity: 1, size: "M" },
+      { productId: "tee", quantity: 2, size: "L" },
+      { productId: "mug", quantity: 1 },
+    ]
+    const quantities = toQuantities(lines)
+    expect(quantities.size).toBe(3)
+    expect(toLines(quantities)).toEqual(lines)
+  })
+
+  it("lets the shopper's edit to one size win without touching the other", () => {
+    const server = toQuantities([
+      { productId: "tee", quantity: 1, size: "M" },
+      { productId: "tee", quantity: 1, size: "L" },
+    ])
+    const local = toQuantities([
+      { productId: "tee", quantity: 4, size: "M" },
+      { productId: "tee", quantity: 1, size: "L" },
+    ])
+    const { merged } = reconcileCart(server, local, edited("tee|M"))
+    expect(merged.get("tee|M")).toBe(4)
+    expect(merged.get("tee|L")).toBe(1)
+  })
+})

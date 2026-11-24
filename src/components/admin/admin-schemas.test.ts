@@ -15,6 +15,7 @@ const product = {
   sku: "HL-001",
   category_id: "c1",
   image_urls: [],
+  sizes: [],
   is_featured: false,
   is_popular: false,
   is_active: true,
@@ -61,6 +62,27 @@ describe("productSchema", () => {
   it("needs both languages' name and description", () => {
     const errors = fieldsWithErrors(productSchema.safeParse({ ...product, name_am: "", description_en: "short" }))
     expect(errors).toEqual(expect.arrayContaining(["name_am", "description_en"]))
+  })
+})
+
+describe("productSchema sizes", () => {
+  it("accepts a product sold in sizes", () => {
+    const sizes = [
+      { label: "M", stock: 3 },
+      { label: "L", stock: 0 },
+    ]
+    expect(productSchema.safeParse({ ...product, sizes }).success).toBe(true)
+  })
+
+  it("rejects a blank size, a size with a |, negative size stock and a size listed twice", () => {
+    expect(fieldsWithErrors(productSchema.safeParse({ ...product, sizes: [{ label: " ", stock: 1 }] }))).toContain("sizes.0.label")
+    expect(fieldsWithErrors(productSchema.safeParse({ ...product, sizes: [{ label: "M|L", stock: 1 }] }))).toContain("sizes.0.label")
+    expect(fieldsWithErrors(productSchema.safeParse({ ...product, sizes: [{ label: "M", stock: -1 }] }))).toContain("sizes.0.stock")
+    const twice = [
+      { label: "M", stock: 1 },
+      { label: "m", stock: 2 },
+    ]
+    expect(fieldsWithErrors(productSchema.safeParse({ ...product, sizes: twice }))).toContain("sizes")
   })
 })
 

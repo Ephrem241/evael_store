@@ -97,6 +97,21 @@ export const product = {
   rated: "Rated {value} out of 5",
   // The red sale pill on the product page and in the cart. {percent} is a whole number.
   percentOff: "{percent}% OFF",
+  // A product sold in sizes (clothes S–XXL, shoes 36–45). {size} is the size's label, e.g. "M" or "39".
+  sizes: {
+    label: "Size",
+    line: "Size: {size}",
+    choose: "Choose size",
+    required: "Please choose a size.",
+    soldOut: "{size}, sold out",
+  },
+  // Under the price while a holiday / special sale lowers it. {time} is e.g. "2d 05:12:09".
+  saleEvent: {
+    percentOff: "{percent}% off",
+    endsIn: "Ends in {time}",
+    daysClock: "{days}d {clock}",
+    ended: "This sale has ended",
+  },
   favorites: {
     add: "Add to favorites",
     remove: "Remove from favorites",

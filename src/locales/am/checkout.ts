@@ -77,6 +77,7 @@ export const checkout: Dictionary["checkout"] = {
     invalidPayment: "ትክክለኛ የክፍያ ዘዴ ይምረጡ።",
     paymentFailed: "ክፍያው ሊከናወን አልቻለም።",
     paymentUnavailable: "ይህ የክፍያ ዘዴ እስካሁን አይገኝም።",
+    chooseSize: "እባክዎ ለ{name} መጠን ይምረጡ።",
   },
   validation: {
     fullName: "ሙሉ ስምዎን ያስገቡ።",

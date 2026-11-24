@@ -24,7 +24,8 @@ export interface OutboxOrder {
   created_at: string
   customer_name: string | null
   customer_email: string | null
-  items: { name: string; quantity: number; unit_price: number | string; total: number | string }[]
+  // `size`: the size chosen for a sized product (0029 onwards; null otherwise).
+  items: { name: string; size?: string | null; quantity: number; unit_price: number | string; total: number | string }[]
 }
 
 export interface OutboxContact {

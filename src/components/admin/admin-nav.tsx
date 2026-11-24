@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useId, useState, type KeyboardEvent } from "react"
-import { ChevronDown, House, LayoutTemplate, Mail, MessageSquare, Package, Settings, ShoppingCart, Users, type LucideIcon } from "lucide-react"
+import { BadgePercent, ChevronDown, House, LayoutTemplate, Mail, MessageSquare, Package, Settings, ShoppingCart, Users, type LucideIcon } from "lucide-react"
 import { cn } from "cn"
 
 import { useT } from "@/lib/i18n/provider"
@@ -62,6 +62,7 @@ const ADMIN_NAV: (NavLinkEntry | NavGroupEntry)[] = [
     ],
   },
   { kind: "link", href: "/admin/orders", label: "admin.nav.orders", icon: ShoppingCart, counter: "orders" },
+  { kind: "link", href: "/admin/sales", label: "admin.nav.sales", icon: BadgePercent },
   { kind: "link", href: "/admin/customers", label: "admin.nav.customers", icon: Users },
   { kind: "link", href: "/admin/messages", label: "admin.nav.messages", icon: Mail, counter: "messages" },
   { kind: "link", href: "/admin/reviews", label: "admin.nav.reviews", icon: MessageSquare },
