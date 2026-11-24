@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 
 import { parseListingParams } from "@/lib/services/catalog"
 import {
+  getCategories,
   getCategoryBySlug,
   getProducts,
   getFilterFacets,
@@ -14,8 +15,7 @@ import { breadcrumbJsonLd, collectionJsonLd } from "@/lib/seo/json-ld"
 import { JsonLd } from "@/components/seo/json-ld"
 import { ProductListing } from "@/components/catalog/product-listing"
 import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
-import { ImagePlaceholder } from "@/components/product/image-placeholder"
-import { getCategoryIcon } from "@/components/product/category-icons"
+import { CategoryRow } from "@/components/catalog/category-row"
 
 type RouteProps = {
   params: Promise<{ slug: string }>
@@ -57,15 +57,16 @@ export default async function CategoryPage({
   const parsed = parseListingParams(rawParams)
   const listingParams = { ...parsed, categorySlug: category.slug }
 
-  const [result, facets] = await Promise.all([
+  const [result, facets, categories] = await Promise.all([
     getProducts(listingParams),
     getFilterFacets({ categorySlug: category.slug, query: parsed.query }),
+    getCategories(),
   ])
 
   const categoryPath = `/category/${category.slug}`
 
   return (
-    <div className="space-y-8 py-6 lg:py-8">
+    <div className="space-y-5 py-6 lg:space-y-6 lg:py-8">
       <JsonLd
         nodes={[
           breadcrumbJsonLd([
@@ -80,24 +81,18 @@ export default async function CategoryPage({
           }),
         ]}
       />
+      {/* Compact, as marketplace list pages are: the products start high on the screen. */}
       <PageHeader
+        variant="plain"
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: categoryName }]}
         backHref="/categories"
         mobileActions={<SearchAndCartActions />}
         title={categoryName}
         description={descriptionOf(category, t.locale)}
-        aside={
-          <ImagePlaceholder
-            seed={category.id}
-            icon={getCategoryIcon(category.slug)}
-            label={categoryName}
-            imageUrl={category.image_url || null}
-            sizes="(min-width: 1024px) 420px, 100vw"
-            eager
-            aspectClassName="aspect-[21/9] lg:aspect-video"
-          />
-        }
       />
+      {/* The marketplace row of category circles, this one ringed; it also
+          carries the category's photo, which the header used to show large. */}
+      <CategoryRow categories={categories} activeSlug={category.slug} />
       <ProductListing
         products={result.products}
         total={result.total}

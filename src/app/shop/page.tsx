@@ -2,9 +2,10 @@ import type { Metadata } from "next"
 
 import { parseListingParams } from "@/lib/services/catalog"
 import { listingSeo, pageMetadata, withPageNumber } from "@/lib/seo/metadata"
-import { getProducts, getFilterFacets } from "@/lib/services/catalog-queries"
+import { getCategories, getProducts, getFilterFacets } from "@/lib/services/catalog-queries"
 import { getT } from "@/lib/i18n/server"
 import { ProductListing } from "@/components/catalog/product-listing"
+import { CategoryRow } from "@/components/catalog/category-row"
 import { PageHeader, SearchAndCartActions } from "@/components/layout/page-header"
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
@@ -36,9 +37,10 @@ export default async function ShopPage({
   const rawParams = await searchParams
   const parsed = parseListingParams(rawParams)
 
-  const [result, facets, t] = await Promise.all([
+  const [result, facets, categories, t] = await Promise.all([
     getProducts(parsed),
     getFilterFacets({ query: parsed.query }),
+    getCategories(),
     getT(),
   ])
 
@@ -48,13 +50,16 @@ export default async function ShopPage({
   const title = deals ? t("nav.deals") : t("catalog.shopTitle")
 
   return (
-    <div className="space-y-8 py-6 lg:py-8">
+    <div className="space-y-5 py-6 lg:space-y-6 lg:py-8">
+      {/* Compact, as marketplace list pages are: the products start high on the screen. */}
       <PageHeader
+        variant="plain"
         mobileActions={<SearchAndCartActions />}
         breadcrumb={[{ label: t("nav.home"), href: "/" }, { label: title }]}
         title={title}
         description={deals ? t("home.flashSubtitle") : t("catalog.shopSubtitle")}
       />
+      <CategoryRow categories={categories} activeSlug={parsed.categorySlug} />
       <ProductListing
         products={result.products}
         total={result.total}
@@ -65,6 +70,7 @@ export default async function ShopPage({
         sort={parsed.sort ?? "recommended"}
         facets={facets}
         showCategoryFilter
+        categoryChips={false}
         rawParams={rawParams}
         basePath="/shop"
       />

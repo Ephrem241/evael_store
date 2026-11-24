@@ -24,12 +24,15 @@ async function FilterChips({
   filters,
   facets,
   showCategory,
+  categoryChips = true,
   rawParams,
   basePath,
 }: {
   filters: FilterValues
   facets: FilterFacets
   showCategory: boolean
+  /** Off where a row of category circles over the listing already offers them (/shop). */
+  categoryChips?: boolean
   rawParams: RawParams
   basePath: string
 }) {
@@ -44,7 +47,7 @@ async function FilterChips({
     !filters.onSaleOnly
 
   const chips: QuickChip[] = [{ key: "all", label: t("catalog.filters.all"), selected: nothingSet, next: {} }]
-  if (showCategory) {
+  if (showCategory && categoryChips) {
     for (const category of facets.categories.filter((c) => c.count > 0)) {
       const on = filters.categorySlug === category.slug
       chips.push({

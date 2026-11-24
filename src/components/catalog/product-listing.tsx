@@ -7,7 +7,7 @@ import { ProductGrid } from "@/components/product/product-grid"
 import { EmptyState } from "@/components/feedback/empty-state"
 import { FilterSidebar } from "@/components/catalog/filter-sidebar"
 import { FilterDrawer } from "@/components/catalog/filter-drawer"
-import { SortSelect } from "@/components/catalog/sort-select"
+import { SortTabs } from "@/components/catalog/sort-tabs"
 import { Pagination } from "@/components/catalog/pagination"
 import { LoadMoreProducts } from "@/components/catalog/load-more-products"
 import { ActiveFilters } from "@/components/catalog/active-filters"
@@ -20,11 +20,14 @@ import type { FilterValues, RawParams } from "@/components/catalog/listing-url"
 // one slot API, Rule 6) and fetches its own data, but the filter/sort/grid/
 // pagination chrome below is identical everywhere (Rule 5).
 //
-// Phones and tablets: a row of quick filter chips, then Filter and Sort in a
-// bar pinned under the header while the products scroll; the full filters
-// open in a bottom sheet; "Load more" adds the next page below the grid
-// instead of numbered pages. Desktop keeps the sidebar, the sort menu beside
-// the result count, and the page numbers.
+// The sort is a row of tabs, the marketplace way (sort-tabs.tsx).
+//
+// Phones and tablets: a row of quick filter chips, then one bar pinned under
+// the header while the products scroll: the sort tabs (scrolling sideways if
+// they must) and Filter at its end; the full filters open in a bottom sheet;
+// "Load more" adds the next page below the grid instead of numbered pages.
+// Desktop keeps the sidebar, the sort tabs across from the result count, and
+// the page numbers.
 async function ProductListing({
   products,
   total,
@@ -35,6 +38,7 @@ async function ProductListing({
   sort,
   facets,
   showCategoryFilter = true,
+  categoryChips = true,
   rawParams,
   basePath,
 }: {
@@ -47,6 +51,8 @@ async function ProductListing({
   sort: SortOption
   facets: FilterFacets
   showCategoryFilter?: boolean
+  /** Category chips in the phone quick-filter row (off under a CategoryRow). */
+  categoryChips?: boolean
   rawParams: RawParams
   basePath: string
 }) {
@@ -64,21 +70,22 @@ async function ProductListing({
         filters={filters}
         facets={facets}
         showCategory={showCategoryFilter}
+        categoryChips={categoryChips}
         rawParams={rawParams}
         basePath={basePath}
       />
-      {/* Full width (it cancels the page's side padding) and 44px controls; the
-          sort menu's 16px text keeps iOS from zooming in when it is tapped. */}
-      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex items-center gap-2 border-b border-border bg-background/95 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+      {/* Full width (it cancels the page's side padding); the tabs are the
+          bar's full 44px height, so each is a comfortable tap. */}
+      <div className="sticky top-(--mobile-header-height) z-20 -mx-4 flex h-12 items-stretch gap-2 border-b border-border bg-background/95 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:hidden">
+        <SortTabs value={sort} rawParams={rawParams} basePath={basePath} className="flex-1" />
         <FilterDrawer
           filters={filters}
           facets={facets}
           showCategory={showCategoryFilter}
           rawParams={rawParams}
           basePath={basePath}
-          className="h-11 flex-1 text-[15px]"
+          className="my-auto h-9 shrink-0"
         />
-        <SortSelect value={sort} rawParams={rawParams} basePath={basePath} className="h-11 min-w-0 flex-1 text-base" />
       </div>
 
       <FilterSidebar
@@ -90,11 +97,11 @@ async function ProductListing({
       />
 
       <div className="min-w-0 flex-1 space-y-5">
-        <div className="hidden items-center justify-between lg:flex">
-          <p role="status" className="text-sm text-muted-text">
+        <div className="hidden h-11 items-stretch justify-between gap-6 border-b border-border lg:flex">
+          <SortTabs value={sort} rawParams={rawParams} basePath={basePath} />
+          <p role="status" className="self-center text-sm text-muted-text">
             {resultSummary}
           </p>
-          <SortSelect value={sort} rawParams={rawParams} basePath={basePath} />
         </div>
         {/* Phones: just the count — the "Showing 1–24 of…" range lives by the
             Load more button, where it changes as more products are added. */}

@@ -53,8 +53,12 @@ export const catalog = {
     "price-asc": "Price: Low to High",
     "price-desc": "Price: High to Low",
     popular: "Most Popular",
+    // The sort tab that flips between low-to-high and high-to-low.
+    price: "Price",
   },
   pageLabel: "Page {page}",
+  // The row of round category icons over the shop and category pages.
+  categoryRowLabel: "Shop by category",
   results: "Showing {start}–{end} of {total} results",
   noResults: "No results",
   emptyTitle: "No products found.",
