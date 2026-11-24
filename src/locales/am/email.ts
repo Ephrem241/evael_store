@@ -37,6 +37,17 @@ export const email: Dictionary["email"] = {
     intro: "{name} ({email}) ትዕዛዝ {number} አስገብተዋል።",
     open: "በአስተዳዳሪ ገጽ ይክፈቱ",
   },
+  telegram: {
+    heading: "አዲስ ትዕዛዝ {number}",
+    customer: "ደንበኛ",
+    phone: "ስልክ",
+    address: "አድራሻ",
+    items: "ዕቃዎች",
+    line: "{quantity} × {name}፦ {total}",
+    total: "ድምር፦ {total}",
+    breakdown: "ዕቃዎች {subtotal} + ማድረሻ {delivery}",
+    open: "በአስተዳዳሪ ገጽ ይክፈቱ",
+  },
   reply: {
     // "Re:" stays as it is, so mail apps keep the conversation together.
     subject: "Re: {subject}",

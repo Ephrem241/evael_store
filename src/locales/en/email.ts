@@ -39,6 +39,20 @@ export const email = {
     intro: "{name} ({email}) placed order {number}.",
     open: "Open it in the admin",
   },
+  // The new-order message from the shop's Telegram bot (src/lib/telegram).
+  telegram: {
+    heading: "New order {number}",
+    customer: "Customer",
+    phone: "Phone",
+    address: "Address",
+    items: "Items",
+    // {quantity} × {name}: {total}
+    line: "{quantity} × {name}: {total}",
+    total: "Total: {total}",
+    // {subtotal} and {delivery} are amounts.
+    breakdown: "Items {subtotal} + delivery {delivery}",
+    open: "Open in the admin",
+  },
   // The admin's answer to a contact-form message, to the customer.
   reply: {
     subject: "Re: {subject}",

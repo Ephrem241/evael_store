@@ -51,7 +51,7 @@ live orders.
 | `src/lib/supabase/` | `client.ts` for the browser, `server.ts` for the server |
 | `src/lib/email/`, `src/lib/ai/` | Resend email outbox and the Gemini assistant |
 | `src/proxy.ts` | Next 16's replacement for `middleware.ts`: protects `/account`, `/checkout`, `/orders`, `/order` and `/admin` on the server, and handles `?lang=` |
-| `supabase/migrations/` | Numbered SQL migrations (`0001` to `0030`) |
+| `supabase/migrations/` | Numbered SQL migrations (`0001` to `0031`) |
 | `scripts/` | Seed scripts, the i18n checker, the secrets checker and the smoke test |
 | `e2e/` | Playwright specs. `e2e/support/` holds the setup, teardown and safety rules |
 | `docs/design/` | Redesign specs and mockups |
@@ -78,7 +78,7 @@ live orders.
   `use-require-admin` hook in the browser is a backup. Keep all three.
 
 **Database changes**
-- Add a new numbered file in `supabase/migrations/` (the next one is `0031_...`).
+- Add a new numbered file in `supabase/migrations/` (the next one is `0032_...`).
   Never edit a migration that has already shipped.
 - Make migrations safe to re-run where you can, and make copy updates
   conditional on the old wording, as `0024` and `0025` do.

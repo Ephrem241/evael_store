@@ -41,11 +41,15 @@ const GOOGLE_API_KEY_PATTERN = /(?<![0-9A-Za-z_-])AIza[0-9A-Za-z_-]{35}(?![0-9A-
 interface Secrets {
   serviceKey: string | undefined
   geminiKey: string | undefined
+  telegramToken: string | undefined
 }
+
+// A Telegram bot token: the bot's number, a colon and 35 characters.
+const TELEGRAM_TOKEN_PATTERN = /(?<![0-9A-Za-z_-])d{8,10}:AA[0-9A-Za-z_-]{33}(?![0-9A-Za-z_-])/g
 
 const redact = (secret: string) => `${secret.slice(0, 6)}…(${secret.length} characters)`
 
-async function scanFile(file: string, { serviceKey, geminiKey }: Secrets) {
+async function scanFile(file: string, { serviceKey, geminiKey, telegramToken }: Secrets) {
   const info = await stat(file).catch(() => null)
   if (!info?.isFile() || info.size > MAX_BYTES) return
   if (!TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) return
@@ -71,6 +75,12 @@ async function scanFile(file: string, { serviceKey, geminiKey }: Secrets) {
   if (geminiKey && text.includes(geminiKey)) {
     findings.push({ file: relative, what: "the value of GEMINI_API_KEY" })
   }
+  for (const token of new Set(text.match(TELEGRAM_TOKEN_PATTERN) ?? [])) {
+    findings.push({ file: relative, what: `a Telegram bot token (${redact(token)})` })
+  }
+  if (telegramToken && text.includes(telegramToken)) {
+    findings.push({ file: relative, what: "the value of TELEGRAM_BOT_TOKEN" })
+  }
 }
 
 async function scanDirectory(directory: string, secrets: Secrets) {
@@ -94,6 +104,7 @@ async function main() {
   const secrets: Secrets = {
     serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || undefined,
     geminiKey: process.env.GEMINI_API_KEY?.trim() || undefined,
+    telegramToken: process.env.TELEGRAM_BOT_TOKEN?.trim() || undefined,
   }
 
   // 1. The built site.

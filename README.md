@@ -121,6 +121,10 @@ screen reader.
   "Customer service" button on every shop page (above "Ask Evael"), the
   Telegram buttons on the Contact page and in the footer, and the Customer
   service link in the admin sidebar. Empty it and the button disappears.
+- **New-order messages on Telegram** — every order placed sends a message from
+  the shop's Telegram bot (order number, customer, phone, address, items,
+  total and a link to the order in the admin) to the chat in
+  `TELEGRAM_CHAT_ID`. See [Telegram order alerts](#7-telegram-order-alerts).
 - **Homepage copy** — Admin → Homepage: the hero and the "Special Deals"
   promotion (the popup a few seconds into a visit), each in English and
   Amharic. In the deals headline or subtext, write `{maxDiscount}` and the
@@ -217,7 +221,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0030` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0031` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the
@@ -438,6 +442,32 @@ are not stored by the shop. The privacy policy says this.
 4. **Test.** Ask a few questions in both languages: a gift under a price, the
    delivery fee to a city, something the shop hasn't set (it should say it
    doesn't know). Check that the product links open the right pages.
+
+### 7. Telegram order alerts
+
+Every new order is queued in the `telegram_outbox` table by the database
+(migration 0031) and sent by the same `/api/email/dispatch` ping as the emails,
+so it goes out within seconds and works with or without email. Test orders
+(the e2e suite's `@example.com` shoppers) are never sent.
+
+1. In Telegram, open **@BotFather**, send `/newbot`, choose a name (Evael
+   Store Orders) and a username ending in `bot`. It replies with the **token**.
+2. Choose where the messages go:
+   - *Just you:* open your new bot and press **Start**.
+   - *Your staff:* create a group, add the bot to it and send any message in it.
+3. Find the chat id: open `https://api.telegram.org/bot<TOKEN>/getUpdates` in a
+   browser and copy `"chat":{"id": … }` (a group's id is negative, e.g.
+   `-1001234567890`). A public channel can use `@channelname` instead, with
+   the bot added as an admin.
+4. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env` and in Vercel
+   (server-only: never `NEXT_PUBLIC_`). `EMAIL_DISPATCH_SECRET` must be set too,
+   and the database must know it (`select public.set_email_dispatch_secret('…');`,
+   as in [Email](#5-email-resend)).
+
+**What's in the queue** (SQL Editor): `select state, attempts, last_error,
+created_at from telegram_outbox order by created_at desc limit 20;` A wrong
+token or a bot removed from the group shows up in `last_error`; a failed
+message is retried with the next ping (up to 5 tries, for 3 days).
 
 ### Security
 

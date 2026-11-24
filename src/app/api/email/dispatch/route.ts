@@ -3,6 +3,7 @@ import { after, NextResponse, type NextRequest } from "next/server"
 import { isLocale, LOCALE_COOKIE } from "@/lib/i18n/config"
 import { createClient } from "@/lib/supabase/server"
 import { dispatchQueuedEmails, emailConfigured } from "@/lib/email/server"
+import { dispatchQueuedTelegram, telegramConfigured } from "@/lib/telegram/server"
 
 // "Send what's queued." The database queues every email itself (order
 // placed, status changed, contact message: migration 0019); the browser pings
@@ -15,6 +16,9 @@ import { dispatchQueuedEmails, emailConfigured } from "@/lib/email/server"
 // failing that, their `locale` cookie) is then recorded on the order first, so
 // their order emails are written in it. The database accepts that only from
 // the order's owner.
+//
+// The same ping sends the shop's Telegram new-order messages (0031) when the
+// bot is set up, with or without email.
 //
 // It answers at once; the sending happens after the response (`after`), so the
 // shopper never waits on the mail server.
@@ -33,11 +37,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (!emailConfigured()) {
+  const email = emailConfigured()
+  const telegram = telegramConfigured()
+  if (!email && !telegram) {
     return NextResponse.json({ configured: false }, { status: 503 })
   }
 
   after(async () => {
+    if (telegram) {
+      try {
+        const result = await dispatchQueuedTelegram()
+        if (result?.blocked) console.error(`telegram dispatch blocked, messages stay queued: ${result.blocked}`) // i18n-ignore: server log
+        if (result && (result.sent || result.failed)) console.info(`telegram dispatch: ${JSON.stringify(result)}`) // i18n-ignore: server log
+      } catch (error) {
+        console.error("telegram dispatch failed:", error instanceof Error ? error.message : error) // i18n-ignore: server log
+      }
+    }
+    if (!email) return
     try {
       const result = await dispatchQueuedEmails()
       if (result?.blocked) console.error(`email dispatch blocked, emails stay queued: ${result.blocked}`) // i18n-ignore: server log
