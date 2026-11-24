@@ -38,6 +38,14 @@ export function storeDateKey(date: Date): string {
   }).format(date)
 }
 
+/** "Nov 24" for a storeDateKey day ("2026-11-24"): the dashboard chart's axis and tooltip. */
+export function formatDayKey(key: string, locale: Locale): string {
+  // Noon in Addis Ababa, so the day can't slip either side of midnight.
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], { month: "short", day: "numeric", timeZone: STORE_TIME_ZONE }).format(
+    new Date(`${key}T12:00:00+03:00`) // i18n-ignore: ISO time format
+  )
+}
+
 export function formatOrderDateTime(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(INTL_LOCALE[locale], {
     year: "numeric",

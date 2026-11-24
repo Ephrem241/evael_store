@@ -19,6 +19,9 @@ import { StorefrontOnly } from "@/components/layout/storefront-only";
 import { NavigationHistory } from "@/components/navigation/back-button";
 import { AssistantLauncher } from "@/components/assistant/assistant-launcher";
 import { isAssistantConfigured } from "@/lib/ai/config";
+import { CustomerServiceButton } from "@/components/contact/customer-service-button";
+import { getStoreContact } from "@/lib/services/store-info";
+import { telegramLink } from "@/lib/contact-links";
 
 // The typefaces are SELF-HOSTED (./fonts, all SIL Open Font License, fetched
 // from Google Fonts): the same fonts next/font/google would serve, but with no
@@ -127,6 +130,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale();
   const dictionary = await getClientDictionary(locale);
   const t = await getT();
+  // The shop's Telegram (store_settings), for the Customer service button. The
+  // footer reads the same row, and getStoreContact is cached per request.
+  const customerServiceHref = telegramLink((await getStoreContact()).telegram);
+  const assistantShown = isAssistantConfigured();
 
   return (
     <html
@@ -166,7 +173,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <StorefrontOnly>
               <BottomNav />
               {/* Only when a Gemini key is set; the key itself stays on the server. */}
-              {isAssistantConfigured() && <AssistantLauncher />}
+              {assistantShown && <AssistantLauncher />}
+              {customerServiceHref && <CustomerServiceButton href={customerServiceHref} stacked={assistantShown} />}
             </StorefrontOnly>
             <Toaster />
             <AuthProvider />

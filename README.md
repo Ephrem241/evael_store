@@ -110,6 +110,17 @@ screen reader.
 ## What an admin controls
 
 - **Products, categories, orders, customers** — Admin → the matching page.
+- **Dashboard** — Admin → Dashboard: revenue, orders and average order value
+  for the last 7, 30 or 90 days (each compared with the same number of days
+  before, cancelled orders left out), active products in stock, a daily sales
+  chart (revenue or orders), the period's orders by status, the five newest
+  orders, the four best sellers by units sold and the products at 5 units or
+  fewer. Days are Addis Ababa days.
+- **Customer service on Telegram** — Admin → Settings → Telegram
+  (`contact_telegram`, `@EVAELSTORES` since `0030`). It drives the floating
+  "Customer service" button on every shop page (above "Ask Evael"), the
+  Telegram buttons on the Contact page and in the footer, and the Customer
+  service link in the admin sidebar. Empty it and the button disappears.
 - **Homepage copy** — Admin → Homepage: the hero and the "Special Deals"
   promotion (the popup a few seconds into a visit), each in English and
   Amharic. In the deals headline or subtext, write `{maxDiscount}` and the
@@ -206,7 +217,7 @@ The site is built for Vercel + Supabase. Do these in order; each step says where
 
 ### 1. Supabase project
 
-1. **Database.** Apply `supabase/migrations/0001` … `0029` in order (or
+1. **Database.** Apply `supabase/migrations/0001` … `0030` in order (or
    `supabase/combined-migration.sql`, which holds `0001` … `0017`, then the
    later files one by one). `0017` is the production hardening from the
    advisors' report (see [Security](#security)); `0024` and `0025` are the

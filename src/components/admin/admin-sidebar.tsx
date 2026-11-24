@@ -9,6 +9,7 @@ import { useT } from "@/lib/i18n/provider"
 import { initialsOf } from "@/lib/admin/initials"
 import type { AuthUser } from "@/lib/store/auth"
 import { AdminNav, type AdminNavProps } from "@/components/admin/admin-nav"
+import { ChannelLogo } from "@/components/contact/channel-logos"
 import { BrandMark, Logo } from "@/components/layout/logo"
 import {
   DropdownMenu,
@@ -66,6 +67,7 @@ function AdminSidebar({
   variant = "full",
   user,
   nav,
+  supportHref,
   onSignOut,
   onClose,
   className,
@@ -73,6 +75,8 @@ function AdminSidebar({
   variant?: "full" | "rail"
   user: AuthUser
   nav: AdminNavProps
+  /** The shop's Telegram chat (customer service), when it is set. */
+  supportHref?: string | null
   onSignOut: () => void
   onClose?: () => void
   className?: string
@@ -117,6 +121,22 @@ function AdminSidebar({
 
       {rail ? (
         <div className="flex flex-col items-center gap-1.5 border-t border-sidebar-border px-2.5 py-3">
+          {supportHref && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
+                  href={supportHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${t("admin.dashboard.support")}: ${t("admin.dashboard.supportHint")}`}
+                  className={cn("flex size-11 items-center justify-center rounded-lg hover:bg-sidebar-accent/60", focusRing)}
+                >
+                  <ChannelLogo channel="telegram" className="size-6" />
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="right">{t("admin.dashboard.support")}</TooltipContent>
+            </Tooltip>
+          )}
           <DropdownMenu>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -146,6 +166,21 @@ function AdminSidebar({
         </div>
       ) : (
         <div className="space-y-1 border-t border-sidebar-border p-3">
+          {supportHref && (
+            <a
+              href={supportHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-sidebar-accent/60",
+                focusRing
+              )}
+            >
+              <ChannelLogo channel="telegram" className="size-5 shrink-0" />
+              {t("admin.dashboard.support")}
+              <span className="sr-only"> ({t("admin.dashboard.supportHint")})</span>
+            </a>
+          )}
           <div className="flex items-center gap-3 px-2 py-2">
             <Avatar name={user.fullName} />
             <div className="min-w-0 flex-1 leading-tight">

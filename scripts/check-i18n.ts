@@ -42,6 +42,7 @@ const NON_UI_ATTRS = new Set([
   "mode", "layout", "layoutId", "initial", "animate", "exit", "transition", "whileHover", "whileTap",
   "reducedMotion", "features", "strict", "tone", "titleAs", "sort", "basePath", "aspectClassName", "fit", "backHref", "fallbackHref", "chooseSizeHref", "headingId", "mobileAlign", "density", "labelledBy", "idPrefix", "preserveAspectRatio", "labels", "bucket", "step", "min", "max", "pattern", "rows", "cols", "wrap", "spellCheck", "list", "form", "formAction",
   "formMethod", "scope", "kind", "srcSet", "media", "content", "property", "httpEquiv", "charSet", "sm", "md",
+  "stopColor", "stopOpacity", "vectorEffect", "channel", "iconClass",
 ])
 
 // Object-literal keys whose string values are shown to people.

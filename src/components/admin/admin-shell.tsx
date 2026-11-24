@@ -7,6 +7,8 @@ import { toast } from "sonner"
 import { PageSkeleton } from "@/components/feedback/skeletons"
 import { useT } from "@/lib/i18n/provider"
 import { useRequireAdmin } from "@/lib/hooks/use-require-admin"
+import { useStoreContactSettings } from "@/lib/hooks/use-admin-data"
+import { telegramLink } from "@/lib/contact-links"
 import { signOut } from "@/lib/services/auth"
 import { useNavCounts, useOpenGroups } from "@/components/admin/admin-nav"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
@@ -37,6 +39,9 @@ function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const { user, ready } = useRequireAdmin()
   const counts = useNavCounts(ready)
+  // The shop's Telegram (public store_settings), for the sidebar's Customer
+  // service link: read once here for all three copies of the sidebar.
+  const supportHref = telegramLink(useStoreContactSettings().data?.telegram)
   const [openGroups, setGroupOpen] = useOpenGroups()
   // The drawer belongs to the page it was opened on: moving to another page
   // (tapping a link in it) closes it.
@@ -64,12 +69,12 @@ function AdminShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh flex-1 bg-admin-bg md:pl-16 lg:pl-63">
       <OrderAlertsWatcher />
-      <AdminSidebar user={user} nav={nav} onSignOut={handleSignOut} className="fixed inset-y-0 left-0 z-30 hidden w-63 lg:flex" />
+      <AdminSidebar user={user} nav={nav} supportHref={supportHref} onSignOut={handleSignOut} className="fixed inset-y-0 left-0 z-30 hidden w-63 lg:flex" />
       <AdminSidebar
         variant="rail"
         user={user}
         nav={nav}
-        onSignOut={handleSignOut}
+        supportHref={supportHref} onSignOut={handleSignOut}
         className="fixed inset-y-0 left-0 z-30 hidden w-16 md:flex lg:hidden"
       />
       <Sheet open={drawerOpen} onOpenChange={(open) => setDrawerPage(open ? pathname : null)}>
@@ -80,7 +85,7 @@ function AdminShell({ children }: { children: ReactNode }) {
           className="w-[min(17.5rem,85vw)] gap-0 border-none bg-sidebar p-0 text-sidebar-foreground"
         >
           <SheetTitle className="sr-only">{t("admin.nav.label")}</SheetTitle>
-          <AdminSidebar user={user} nav={nav} onSignOut={handleSignOut} onClose={() => setDrawerPage(null)} />
+          <AdminSidebar user={user} nav={nav} supportHref={supportHref} onSignOut={handleSignOut} onClose={() => setDrawerPage(null)} />
         </SheetContent>
       </Sheet>
 

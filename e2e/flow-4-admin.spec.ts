@@ -16,7 +16,7 @@ test.describe("Flow 4: an administrator running the shop", () => {
       await page.goto("/admin")
       const main = page.locator("main")
       await expect(main.getByRole("heading", { level: 1 })).toHaveText(en.admin.dashboard.title)
-      for (const label of [en.admin.dashboard.todaysSales, en.admin.dashboard.monthlySales, en.admin.dashboard.totalOrders, en.admin.dashboard.totalCustomers]) {
+      for (const label of [en.admin.dashboard.totalRevenue, en.admin.dashboard.averageOrder, en.admin.dashboard.productsInStock, en.admin.dashboard.salesPerformance, en.admin.dashboard.recentOrders]) {
         await expect(main).toContainText(label)
       }
       // Dashboard, Orders, Customers, Messages, Homepage and Settings are links; Products is a group.

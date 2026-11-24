@@ -1,6 +1,9 @@
 // Header, navigation, search, footer, language switcher, page metadata.
 export const nav = {
   home: "Home",
+  // The floating button that opens the shop's Telegram chat.
+  customerService: "Customer service",
+  customerServiceHint: "Chat with us on Telegram",
   categories: "Categories",
   deals: "Deals",
   // The header's link to the newest products.

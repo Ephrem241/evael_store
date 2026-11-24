@@ -240,7 +240,7 @@ test.describe("8. Unauthorized admin access", () => {
     for (const path of ["/admin", "/admin/products", "/admin/products/new", "/admin/categories", "/admin/orders", "/admin/customers", "/admin/homepage"]) {
       await page.goto(path)
       await expect(page).toHaveURL(/localhost:\d+\/$/)
-      await expect(page.getByText(en.admin.dashboard.todaysSales)).toHaveCount(0)
+      await expect(page.getByText(en.admin.dashboard.totalRevenue)).toHaveCount(0)
     }
   })
 

@@ -2,6 +2,8 @@ import type { Dictionary } from "@/locales/en"
 
 export const nav: Dictionary["nav"] = {
   home: "መነሻ",
+  customerService: "የደንበኞች አገልግሎት",
+  customerServiceHint: "በቴሌግራም ያነጋግሩን",
   categories: "ምድቦች",
   deals: "ቅናሾች",
   newIn: "አዲስ የገቡ",
