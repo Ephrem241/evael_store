@@ -125,8 +125,8 @@ export default async function Home() {
       {saleEvent && <SaleEventBanner event={saleEvent} categories={categories} />}
       {deals.count > 0 && <SavingsBanner percent={deals.maxDiscountPercent} />}
       <DealsRow products={flashDeals} countdown={dealDeadline} />
-      <PaymentMethods />
       <ForYouFeed first={feed} />
+      <PaymentMethods />
     </div>
   )
 }
